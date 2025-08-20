@@ -50,11 +50,11 @@ col1, col2, col3 = st.columns([1, 10, 1])
 with col1:
     if st.button("⬅️", use_container_width=True) and st.session_state.page > 0:
         st.session_state.page -= 1
-        st.experimental_rerun()
+        st.rerun()
 with col3:
     if st.button("➡️", use_container_width=True) and end_idx < len(images):
         st.session_state.page += 1
-        st.experimental_rerun()
+        st.rerun()
 
 # Image containers with proper scaling inside fixed-height boxes
 img_cols = st.columns(3)
@@ -97,13 +97,13 @@ for idx, col in enumerate(img_cols):
     else:
         col.empty()
 
-# Handle image popup without st.modal to avoid errors
-query_params = st.experimental_get_query_params()
+# Use st.query_params instead of deprecated experimental_get_query_params
+query_params = st.query_params
 if "selected" in query_params:
     idx = int(query_params["selected"][0])
     if 0 <= idx < len(images):
         st.session_state.selected_img = images[idx]
-    # Clear query param so modal won't reopen on refresh
+    # Clear query params so popup doesn't reopen on refresh
     st.experimental_set_query_params()
 
 if st.session_state.selected_img:
@@ -139,10 +139,10 @@ if st.session_state.selected_img:
     st.image(st.session_state.selected_img, use_column_width=True)
     if st.button("Close"):
         st.session_state.selected_img = None
-        st.experimental_rerun()
+        st.rerun()
     st.markdown("</div></div>", unsafe_allow_html=True)
 
-# About Section
+# ------------------ ABOUT SECTION ------------------
 st.header("About")
 st.write(
     """
@@ -151,6 +151,6 @@ st.write(
     """
 )
 
-# Contact Section
+# ------------------ CONTACT SECTION ------------------
 st.header("Contact")
 st.write("Email me at: [your.email@example.com](mailto:your.email@example.com)")
