@@ -14,7 +14,7 @@ st.markdown(
     }
     /* Header */
     .header-container {
-        background: linear-gradient(90deg, #800000, #a00000);
+        background: linear-gradient(90deg, #800000, #ffffff);
         padding: 20px;
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -263,5 +263,6 @@ with st.form(key="contact_form"):
             st.success(f"Thank you, {name}! Your message has been received. We'll get back to you at {email} soon.")
         else:
             st.error("Please fill out all fields.")
+
 
 
