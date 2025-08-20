@@ -164,42 +164,68 @@ if st.session_state.selected_img_idx is not None:
                 font-size: 1.1em;
                 color: #333;
             }}
-            .modal-close-btn {{
-                padding: 10px 20px;
-                background-color: #800000;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 1em;
+            .modal-close-btn-container {{
+                width: 100%;
                 text-align: center;
             }}
-            .modal-close-btn:hover {{
-                background-color: #a00000;
+            @media (max-width: 768px) {{
+                .modal-inner {{
+                    flex-direction: column;
+                }}
+                .modal-image, .modal-description {{
+                    flex: 1;
+                    max-height: none;
+                }}
             }}
             </style>
-            <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-overlay" role="dialog" aria-labelledby="modalTitle">
                 <div class="modal-content">
                     <div class="modal-inner">
                         <div class="modal-image">
                             <img src="{img_url}" alt="Full image">
                         </div>
                         <div class="modal-description">
-                            <h3>Description</h3>
+                            <h3 id="modalTitle">Description</h3>
                             <p>{description}</p>
                         </div>
+                    </div>
+                    <div class="modal-close-btn-container">
+                        <!-- Streamlit will replace this button -->
                     </div>
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        # Streamlit close button
-        if st.button("Close", key=f"close_{idx}", help="Close the modal"):
-            st.session_state.selected_img_idx = None
-            st.rerun()
-
-
+        # Style the Streamlit button to match the modal
+        st.markdown(
+            """
+            <style>
+            .stButton>button {
+                background-color: #800000;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 10px 20px;
+                font-size: 1em;
+                cursor: pointer;
+            }
+            .stButton>button:hover {
+                background-color: #a00000;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+        # Place the close button in a container to ensure it appears in the modal
+        with st.container():
+            if st.button("Close", key=f"close_{idx}", help="Close the modal"):
+                st.session_state.selected_img_idx = None
+                st.rerun()
+    else:
+        # Reset invalid index to prevent modal from getting stuck
+        st.session_state.selected_img_idx = None
+        st.rerun()
 
 
 # ------------------ ABOUT SECTION ------------------
@@ -214,6 +240,7 @@ st.write(
 # ------------------ CONTACT SECTION ------------------
 st.header("Contact")
 st.write("Email me at: [your.email@example.com](mailto:your.email@example.com)")
+
 
 
 
