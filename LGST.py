@@ -25,26 +25,48 @@ st.markdown(
 # ==============================
 st.header("Current Project")
 
-# Assume we have images: pic1.jpg, pic2.jpg, ..., picN.jpg
-# Let's define the number of images manually for now (update when more are added)
-max_images = 5  # change this when more images are uploaded
+# List of image URLs from GitHub repo
+max_images = 10  # adjust as needed
 image_urls = [
     f"https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/refs/heads/main/pic{i}.jpg"
     for i in range(1, max_images + 1)
 ]
 
-# Arrow selector
-selected_index = st.slider("Select an image", 1, max_images, 1)
+# Session state for navigation
+if "start_index" not in st.session_state:
+    st.session_state.start_index = 0
 
-# Display selected image
-col1, col2 = st.columns([2, 1])  # image on left, placeholder text on right
-with col1:
-    st.image(image_urls[selected_index - 1], use_container_width=True, caption=f"Image {selected_index}")
+images_per_page = 3  # how many images to show at once
 
-with col2:
-    st.subheader("Project Details")
-    st.write("📝 Placeholder text for the selected image.")
-    st.write("You can add descriptions or notes for each project image here.")
+# Navigation buttons
+col_nav1, col_nav2 = st.columns([1, 8])
+with col_nav1:
+    if st.button("⬅️ Prev") and st.session_state.start_index > 0:
+        st.session_state.start_index -= images_per_page
+with col_nav2:
+    if st.button("Next ➡️") and st.session_state.start_index + images_per_page < len(image_urls):
+        st.session_state.start_index += images_per_page
+
+# Show multiple images in a row
+cols = st.columns(images_per_page)
+selected_image = None
+for i, col in enumerate(cols):
+    idx = st.session_state.start_index + i
+    if idx < len(image_urls):
+        if col.button(f"Image {idx+1}", key=f"btn{idx}"):
+            selected_image = image_urls[idx]
+        col.image(image_urls[idx], use_container_width=True)
+
+# If an image was clicked, show it larger with details
+if selected_image:
+    st.markdown("---")
+    c1, c2 = st.columns([2, 1])
+    with c1:
+        st.image(selected_image, use_container_width=True)
+    with c2:
+        st.subheader("Project Details")
+        st.write("📝 Placeholder text for this image.")
+        st.write("You can replace this with a description of the scrap material or project info.")
 
 # ==============================
 # Section 2: About
