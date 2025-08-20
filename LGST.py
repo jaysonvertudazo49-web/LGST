@@ -211,9 +211,9 @@ def show_image_modal(idx):
             st.subheader("Description")
             st.write(description)
             # Placeholder: Additional image details
-            st.write("**Weight**: [Placeholder: e.g., 50kg]")
-            st.write("**Material**: [Placeholder: e.g., Aluminum]")
-            st.write("**Price**: [Placeholder: e.g., $100/ton]")
+            #st.write("**Weight**: [Placeholder: e.g., 50kg]")
+            #st.write("**Material**: [Placeholder: e.g., Aluminum]")
+            #st.write("**Price**: [Placeholder: e.g., $100/ton]")
         # Explicit Close button
         if st.button("Close", key=f"close_modal_{idx}"):
             st.rerun()
@@ -263,6 +263,7 @@ with st.form(key="contact_form"):
             st.success(f"Thank you, {name}! Your message has been received. We'll get back to you at {email} soon.")
         else:
             st.error("Please fill out all fields.")
+
 
 
 
