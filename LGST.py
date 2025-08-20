@@ -24,27 +24,23 @@ repo_url = "https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/"
 max_images = 15
 possible_exts = ["jpg", "jpeg", "png"]
 
-# Descriptions for each image (edit inline as needed)
-image_descriptions = {
-    0: "Pic 1 description: This is the description for picture 1.",
-    1: "Pic 2 description: Description text can go here.",
-    2: "Pic 3 description: Another placeholder description.",
-    3: "Pic 4 description: Add your descriptions here.",
-    4: "Pic 5 description: Customize as needed.",
-    # Extend as needed up to max_images
-}
+# Cache images in session state
+if "images" not in st.session_state:
+    st.session_state.images = []
+    for i in range(1, max_images + 1):
+        for ext in possible_exts:
+            url = f"{repo_url}pic{i}.{ext}"
+            try:
+                if requests.head(url).status_code == 200:
+                    st.session_state.images.append(url)
+                    break
+            except Exception as e:
+                print(f"Error checking {url}: {e}")
 
-# Determine which images actually exist
-images = []
-for i in range(1, max_images + 1):
-    for ext in possible_exts:
-        url = f"{repo_url}pic{i}.{ext}"
-        try:
-            if requests.head(url).status_code == 200:
-                images.append(url)
-                break
-        except:
-            continue
+images = st.session_state.images
+
+# Descriptions for each image
+image_descriptions = {i: f"Pic {i+1} description: Add your description here." for i in range(max_images)}
 
 if "page" not in st.session_state:
     st.session_state.page = 0
@@ -66,12 +62,12 @@ with col3:
         st.session_state.page += 1
         st.rerun()
 
-img_cols = st.columns(3)
+# Dynamic columns based on available images
+img_cols = st.columns(min(len(current_images), 3))
 for idx, col in enumerate(img_cols):
     if idx < len(current_images):
         img_url = current_images[idx]
         absolute_idx = start_idx + idx
-        # Image container with hover scale effect
         col.markdown(
             f"""
             <style>
@@ -104,11 +100,8 @@ for idx, col in enumerate(img_cols):
             """,
             unsafe_allow_html=True,
         )
-        # View button to open modal popup
         if col.button("View", key=f"view_{absolute_idx}"):
             st.session_state.selected_img_idx = absolute_idx
-    else:
-        col.empty()
 
 # Modal popup with full image and description
 if st.session_state.selected_img_idx is not None:
@@ -116,7 +109,6 @@ if st.session_state.selected_img_idx is not None:
     if 0 <= idx < len(images):
         img_url = images[idx]
         description = image_descriptions.get(idx, "No description available.")
-        # Modal with close button
         st.markdown(
             f"""
             <style>
@@ -197,7 +189,6 @@ if st.session_state.selected_img_idx is not None:
             """,
             unsafe_allow_html=True,
         )
-        # Style the Streamlit button to match the modal
         st.markdown(
             """
             <style>
@@ -217,16 +208,13 @@ if st.session_state.selected_img_idx is not None:
             """,
             unsafe_allow_html=True,
         )
-        # Place the close button in a container to ensure it appears in the modal
         with st.container():
             if st.button("Close", key=f"close_{idx}", help="Close the modal"):
                 st.session_state.selected_img_idx = None
                 st.rerun()
     else:
-        # Reset invalid index to prevent modal from getting stuck
         st.session_state.selected_img_idx = None
         st.rerun()
-
 
 # ------------------ ABOUT SECTION ------------------
 st.header("About")
@@ -240,8 +228,3 @@ st.write(
 # ------------------ CONTACT SECTION ------------------
 st.header("Contact")
 st.write("Email me at: [your.email@example.com](mailto:your.email@example.com)")
-
-
-
-
-
