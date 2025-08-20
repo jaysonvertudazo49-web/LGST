@@ -251,7 +251,7 @@ st.write(
 
 # ------------------ CONTACT SECTION ------------------
 st.header("Contact Us")
-st.write(jaysonxkhyla@gmail.com)
+st.write("""jaysonxkhyla@gmail.com""")
 with st.form(key="contact_form"):
     name = st.text_input("Name", placeholder="Enter your full name")
     email = st.text_input("Email", placeholder="Enter your email address")
@@ -263,4 +263,5 @@ with st.form(key="contact_form"):
             st.success(f"Thank you, {name}! Your message has been received. We'll get back to you at {email} soon.")
         else:
             st.error("Please fill out all fields.")
+
 
