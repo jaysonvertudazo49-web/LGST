@@ -116,7 +116,7 @@ if st.session_state.selected_img_idx is not None:
     if 0 <= idx < len(images):
         img_url = images[idx]
         description = image_descriptions.get(idx, "No description available.")
-        # Use a single st.markdown for the entire modal
+        # Modal with close button inside
         st.markdown(
             f"""
             <style>
@@ -128,7 +128,7 @@ if st.session_state.selected_img_idx is not None:
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                z-index: 9999999;
+                z-index: 9999;
             }}
             .modal-content {{
                 background: white;
@@ -138,13 +138,20 @@ if st.session_state.selected_img_idx is not None:
                 max-height: 90vh;
                 overflow-y: auto;
                 display: flex;
+                flex-direction: column;
                 gap: 20px;
                 align-items: center;
                 box-shadow: 0 0 10px rgba(0,0,0,0.25);
             }}
+            .modal-inner {{
+                display: flex;
+                flex-direction: row;
+                gap: 20px;
+                width: 100%;
+            }}
             .modal-image {{
                 flex: 2;
-                max-height: 80vh;
+                max-height: 70vh;
                 overflow: hidden;
             }}
             .modal-image img {{
@@ -158,7 +165,6 @@ if st.session_state.selected_img_idx is not None:
                 color: #333;
             }}
             .modal-close-btn {{
-                margin-top: 15px;
                 padding: 10px 20px;
                 background-color: #800000;
                 color: white;
@@ -166,6 +172,7 @@ if st.session_state.selected_img_idx is not None:
                 border-radius: 5px;
                 cursor: pointer;
                 font-size: 1em;
+                text-align: center;
             }}
             .modal-close-btn:hover {{
                 background-color: #a00000;
@@ -173,25 +180,29 @@ if st.session_state.selected_img_idx is not None:
             </style>
             <div class="modal-overlay" id="modalOverlay">
                 <div class="modal-content">
-                    <div class="modal-image">
-                        <img src="{img_url}" alt="Full image">
+                    <div class="modal-inner">
+                        <div class="modal-image">
+                            <img src="{img_url}" alt="Full image">
+                        </div>
+                        <div class="modal-description">
+                            <h3>Description</h3>
+                            <p>{description}</p>
+                        </div>
                     </div>
-                    <div class="modal-description">
-                        <h3>Description</h3>
-                        <p>{description}</p>
+                    <div>
+                        <button class="modal-close-btn">Close</button>
                     </div>
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        # Close button with explicit state reset
-        col1, col2, col3 = st.columns([1, 1, 1])  # Center the button
-        with col2:
-            if st.button("Close", key=f"close_modal_{idx}"):
+        # Streamlit button for close functionality (hidden, triggered by form)
+        with st.form(key=f"close_form_{idx}"):
+            submitted = st.form_submit_button("Close", use_container_width=True)
+            if submitted:
                 st.session_state.selected_img_idx = None
                 st.rerun()
-
 # ------------------ ABOUT SECTION ------------------
 st.header("About")
 st.write(
@@ -204,5 +215,6 @@ st.write(
 # ------------------ CONTACT SECTION ------------------
 st.header("Contact")
 st.write("Email me at: [your.email@example.com](mailto:your.email@example.com)")
+
 
 
