@@ -68,7 +68,7 @@ def show_image_modal(idx):
         description = image_descriptions.get(idx, "No description available.")
         col_img, col_desc = st.columns(2)
         with col_img:
-            st.image(img_url, use_column_width=True)
+            st.image(img_url, use_container_width=True)
         with col_desc:
             st.subheader("Description")
             st.write(description)
@@ -129,3 +129,4 @@ st.write(
 # ------------------ CONTACT SECTION ------------------
 st.header("Contact")
 st.write("Email me at: [your.email@example.com](mailto:your.email@example.com)")
+
