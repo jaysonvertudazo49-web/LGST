@@ -24,17 +24,17 @@ repo_url = "https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/"
 max_images = 15
 possible_exts = ["jpg", "jpeg", "png"]
 
-# Descriptions for each image (edit these texts inline)
+# Descriptions for each image (edit inline as needed)
 image_descriptions = {
     0: "Pic 1 description: This is the description for picture 1.",
     1: "Pic 2 description: Description text can go here.",
     2: "Pic 3 description: Another placeholder description.",
     3: "Pic 4 description: Add your descriptions here.",
     4: "Pic 5 description: Customize as needed.",
-    # Add more descriptions as needed up to max_images
+    # Extend as needed up to max_images
 }
 
-# Determine which images exist using HEAD requests
+# Determine which images actually exist
 images = []
 for i in range(1, max_images + 1):
     for ext in possible_exts:
@@ -71,7 +71,7 @@ for idx, col in enumerate(img_cols):
     if idx < len(current_images):
         img_url = current_images[idx]
         absolute_idx = start_idx + idx
-        # Display image container with hover effect
+        # Image container with hover scale effect
         col.markdown(
             f"""
             <style>
@@ -104,23 +104,23 @@ for idx, col in enumerate(img_cols):
             """,
             unsafe_allow_html=True,
         )
-        # Add a "View" button to open popup modal
+        # View button to open modal popup
         if col.button("View", key=f"view_{absolute_idx}"):
             st.session_state.selected_img_idx = absolute_idx
     else:
         col.empty()
 
-# Display popup modal if an image is selected
+# Modal popup with full image and description
 if st.session_state.selected_img_idx is not None:
-    selected_idx = st.session_state.selected_img_idx
-    if 0 <= selected_idx < len(images):
-        selected_img_url = images[selected_idx]
-        selected_description = image_descriptions.get(selected_idx, "No description available.")
-        # Modal with side-by-side image and description
+    idx = st.session_state.selected_img_idx
+    if 0 <= idx < len(images):
+        img_url = images[idx]
+        description = image_descriptions.get(idx, "No description available.")
+        # Use st.markdown with z-index and fixed positioning to ensure modal appears on top
         st.markdown(
-            """
+            f"""
             <style>
-            .modal-overlay {
+            .modal-overlay {{
                 position: fixed;
                 top: 0; left: 0;
                 width: 100vw; height: 100vh;
@@ -128,9 +128,9 @@ if st.session_state.selected_img_idx is not None:
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                z-index: 10000;
-            }
-            .modal-content {
+                z-index: 9999999;
+            }}
+            .modal-content {{
                 background: white;
                 border-radius: 10px;
                 padding: 20px;
@@ -140,50 +140,50 @@ if st.session_state.selected_img_idx is not None:
                 display: flex;
                 gap: 20px;
                 align-items: center;
-            }
-            .modal-image {
+                box-shadow: 0 0 10px rgba(0,0,0,0.25);
+            }}
+            .modal-image {{
                 flex: 2;
                 max-height: 80vh;
                 overflow: hidden;
-            }
-            .modal-image img {
+            }}
+            .modal-image img {{
                 width: 100%;
                 height: auto;
                 border-radius: 8px;
-            }
-            .modal-description {
+            }}
+            .modal-description {{
                 flex: 1;
                 font-size: 1.1em;
                 color: #333;
-            }
-            .modal-close-btn {
+            }}
+            .modal-close-btn {{
                 margin-top: 15px;
-            }
+            }}
             </style>
-            <div class="modal-overlay">
+            <div class="modal-overlay" id="modalOverlay">
                 <div class="modal-content">
                     <div class="modal-image">
-            """,
-            unsafe_allow_html=True,
-        )
-        st.image(selected_img_url, use_column_width=True)
-        st.markdown(
-            f"""
+                        <img src="{img_url}" alt="Full image">
                     </div>
                     <div class="modal-description">
                         <h3>Description</h3>
-                        <p>{selected_description}</p>
-                        <button class="modal-close-btn" onclick="window.location.reload();">Close</button>
+                        <p>{description}</p>
+            """,
+            unsafe_allow_html=True,
+        )
+        # Use Streamlit components for the close button for reliable interaction
+        if st.button("Close"):
+            st.session_state.selected_img_idx = None
+            st.rerun()
+        st.markdown(
+            """
                     </div>
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        # Provide fallback close button in Streamlit for accessibility
-        if st.button("Close"):
-            st.session_state.selected_img_idx = None
-            st.rerun()
 
 # ------------------ ABOUT SECTION ------------------
 st.header("About")
