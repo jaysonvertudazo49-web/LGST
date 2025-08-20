@@ -41,6 +41,7 @@ images = st.session_state.images
 
 # Descriptions for each image
 image_descriptions = {i: f"Pic {i+1} description: Add your description here." for i in range(max_images)}
+image_descriptions = {i: f"Pic {2} description: Add your description here." for i in range(max_images)}
 
 if "page" not in st.session_state:
     st.session_state.page = 0
@@ -129,4 +130,5 @@ st.write(
 # ------------------ CONTACT SECTION ------------------
 st.header("Contact")
 st.write("Email me at: [your.email@example.com](mailto:your.email@example.com)")
+
 
