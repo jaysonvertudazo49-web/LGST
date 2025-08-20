@@ -116,7 +116,7 @@ if st.session_state.selected_img_idx is not None:
     if 0 <= idx < len(images):
         img_url = images[idx]
         description = image_descriptions.get(idx, "No description available.")
-        # Use st.markdown with z-index and fixed positioning to ensure modal appears on top
+        # Consolidated modal HTML with close button styled within
         st.markdown(
             f"""
             <style>
@@ -159,6 +159,16 @@ if st.session_state.selected_img_idx is not None:
             }}
             .modal-close-btn {{
                 margin-top: 15px;
+                padding: 10px 20px;
+                background-color: #800000;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1em;
+            }}
+            .modal-close-btn:hover {{
+                background-color: #a00000;
             }}
             </style>
             <div class="modal-overlay" id="modalOverlay">
@@ -169,21 +179,17 @@ if st.session_state.selected_img_idx is not None:
                     <div class="modal-description">
                         <h3>Description</h3>
                         <p>{description}</p>
-            """,
-            unsafe_allow_html=True,
-        )
-        # Use Streamlit components for the close button for reliable interaction
-        if st.button("Close"):
-            st.session_state.selected_img_idx = None
-            st.rerun()
-        st.markdown(
-            """
+                        <button class="modal-close-btn" onclick="this.disabled=true">Close</button>
                     </div>
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
+        # Streamlit button for actual close functionality
+        if st.button("Close", key=f"close_modal_{idx}"):
+            st.session_state.selected_img_idx = None
+            st.rerun()
 
 # ------------------ ABOUT SECTION ------------------
 st.header("About")
@@ -197,3 +203,4 @@ st.write(
 # ------------------ CONTACT SECTION ------------------
 st.header("Contact")
 st.write("Email me at: [your.email@example.com](mailto:your.email@example.com)")
+
