@@ -44,8 +44,6 @@ image_descriptions = {i: f"Pic {i+1} description: Add your description here." fo
 
 if "page" not in st.session_state:
     st.session_state.page = 0
-if "selected_img_idx" not in st.session_state:
-    st.session_state.selected_img_idx = None
 
 images_per_page = 3
 start_idx = st.session_state.page * images_per_page
@@ -101,120 +99,23 @@ for idx, col in enumerate(img_cols):
             unsafe_allow_html=True,
         )
         if col.button("View", key=f"view_{absolute_idx}"):
-            st.session_state.selected_img_idx = absolute_idx
+            show_image_modal(absolute_idx)
 
-# Modal popup with full image and description
-if st.session_state.selected_img_idx is not None:
-    idx = st.session_state.selected_img_idx
+# Define the modal dialog function
+@st.dialog("Image Details :camera:", width="large")
+def show_image_modal(idx):
     if 0 <= idx < len(images):
         img_url = images[idx]
         description = image_descriptions.get(idx, "No description available.")
-        st.markdown(
-            f"""
-            <style>
-            .modal-overlay {{
-                position: fixed;
-                top: 0; left: 0;
-                width: 100vw; height: 100vh;
-                background: rgba(0,0,0,0.7);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-            }}
-            .modal-content {{
-                background: white;
-                border-radius: 10px;
-                padding: 20px;
-                max-width: 90vw;
-                max-height: 90vh;
-                overflow-y: auto;
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                align-items: center;
-                box-shadow: 0 0 10px rgba(0,0,0,0.25);
-            }}
-            .modal-inner {{
-                display: flex;
-                flex-direction: row;
-                gap: 20px;
-                width: 100%;
-            }}
-            .modal-image {{
-                flex: 2;
-                max-height: 70vh;
-                overflow: hidden;
-            }}
-            .modal-image img {{
-                width: 100%;
-                height: auto;
-                border-radius: 8px;
-            }}
-            .modal-description {{
-                flex: 1;
-                font-size: 1.1em;
-                color: #333;
-            }}
-            .modal-close-btn-container {{
-                width: 100%;
-                text-align: center;
-            }}
-            @media (max-width: 768px) {{
-                .modal-inner {{
-                    flex-direction: column;
-                }}
-                .modal-image, .modal-description {{
-                    flex: 1;
-                    max-height: none;
-                }}
-            }}
-            </style>
-            <div class="modal-overlay" role="dialog" aria-labelledby="modalTitle">
-                <div class="modal-content">
-                    <div class="modal-inner">
-                        <div class="modal-image">
-                            <img src="{img_url}" alt="Full image">
-                        </div>
-                        <div class="modal-description">
-                            <h3 id="modalTitle">Description</h3>
-                            <p>{description}</p>
-                        </div>
-                    </div>
-                    <div class="modal-close-btn-container">
-                        <!-- Streamlit will replace this button -->
-                    </div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            """
-            <style>
-            .stButton>button {
-                background-color: #800000;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                padding: 10px 20px;
-                font-size: 1em;
-                cursor: pointer;
-            }
-            .stButton>button:hover {
-                background-color: #a00000;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-        with st.container():
-            if st.button("Close", key=f"close_{idx}", help="Close the modal"):
-                st.session_state.selected_img_idx = None
-                st.rerun()
-    else:
-        st.session_state.selected_img_idx = None
-        st.rerun()
+        col_img, col_desc = st.columns(2)
+        with col_img:
+            st.image(img_url, use_column_width=True)
+        with col_desc:
+            st.subheader("Description")
+            st.write(description)
+        # Explicit Close button (triggers rerun to close the modal)
+        if st.button("Close", key=f"close_modal_{idx}"):
+            st.rerun()
 
 # ------------------ ABOUT SECTION ------------------
 st.header("About")
