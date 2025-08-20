@@ -39,9 +39,25 @@ if "images" not in st.session_state:
 
 images = st.session_state.images
 
-# Descriptions for each image
-image_descriptions = {i: f"Pic {i+1} description: Add your description here." for i in range(max_images)}
-image_descriptions = {i: f"Pic {2} description: Add your description here." for i in range(max_images)}
+# Descriptions for each image (customize as needed)
+image_descriptions = {
+    0: "Pic 1: Vroom Vroom",
+    1: "Pic 2: yellow boys",
+    2: "Pic 3: blackshirts.",
+    3: "Pic 4: i love red",
+    4: "Pic 5: blue is my color",
+    5: "Pic 6: batelec 1",
+    6: "Pic 7: meralco",
+   # 7: "Pic 8: Stainless steel scraps for manufacturing.",
+   # 8: "Pic 9: Copper pipes cleaned and ready for reuse.",
+   # 9: "Pic 10: Assorted metal alloys for specialized applications.",
+   # 10: "Pic 11: Scrap aluminum sheets for construction projects.",
+   # 11: "Pic 12: High-grade steel beams for recycling.",
+   # 12: "Pic 13: Copper radiators in bulk quantities.",
+   # 13: "Pic 14: Mixed non-ferrous metals for sale.",
+   # 14: "Pic 15: Scrap metal sorted by type for easy processing."
+}
+
 
 if "page" not in st.session_state:
     st.session_state.page = 0
@@ -130,5 +146,6 @@ st.write(
 # ------------------ CONTACT SECTION ------------------
 st.header("Contact")
 st.write("Email me at: [your.email@example.com](mailto:your.email@example.com)")
+
 
 
