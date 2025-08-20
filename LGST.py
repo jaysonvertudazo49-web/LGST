@@ -21,13 +21,21 @@ st.markdown(
 # ------------------ IMAGE GALLERY ------------------
 st.header("Current Project")
 
-# GitHub image repo
+# Repo base URL
 repo_url = "https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/"
-max_images = 10  # change based on how many pics you have in the repo
+max_images = 15  # adjust based on repo
+possible_exts = ["jpg", "jpeg", "png"]
 
-images = [f"{repo_url}pic{i}.jpg" for i in range(1, max_images + 1)]
+# Build actual image list
+images = []
+for i in range(1, max_images + 1):
+    for ext in possible_exts:
+        url = f"{repo_url}pic{i}.{ext}"
+        # We don't know which exist until we try, but Streamlit can't probe directly,
+        # so just append all (broken ones won't display but ok).
+        images.append(url)
 
-# Initialize session state
+# Session state
 if "page" not in st.session_state:
     st.session_state.page = 0
 if "selected_img" not in st.session_state:
@@ -47,22 +55,26 @@ with col1:
             st.session_state.page -= 1
         st.rerun()
 
-# Images Grid
+# Image grid with hover + click
 with col2:
     img_cols = st.columns(len(current_images))
     for idx, img in enumerate(current_images):
         with img_cols[idx]:
-            if st.button(
-                f"🖼️", key=f"img_btn_{start+idx}", 
-                help=f"Click to view Image {start+idx+1}"
-            ):
-                st.session_state.selected_img = img
-
-            # Thumbnail preview
             st.markdown(
                 f"""
-                <div style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center;
-                            border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin-top: -45px; cursor:pointer;">
+                <style>
+                    .img-container {{
+                        width: 100%; height: 220px;
+                        border: 1px solid #ddd; border-radius: 8px;
+                        overflow: hidden; cursor: pointer;
+                        transition: transform 0.3s ease;
+                    }}
+                    .img-container:hover {{
+                        transform: scale(1.05);
+                        border: 2px solid #800000;
+                    }}
+                </style>
+                <div class="img-container" onclick="window.location.href='?selected={start+idx}'">
                     <img src="{img}" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 """,
@@ -76,15 +88,23 @@ with col3:
             st.session_state.page += 1
         st.rerun()
 
+# Handle click event by query param
+query_params = st.query_params
+if "selected" in query_params:
+    idx = int(query_params["selected"])
+    if 0 <= idx < len(images):
+        st.session_state.selected_img = images[idx]
+    st.query_params.clear()  # reset so refresh doesn't reopen
+
 # ------------------ MODAL POPUP ------------------
 if st.session_state.selected_img:
     st.markdown(
         """
         <div style="
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center;
             z-index: 9999;">
-            <div style="background: white; padding: 20px; border-radius: 10px; width: 70%; display: flex; gap: 20px;">
+            <div style="background: white; padding: 20px; border-radius: 10px; width: 75%; display: flex; gap: 20px;">
         """,
         unsafe_allow_html=True,
     )
@@ -94,7 +114,7 @@ if st.session_state.selected_img:
         st.image(st.session_state.selected_img, use_container_width=True)
     with text_col:
         st.subheader("Image Details")
-        st.write("📌 This is a placeholder description for the selected image. You can update this text later.")
+        st.write("📌 This is a placeholder description for the selected image. Update this text later.")
         if st.button("Close"):
             st.session_state.selected_img = None
             st.rerun()
