@@ -21,12 +21,12 @@ st.markdown(
 )
 
 # ==============================
-# Section 1: Current Project
+# Section 1: Current Project (Image Browser)
 # ==============================
 st.header("Current Project")
 
 # List of image URLs from GitHub repo
-max_images = 10  # adjust as needed
+max_images = 10  # adjust when adding more images
 image_urls = [
     f"https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/refs/heads/main/pic{i}.jpg"
     for i in range(1, max_images + 1)
@@ -35,38 +35,119 @@ image_urls = [
 # Session state for navigation
 if "start_index" not in st.session_state:
     st.session_state.start_index = 0
+if "selected_image" not in st.session_state:
+    st.session_state.selected_image = None
 
-images_per_page = 3  # how many images to show at once
+images_per_page = 3  # number of thumbnails per page
 
-# Navigation buttons
-col_nav1, col_nav2 = st.columns([1, 8])
-with col_nav1:
-    if st.button("⬅️ Prev") and st.session_state.start_index > 0:
-        st.session_state.start_index -= images_per_page
-with col_nav2:
-    if st.button("Next ➡️") and st.session_state.start_index + images_per_page < len(image_urls):
-        st.session_state.start_index += images_per_page
+# --- Custom CSS for gallery look ---
+st.markdown(
+    """
+    <style>
+    .gallery-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+    }
+    .thumbnail-container {
+        width: 250px;
+        height: 180px;
+        overflow: hidden;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f4f4f4;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .thumbnail-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .thumbnail-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .selected {
+        border: 5px solid #FFD700; /* gold border */
+    }
+    .arrow {
+        background-color: #800000;
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        font-size: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        position: absolute;
+        top: 40%;
+        z-index: 10;
+    }
+    .arrow:hover {
+        background-color: #a00000;
+    }
+    .arrow-left {
+        left: -60px;
+    }
+    .arrow-right {
+        right: -60px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
-# Show multiple images in a row
-cols = st.columns(images_per_page)
-selected_image = None
-for i, col in enumerate(cols):
-    idx = st.session_state.start_index + i
-    if idx < len(image_urls):
-        if col.button(f"Image {idx+1}", key=f"btn{idx}"):
-            selected_image = image_urls[idx]
-        col.image(image_urls[idx], use_container_width=True)
+# --- Navigation + Gallery ---
+col_gallery = st.container()
+with col_gallery:
+    st.markdown("<div class='gallery-container'>", unsafe_allow_html=True)
 
-# If an image was clicked, show it larger with details
-if selected_image:
+    # Prev button
+    if st.session_state.start_index > 0:
+        if st.button("⬅️", key="prev", help="Previous"):
+            st.session_state.start_index -= images_per_page
+
+    # Display thumbnails
+    cols = st.columns(images_per_page, gap="large")
+    for i, col in enumerate(cols):
+        idx = st.session_state.start_index + i
+        if idx < len(image_urls):
+            img_url = image_urls[idx]
+            is_selected = st.session_state.selected_image == img_url
+            css_class = "thumbnail-container"
+            if is_selected:
+                css_class += " selected"
+
+            if col.button(" ", key=f"imgbtn{idx}"):
+                st.session_state.selected_image = img_url
+
+            col.markdown(
+                f"<div class='{css_class}'><img src='{img_url}'></div>",
+                unsafe_allow_html=True,
+            )
+
+    # Next button
+    if st.session_state.start_index + images_per_page < len(image_urls):
+        if st.button("➡️", key="next", help="Next"):
+            st.session_state.start_index += images_per_page
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# --- Enlarged image with details ---
+if st.session_state.selected_image:
     st.markdown("---")
     c1, c2 = st.columns([2, 1])
     with c1:
-        st.image(selected_image, use_container_width=True)
+        st.image(st.session_state.selected_image, use_container_width=True, caption="Selected Image")
     with c2:
         st.subheader("Project Details")
-        st.write("📝 Placeholder text for this image.")
-        st.write("You can replace this with a description of the scrap material or project info.")
+        st.write("📝 Placeholder description for this image.")
+        st.write("Replace this with real scrap trading project details.")
+        st.info("Tip: Use this section to explain the type, quality, or source of the scrap.")
 
 # ==============================
 # Section 2: About
