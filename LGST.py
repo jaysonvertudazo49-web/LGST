@@ -60,6 +60,22 @@ with col3:
         st.session_state.page += 1
         st.rerun()
 
+# Define the modal dialog function before calling it
+@st.dialog("Image Details :camera:", width="large")
+def show_image_modal(idx):
+    if 0 <= idx < len(images):
+        img_url = images[idx]
+        description = image_descriptions.get(idx, "No description available.")
+        col_img, col_desc = st.columns(2)
+        with col_img:
+            st.image(img_url, use_column_width=True)
+        with col_desc:
+            st.subheader("Description")
+            st.write(description)
+        # Explicit Close button (triggers rerun to close the modal)
+        if st.button("Close", key=f"close_modal_{idx}"):
+            st.rerun()
+
 # Dynamic columns based on available images
 img_cols = st.columns(min(len(current_images), 3))
 for idx, col in enumerate(img_cols):
@@ -100,22 +116,6 @@ for idx, col in enumerate(img_cols):
         )
         if col.button("View", key=f"view_{absolute_idx}"):
             show_image_modal(absolute_idx)
-
-# Define the modal dialog function
-@st.dialog("Image Details :camera:", width="large")
-def show_image_modal(idx):
-    if 0 <= idx < len(images):
-        img_url = images[idx]
-        description = image_descriptions.get(idx, "No description available.")
-        col_img, col_desc = st.columns(2)
-        with col_img:
-            st.image(img_url, use_column_width=True)
-        with col_desc:
-            st.subheader("Description")
-            st.write(description)
-        # Explicit Close button (triggers rerun to close the modal)
-        if st.button("Close", key=f"close_modal_{idx}"):
-            st.rerun()
 
 # ------------------ ABOUT SECTION ------------------
 st.header("About")
