@@ -116,7 +116,7 @@ if st.session_state.selected_img_idx is not None:
     if 0 <= idx < len(images):
         img_url = images[idx]
         description = image_descriptions.get(idx, "No description available.")
-        # Modal with close button inside
+        # Modal with close button
         st.markdown(
             f"""
             <style>
@@ -189,20 +189,19 @@ if st.session_state.selected_img_idx is not None:
                             <p>{description}</p>
                         </div>
                     </div>
-                    <div>
-                        <button class="modal-close-btn">Close</button>
-                    </div>
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        # Streamlit button for close functionality (hidden, triggered by form)
-        with st.form(key=f"close_form_{idx}"):
-            submitted = st.form_submit_button("Close", use_container_width=True)
-            if submitted:
-                st.session_state.selected_img_idx = None
-                st.rerun()
+        # Streamlit close button
+        if st.button("Close", key=f"close_{idx}", help="Close the modal"):
+            st.session_state.selected_img_idx = None
+            st.rerun()
+
+
+
+
 # ------------------ ABOUT SECTION ------------------
 st.header("About")
 st.write(
@@ -215,6 +214,7 @@ st.write(
 # ------------------ CONTACT SECTION ------------------
 st.header("Contact")
 st.write("Email me at: [your.email@example.com](mailto:your.email@example.com)")
+
 
 
 
