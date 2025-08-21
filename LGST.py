@@ -77,10 +77,7 @@ with col1:
     st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
 with col2:
     st.markdown("<h1 style='text-align:center;'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
-with col3:
-    if st.button("Home", key="home_btn"):
-        st.session_state.page = "Home"
-        st.rerun()
+
 with col4:
     if st.button("About", key="about_btn"):
         st.session_state.page = "About"
@@ -227,3 +224,4 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
