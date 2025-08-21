@@ -242,10 +242,7 @@ for idx, col in enumerate(img_cols):
 st.header("About")
 st.write(
     """
-    Lucas Grey Scrap Trading is your trusted partner for sustainable scrap metal solutions. 
-    We specialize in sourcing, sorting, and supplying high-quality scrap materials for 
-    industrial and recycling purposes. Our mission is to promote eco-friendly practices 
-    while delivering exceptional value to our clients.
+    DETAILS HINGI AKO HAHAHA
     """
 )
 
@@ -263,6 +260,7 @@ with st.form(key="contact_form"):
             st.success(f"Thank you, {name}! Your message has been received. We'll get back to you at {email} soon.")
         else:
             st.error("Please fill out all fields.")
+
 
 
 
