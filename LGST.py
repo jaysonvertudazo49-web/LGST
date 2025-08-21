@@ -161,25 +161,25 @@ if st.session_state.page == "Home":
         if st.button("Next ➡️", disabled=end_idx >= len(filtered_images)):
             st.session_state.page_num += 1
             st.rerun()
-# Gallery
-st.subheader("Image Gallery")
-img_cols = st.columns(min(len(current_images), 3))
-for idx, col in enumerate(img_cols):
-    if idx < len(current_images):
-        img_url = current_images[idx]
-        absolute_idx = images.index(img_url)
-        caption = image_descriptions.get(absolute_idx, "No description")
-        col.markdown(
-            f"""
-            <div class="img-card">
-                <img src="{img_url}" alt="project image">
-                <div class="img-caption">{caption}</div>
-            </div>
-            """, unsafe_allow_html=True
-        )
-        if col.button("View Details", key=f"view_{absolute_idx}"):
-            st.image(img_url, caption=caption, width=400)  # <- set width to half size (adjust as needed)
 
+    # Gallery
+    st.subheader("Image Gallery")
+    img_cols = st.columns(min(len(current_images), 3))
+    for idx, col in enumerate(img_cols):
+        if idx < len(current_images):
+            img_url = current_images[idx]
+            absolute_idx = images.index(img_url)
+            caption = image_descriptions.get(absolute_idx, "No description")
+            col.markdown(
+                f"""
+                <div class="img-card">
+                    <img src="{img_url}" alt="project image">
+                    <div class="img-caption">{caption}</div>
+                </div>
+                """, unsafe_allow_html=True
+            )
+            if col.button("View Details", key=f"view_{absolute_idx}"):
+                st.image(img_url, caption=caption, use_container_width=True)
 
 # ------------------ ABOUT PAGE ------------------
 elif st.session_state.page == "About":
@@ -220,5 +220,3 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
-
-
