@@ -58,8 +58,8 @@ body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin:0; pa
     border: 2px solid #800000;
 }
 .img-card img {
-    width: 100%;
-    height: 200px;
+    width: 50%;
+    height: 100px;
     object-fit: contain;
     border-radius: 8px;
 }
@@ -220,3 +220,4 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
