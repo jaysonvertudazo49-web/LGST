@@ -241,6 +241,9 @@ elif st.session_state.page == "About":
         - Partnerships for industrial recycling
         """
     )
+    if st.button("⬅️ Back to Home"):
+        st.session_state.page = "Home"
+        st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -263,3 +266,6 @@ elif st.session_state.page == "Contact":
         © 2025 Lucas Grey Scrap Trading. All rights reserved.
         """
     )
+    if st.button("⬅️ Back to Home"):
+        st.session_state.page = "Home"
+        st.rerun()
