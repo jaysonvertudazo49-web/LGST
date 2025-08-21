@@ -37,7 +37,7 @@ st.markdown(
     .stButton>button {
         background: none;
         border: none;
-        color: #800000;
+        color: #000000;
         font-size: 1.1em;
         font-weight: bold;
         cursor: pointer;
@@ -258,3 +258,4 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
