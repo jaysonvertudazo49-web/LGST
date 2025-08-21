@@ -17,7 +17,6 @@ body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin:0; pa
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 .header-title { 
@@ -29,20 +28,6 @@ body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin:0; pa
     color: black; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
-.nav-buttons {
-    display: flex;
-    gap: 15px;
-}
-.nav-buttons button {
-    background: #800000;
-    color: #000;
-    font-weight: bold;
-    border-radius: 8px;
-    padding: 5px 15px;
-    border: none;
-    cursor: pointer;
-}
-.nav-buttons button:hover { text-decoration: underline; background: #ffffff; }
 
 /* Gallery */
 .img-card {
@@ -87,21 +72,28 @@ if "view_image" not in st.session_state:
     st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
-st.markdown("""
-<div class="header-container">
-    <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
-    <div class="header-title"><h1>LUCAS GREY SCRAP TRADING</h1></div>
-    <div class="nav-buttons">
-        <button onclick="window.location.href='?page=Home'">Home</button>
-        <button onclick="window.location.href='?page=About'">About</button>
-        <button onclick="window.location.href='?page=Contact'">Contact Us</button>
-    </div>
-</div>
-<hr>
-""", unsafe_allow_html=True)
+col1, col2, col3, col4, col5 = st.columns([2, 4, 1, 1, 1])
+with col1:
+    st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
+with col2:
+    st.markdown("<h1 style='text-align:center;'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
+with col3:
+    if st.button("Home", key="home_btn"):
+        st.session_state.page = "Home"
+        st.rerun()
+with col4:
+    if st.button("About", key="about_btn"):
+        st.session_state.page = "About"
+        st.rerun()
+with col5:
+    if st.button("Contact Us", key="contact_btn"):
+        st.session_state.page = "Contact"
+        st.rerun()
+
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # ------------------ NAVBAR HANDLING ------------------
-query_params = st.experimental_get_query_params()
+query_params = st.query_params
 if "page" in query_params:
     st.session_state.page = query_params["page"][0]
 
