@@ -4,27 +4,103 @@ import requests
 st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 
 # ------------------ CSS ------------------
-st.markdown(
-    """
-    <style>
-    body { font-family: 'Arial', sans-serif'; background-color: #f4f4f4; }
-    .header-container { background: linear-gradient(90deg, #800000, #ffffff); padding: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); display: flex; justify-content: space-between; align-items: center; }
-    .header-container h1 { color: black; font-size: 2.5em; text-align: center; flex: 1; margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
-    .header-container img { height: 70px; margin-left: 20px; }
-    .nav-bar { display: flex; justify-content: flex-end; gap: 20px; align-items: center; }
-    .nav-bar button { font-weight: bold; color: black; font-size: 1.1em; background: none; border: none; cursor: pointer; }
-    .nav-bar button.active { color: #800000; text-decoration: underline; }
-    .nav-bar button:hover { color: #800000; }
-    .img-card { background: white; border-radius: 10px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .img-card:hover { transform: translateY(-5px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid #800000; }
-    .img-card img { width: 100%; height: 200px; object-fit: contain; border-radius: 8px; }
-    .img-caption { text-align: center; font-size: 0.9em; color: #333; margin-top: 8px; }
-    .stTextInput input { border: 2px solid #800000; border-radius: 8px; padding: 8px; }
-    h2 { color: #800000; font-size: 1.8em; margin-top: 20px; border-bottom: 2px solid #800000; padding-bottom: 5px; }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown("""
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Header */
+.header-container {
+    background: linear-gradient(90deg, #800000, #ffffff);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header-container h1 {
+    color: black;
+    font-size: 2.5em;
+    text-align: center;
+    flex: 1;
+    margin: 0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+.header-container img {
+    height: 70px;
+    margin-left: 20px;
+}
+
+/* Nav bar */
+.nav-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    align-items: center;
+}
+.nav-bar button {
+    font-weight: bold;
+    color: black;
+    font-size: 1.1em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+.nav-bar button.active {
+    color: #800000;
+    text-decoration: underline;
+}
+.nav-bar button:hover {
+    color: #800000;
+}
+
+/* Gallery */
+.img-card {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.img-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border: 2px solid #800000;
+}
+.img-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+.img-caption {
+    text-align: center;
+    font-size: 0.9em;
+    color: #333;
+    margin-top: 8px;
+}
+
+/* Search bar */
+.stTextInput input {
+    border: 2px solid #800000;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+/* Section headers */
+h2 {
+    color: #800000;
+    font-size: 1.8em;
+    margin-top: 20px;
+    border-bottom: 2px solid #800000;
+    padding-bottom: 5px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ------------------ SESSION STATE ------------------
 if "page" not in st.session_state:
@@ -33,7 +109,7 @@ if "page_num" not in st.session_state:
     st.session_state.page_num = 0
 
 # ------------------ HEADER ------------------
-col1, col2, col3 = st.columns([2, 6, 4])
+col1, col2, col3 = st.columns([2,6,4])
 with col1:
     st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
 with col2:
@@ -44,7 +120,7 @@ with col3:
         active = "active" if st.session_state.page == item else ""
         if st.button(item, key=item):
             st.session_state.page = item
-            st.session_state.page_num = 0  # Reset pagination for Home
+            st.session_state.page_num = 0
             st.experimental_rerun()
 
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -58,7 +134,7 @@ if st.session_state.page == "Home":
     if "images" not in st.session_state:
         st.session_state.images = []
         with st.spinner("Loading images..."):
-            for i in range(1, max_images + 1):
+            for i in range(1, max_images+1):
                 for ext in possible_exts:
                     url = f"{repo_url}pic{i}.{ext}"
                     try:
@@ -88,38 +164,38 @@ if st.session_state.page == "Home":
     }
 
     st.subheader("Search Images")
-    search_query = st.text_input("Enter keywords to filter images (e.g., 'copper' or 'steel')", "")
+    search_query = st.text_input("Enter keywords to filter images", "")
     filtered_images = images
     if search_query:
         filtered_images = [
-            img for idx, img in enumerate(images)
-            if search_query.lower() in image_descriptions.get(idx, "").lower()
+            img for idx,img in enumerate(images)
+            if search_query.lower() in image_descriptions.get(idx,"").lower()
         ]
 
     images_per_page = 3
     start_idx = st.session_state.page_num * images_per_page
     end_idx = start_idx + images_per_page
     current_images = filtered_images[start_idx:end_idx]
-    total_pages = (len(filtered_images) + images_per_page - 1) // images_per_page
+    total_pages = (len(filtered_images) + images_per_page - 1)//images_per_page
 
     st.markdown(f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 10, 1])
+    col1, col2, col3 = st.columns([1,10,1])
     with col1:
-        if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
-            st.session_state.page_num -= 1
+        if st.button("⬅️ Back", disabled=st.session_state.page_num==0):
+            st.session_state.page_num -=1
             st.experimental_rerun()
     with col3:
-        if st.button("Next ➡️", disabled=end_idx >= len(filtered_images)):
-            st.session_state.page_num += 1
+        if st.button("Next ➡️", disabled=end_idx>=len(filtered_images)):
+            st.session_state.page_num +=1
             st.experimental_rerun()
 
     st.subheader("Image Gallery")
-    img_cols = st.columns(min(len(current_images), 3))
-    for idx, col in enumerate(img_cols):
+    img_cols = st.columns(min(len(current_images),3))
+    for idx,col in enumerate(img_cols):
         if idx < len(current_images):
             img_url = current_images[idx]
             absolute_idx = images.index(img_url)
-            caption = image_descriptions.get(absolute_idx, "No description")
+            caption = image_descriptions.get(absolute_idx,"No description")
             col.markdown(f"""
                 <div class="img-card">
                     <img src="{img_url}" alt="project image">
@@ -135,10 +211,10 @@ elif st.session_state.page == "About":
         Lucas Grey Scrap Trading is dedicated to providing sustainable and 
         cost-effective scrap trading services. We specialize in recycling metals such 
         as copper, aluminum, and steel to support both small-scale and industrial clients.
-        
+
         Our mission is to promote eco-friendly recycling solutions while delivering 
         reliable services to our customers. 
-        
+
         **Services Offered:**
         - Scrap metal collection
         - Sorting and processing
@@ -161,10 +237,8 @@ elif st.session_state.page == "Contact Us":
             else:
                 st.error("Please fill out all fields.")
 
-    st.markdown(
-        """
-        📧 Email: **charlottevazquez78@gmail.com**  
-        📍 Address: Blk-5 Lot-7 Sta. Fe st. Amlac Ville Payatas B, Quezon City  
-        © 2025 Lucas Grey Scrap Trading. All rights reserved.
-        """
-    )
+    st.markdown("""
+    📧 Email: **charlottevazquez78@gmail.com**  
+    📍 Address: Blk-5 Lot-7 Sta. Fe st. Amlac Ville Payatas B, Quezon City  
+    © 2025 Lucas Grey Scrap Trading. All rights reserved.
+    """)
