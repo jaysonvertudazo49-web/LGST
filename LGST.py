@@ -114,24 +114,19 @@ with col3:
     nav_html = "<div class='nav-bar'>"
     for name, page in nav_items.items():
         active_class = "active" if st.session_state.page == page else ""
-        nav_html += f"<button class='{active_class}' onclick=\"window.location.reload();\">{name}</button>"
+        # Buttons now call JS -> Streamlit session state
+        nav_html += f"""
+        <form action="" method="get">
+            <button name="nav" value="{page}" class="{active_class}">{name}</button>
+        </form>
+        """
     nav_html += "</div>"
     st.markdown(nav_html, unsafe_allow_html=True)
 
-    # Fake buttons with Streamlit to trigger state change
-    nav1, nav2, nav3 = st.columns(3)
-    with nav1:
-        if st.button("Home", key="nav_home"):
-            st.session_state.page = "Home"
-            st.rerun()
-    with nav2:
-        if st.button("About", key="nav_about"):
-            st.session_state.page = "About"
-            st.rerun()
-    with nav3:
-        if st.button("Contact Us", key="nav_contact"):
-            st.session_state.page = "Contact"
-            st.rerun()
+# Handle navigation from GET param
+nav_selection = st.experimental_get_query_params().get("nav", [None])[0]
+if nav_selection:
+    st.session_state.page = nav_selection
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
