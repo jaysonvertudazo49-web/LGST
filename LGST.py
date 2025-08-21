@@ -62,6 +62,7 @@ body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin:0; pa
     height: 200px;
     object-fit: contain;
     border-radius: 8px;
+    cursor: pointer;
 }
 .img-caption { text-align: center; font-size: 0.9em; color: #333; margin-top: 8px; }
 
@@ -162,6 +163,13 @@ if st.session_state.page == "Home":
             st.session_state.page_num += 1
             st.rerun()
 
+    # Function to show image in modal
+    def show_modal(idx):
+        if 0 <= idx < len(images):
+            with st.dialog(f"Image Details: {idx+1}", width="large"):
+                st.image(images[idx], caption=image_descriptions.get(idx, "No description"), width=700)
+                st.markdown(image_descriptions.get(idx, "No description"))
+
     # Gallery
     st.subheader("Image Gallery")
     img_cols = st.columns(min(len(current_images), 3))
@@ -179,7 +187,7 @@ if st.session_state.page == "Home":
                 """, unsafe_allow_html=True
             )
             if col.button("View Details", key=f"view_{absolute_idx}"):
-                st.image(img_url, caption=caption, width=400)  # <- half size image
+                show_modal(absolute_idx)
 
 # ------------------ ABOUT PAGE ------------------
 elif st.session_state.page == "About":
