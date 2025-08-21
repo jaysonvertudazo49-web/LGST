@@ -7,99 +7,30 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 st.markdown(
     """
     <style>
-    body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f4f4f4;
-    }
-    /* Header */
-    .header-container {
-        background: linear-gradient(90deg, #800000, #ffffff);
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .header-container h1 {
-        color: black;
-        font-size: 2.5em;
-        text-align: center;
-        flex: 1;
-        margin: 0;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-    .header-container img {
-        height: 70px;
-        margin-left: 20px;
-    }
-    /* Nav bar */
-    .nav-bar {
-        display: flex;
-        justify-content: flex-end;
-        gap: 20px;
-        align-items: center;
-    }
-    .nav-bar a {
-        font-weight: bold;
-        color: black;
-        font-size: 1.1em;
-        text-decoration: none;
-    }
-    .nav-bar a.active {
-        color: #800000;
-        text-decoration: underline;
-    }
-    .nav-bar a:hover {
-        color: #800000;
-    }
-    /* Gallery */
-    .img-card {
-        background: white;
-        border-radius: 10px;
-        padding: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .img-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        border: 2px solid #800000;
-    }
-    .img-card img {
-        width: 100%;
-        height: 200px;
-        object-fit: contain;
-        border-radius: 8px;
-    }
-    .img-caption {
-        text-align: center;
-        font-size: 0.9em;
-        color: #333;
-        margin-top: 8px;
-    }
-    /* Search bar */
-    .stTextInput input {
-        border: 2px solid #800000;
-        border-radius: 8px;
-        padding: 8px;
-    }
-    /* Section headers */
-    h2 {
-        color: #800000;
-        font-size: 1.8em;
-        margin-top: 20px;
-        border-bottom: 2px solid #800000;
-        padding-bottom: 5px;
-    }
+    body { font-family: 'Arial', sans-serif'; background-color: #f4f4f4; }
+    .header-container { background: linear-gradient(90deg, #800000, #ffffff); padding: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); display: flex; justify-content: space-between; align-items: center; }
+    .header-container h1 { color: black; font-size: 2.5em; text-align: center; flex: 1; margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+    .header-container img { height: 70px; margin-left: 20px; }
+    .nav-bar { display: flex; justify-content: flex-end; gap: 20px; align-items: center; }
+    .nav-bar button { font-weight: bold; color: black; font-size: 1.1em; background: none; border: none; cursor: pointer; }
+    .nav-bar button.active { color: #800000; text-decoration: underline; }
+    .nav-bar button:hover { color: #800000; }
+    .img-card { background: white; border-radius: 10px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .img-card:hover { transform: translateY(-5px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid #800000; }
+    .img-card img { width: 100%; height: 200px; object-fit: contain; border-radius: 8px; }
+    .img-caption { text-align: center; font-size: 0.9em; color: #333; margin-top: 8px; }
+    .stTextInput input { border: 2px solid #800000; border-radius: 8px; padding: 8px; }
+    h2 { color: #800000; font-size: 1.8em; margin-top: 20px; border-bottom: 2px solid #800000; padding-bottom: 5px; }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# ------------------ SESSION STATE (Navigation) ------------------
+# ------------------ SESSION STATE ------------------
 if "page" not in st.session_state:
     st.session_state.page = "Home"
+if "page_num" not in st.session_state:
+    st.session_state.page_num = 0
 
 # ------------------ HEADER ------------------
 col1, col2, col3 = st.columns([2, 6, 4])
@@ -108,18 +39,13 @@ with col1:
 with col2:
     st.markdown("<h1 style='text-align:center;'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
 with col3:
-    nav_items = {"Home": "Home", "About": "About", "Contact Us": "Contact"}
-    nav_html = "<div class='nav-bar'>"
-    for name, page in nav_items.items():
-        active_class = "active" if st.session_state.page == page else ""
-        nav_html += f"<a href='/?page={page}' class='{active_class}'>{name}</a>"
-    nav_html += "</div>"
-    st.markdown(nav_html, unsafe_allow_html=True)
-
-# Update session state from query params
-params = st.experimental_get_query_params()
-if "page" in params:
-    st.session_state.page = params["page"][0]
+    nav_items = ["Home", "About", "Contact Us"]
+    for item in nav_items:
+        active = "active" if st.session_state.page == item else ""
+        if st.button(item, key=item):
+            st.session_state.page = item
+            st.session_state.page_num = 0  # Reset pagination for Home
+            st.experimental_rerun()
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -170,8 +96,6 @@ if st.session_state.page == "Home":
             if search_query.lower() in image_descriptions.get(idx, "").lower()
         ]
 
-    if "page_num" not in st.session_state:
-        st.session_state.page_num = 0
     images_per_page = 3
     start_idx = st.session_state.page_num * images_per_page
     end_idx = start_idx + images_per_page
@@ -183,25 +107,11 @@ if st.session_state.page == "Home":
     with col1:
         if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
             st.session_state.page_num -= 1
-            st.rerun()
+            st.experimental_rerun()
     with col3:
         if st.button("Next ➡️", disabled=end_idx >= len(filtered_images)):
             st.session_state.page_num += 1
-            st.rerun()
-
-    @st.dialog("Image Details :camera:", width="large")
-    def show_image_modal(idx):
-        if 0 <= idx < len(images):
-            img_url = images[idx]
-            description = image_descriptions.get(idx, "No description available.")
-            col_img, col_desc = st.columns([2, 1])
-            with col_img:
-                st.image(img_url, use_container_width=True)
-            with col_desc:
-                st.subheader("Description")
-                st.write(description)
-            if st.button("Close", key=f"close_modal_{idx}"):
-                st.rerun()
+            st.experimental_rerun()
 
     st.subheader("Image Gallery")
     img_cols = st.columns(min(len(current_images), 3))
@@ -210,17 +120,12 @@ if st.session_state.page == "Home":
             img_url = current_images[idx]
             absolute_idx = images.index(img_url)
             caption = image_descriptions.get(absolute_idx, "No description")
-            col.markdown(
-                f"""
+            col.markdown(f"""
                 <div class="img-card">
                     <img src="{img_url}" alt="project image">
                     <div class="img-caption">{caption}</div>
                 </div>
-                """,
-                unsafe_allow_html=True,
-            )
-            if col.button("View Details", key=f"view_{absolute_idx}"):
-                show_image_modal(absolute_idx)
+            """, unsafe_allow_html=True)
 
 # ------------------ ABOUT PAGE ------------------
 elif st.session_state.page == "About":
@@ -241,12 +146,9 @@ elif st.session_state.page == "About":
         - Partnerships for industrial recycling
         """
     )
-    if st.button("⬅️ Back to Home"):
-        st.session_state.page = "Home"
-        st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
-elif st.session_state.page == "Contact":
+elif st.session_state.page == "Contact Us":
     st.header("Contact Us")
     with st.form(key="contact_form"):
         name = st.text_input("Name", placeholder="Enter your full name")
@@ -266,6 +168,3 @@ elif st.session_state.page == "Contact":
         © 2025 Lucas Grey Scrap Trading. All rights reserved.
         """
     )
-    if st.button("⬅️ Back to Home"):
-        st.session_state.page = "Home"
-        st.rerun()
