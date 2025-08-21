@@ -13,7 +13,7 @@ st.markdown(
     }
     /* Header */
     .header-container {
-        background: linear-gradient(90deg, #800000, #ffffff);
+        background: #800000;
         padding: 20px;
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -258,5 +258,6 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
 
 
