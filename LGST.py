@@ -92,9 +92,23 @@ st.markdown("""
     <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
     <div class="header-title"><h1>LUCAS GREY SCRAP TRADING</h1></div>
     <div class="nav-buttons">
-        <button onclick="window.location.href='?page=Home'">Home</button>
-        <button onclick="window.location.href='?page=About'">About</button>
-        <button onclick="window.location.href='?page=Contact'">Contact Us</button>
+col1, col2, col3, col4, col5 = st.columns([2, 3, 1, 1, 1])
+with col1:
+    st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
+with col2:
+    st.markdown("<h1 style='text-align:center;'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
+with col3:
+    if st.button("Home", key="home_btn"):
+        st.session_state.page = "Home"
+        st.rerun()
+with col4:
+    if st.button("About", key="about_btn"):
+        st.session_state.page = "About"
+        st.rerun()
+with col5:
+    if st.button("Contact Us", key="contact_btn"):
+        st.session_state.page = "Contact"
+        st.rerun()
     </div>
 </div>
 <hr>
@@ -235,3 +249,4 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
