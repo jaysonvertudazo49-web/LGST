@@ -45,6 +45,79 @@ st.markdown(
     .about-link button:hover {
         text-decoration: underline;
     }
+    /* Gallery */
+    .img-card {
+        background: white;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .img-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        border: 2px solid #800000;
+    }
+    .img-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+    .img-caption {
+        text-align: center;
+        font-size: 0.9em;
+        color: #333;
+        margin-top: 8px;
+    }
+    /* Buttons */
+    .stButton>button {
+        background-color: #800000;
+        color: white;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 1em;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+    .stButton>button:hover {
+        background-color: #a00000;
+    }
+    /* Search bar */
+    .stTextInput input {
+        border: 2px solid #800000;
+        border-radius: 8px;
+        padding: 8px;
+    }
+    /* Section headers */
+    h2 {
+        color: #800000;
+        font-size: 1.8em;
+        margin-top: 20px;
+        border-bottom: 2px solid #800000;
+        padding-bottom: 5px;
+    }
+    /* Contact form */
+    .stTextInput label, .stTextArea label {
+        color: #800000;
+        font-weight: bold;
+    }
+    /* Footer */
+    .footer {
+        background: linear-gradient(90deg, #800000, #a00000);
+        color: white;
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+        border-radius: 12px 12px 0 0;
+    }
+    .footer h2 {
+        color: white;
+        margin-bottom: 10px;
+    }
+    .footer p {
+        margin: 5px 0;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -68,12 +141,12 @@ st.markdown("<hr>", unsafe_allow_html=True)
 
 # ------------------ HOME PAGE ------------------
 if st.session_state.page == "Home":
-    st.subheader("Search Images")
-
+    # Repo base URL
     repo_url = "https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/"
     max_images = 15
     possible_exts = ["jpg", "jpeg", "png"]
 
+    # Cache images in session state
     if "images" not in st.session_state:
         st.session_state.images = []
         with st.spinner("Loading images..."):
@@ -88,6 +161,8 @@ if st.session_state.page == "Home":
                         pass
 
     images = st.session_state.images
+
+    # Descriptions
     image_descriptions = {
         0: "Pic 1: Vroom Vroom",
         1: "Pic 2: Yellow boys",
@@ -106,6 +181,8 @@ if st.session_state.page == "Home":
         14: "Pic 15: Scrap metal sorted by type for easy processing"
     }
 
+    # Search
+    st.subheader("Search Images")
     search_query = st.text_input("Enter keywords to filter images (e.g., 'copper' or 'steel')", "")
     filtered_images = images
     if search_query:
@@ -114,17 +191,16 @@ if st.session_state.page == "Home":
             if search_query.lower() in image_descriptions.get(idx, "").lower()
         ]
 
+    # Pagination
     if "page_num" not in st.session_state:
         st.session_state.page_num = 0
-
     images_per_page = 3
     start_idx = st.session_state.page_num * images_per_page
     end_idx = start_idx + images_per_page
     current_images = filtered_images[start_idx:end_idx]
-
     total_pages = (len(filtered_images) + images_per_page - 1) // images_per_page
-    st.markdown(f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>", unsafe_allow_html=True)
 
+    st.markdown(f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 10, 1])
     with col1:
         if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
@@ -135,6 +211,22 @@ if st.session_state.page == "Home":
             st.session_state.page_num += 1
             st.rerun()
 
+    # Modal
+    @st.dialog("Image Details :camera:", width="large")
+    def show_image_modal(idx):
+        if 0 <= idx < len(images):
+            img_url = images[idx]
+            description = image_descriptions.get(idx, "No description available.")
+            col_img, col_desc = st.columns([2, 1])
+            with col_img:
+                st.image(img_url, use_container_width=True)
+            with col_desc:
+                st.subheader("Description")
+                st.write(description)
+            if st.button("Close", key=f"close_modal_{idx}"):
+                st.rerun()
+
+    # Gallery
     st.subheader("Image Gallery")
     img_cols = st.columns(min(len(current_images), 3))
     for idx, col in enumerate(img_cols):
@@ -142,7 +234,39 @@ if st.session_state.page == "Home":
             img_url = current_images[idx]
             absolute_idx = images.index(img_url)
             caption = image_descriptions.get(absolute_idx, "No description")
-            col.image(img_url, caption=caption, use_container_width=True)
+            col.markdown(
+                f"""
+                <div class="img-card">
+                    <img src="{img_url}" alt="project image">
+                    <div class="img-caption">{caption}</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            if col.button("View Details", key=f"view_{absolute_idx}"):
+                show_image_modal(absolute_idx)
+
+    # Footer / Contact
+    st.markdown('<div class="footer"><h2>Contact Us</h2>', unsafe_allow_html=True)
+    with st.form(key="contact_form"):
+        name = st.text_input("Name", placeholder="Enter your full name")
+        email = st.text_input("Email", placeholder="Enter your email address")
+        message = st.text_area("Message", placeholder="Your inquiry or message")
+        submit_button = st.form_submit_button("Send Message")
+        if submit_button:
+            if name and email and message:
+                st.success(f"Thank you, {name}! Your message has been received. We'll get back to you at {email} soon.")
+            else:
+                st.error("Please fill out all fields.")
+    st.markdown(
+        """
+        <p>📧 Email: charlottevazquez78@gmail.com</p>
+        <p>📍 Address: Blk-5 Lot-7 Sta. Fe st. Amlac Ville Payatas B, Quezon City</p>
+        <p>&copy; 2025 Lucas Grey Scrap Trading. All rights reserved.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # ------------------ ABOUT PAGE ------------------
 elif st.session_state.page == "About":
