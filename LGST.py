@@ -40,19 +40,17 @@ st.markdown(
         gap: 20px;
         align-items: center;
     }
-    .nav-bar button {
-        background: none;
-        border: none;
+    .nav-bar a {
         font-weight: bold;
         color: black;
         font-size: 1.1em;
-        cursor: pointer;
+        text-decoration: none;
     }
-    .nav-bar button.active {
+    .nav-bar a.active {
         color: #800000;
         text-decoration: underline;
     }
-    .nav-bar button:hover {
+    .nav-bar a:hover {
         color: #800000;
     }
     /* Gallery */
@@ -114,19 +112,14 @@ with col3:
     nav_html = "<div class='nav-bar'>"
     for name, page in nav_items.items():
         active_class = "active" if st.session_state.page == page else ""
-        # Buttons now call JS -> Streamlit session state
-        nav_html += f"""
-        <form action="" method="get">
-            <button name="nav" value="{page}" class="{active_class}">{name}</button>
-        </form>
-        """
+        nav_html += f"<a href='/?page={page}' class='{active_class}'>{name}</a>"
     nav_html += "</div>"
     st.markdown(nav_html, unsafe_allow_html=True)
 
-# Handle navigation from GET param
-nav_selection = st.experimental_get_query_params().get("nav", [None])[0]
-if nav_selection:
-    st.session_state.page = nav_selection
+# Update session state from query params
+params = st.experimental_get_query_params()
+if "page" in params:
+    st.session_state.page = params["page"][0]
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
