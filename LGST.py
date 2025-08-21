@@ -63,7 +63,11 @@ body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin:0; pa
     object-fit: contain;
     border-radius: 8px;
 }
-.img-caption { text-align: center; font-size: 0.9em; color: #333; margin-top: 8px; }
+.img-caption {
+    font-size: 1em;
+    color: #333;
+    margin-left: 20px;
+}
 
 /* Search bar */
 .stTextInput input {
@@ -84,6 +88,8 @@ if "images" not in st.session_state:
     st.session_state.images = []
 if "page_num" not in st.session_state:
     st.session_state.page_num = 0
+if "view_image" not in st.session_state:
+    st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
 col1, col2, col3 = st.columns([2, 6, 2])
@@ -174,12 +180,26 @@ if st.session_state.page == "Home":
                 f"""
                 <div class="img-card">
                     <img src="{img_url}" alt="project image">
-                    <div class="img-caption">{caption}</div>
                 </div>
                 """, unsafe_allow_html=True
             )
             if col.button("View Details", key=f"view_{absolute_idx}"):
-                st.image(img_url, caption=caption, width=700)  # <- width updated to 700px
+                st.session_state.view_image = absolute_idx
+                st.rerun()
+
+    # View Details Modal
+    if st.session_state.view_image is not None:
+        idx = st.session_state.view_image
+        img_url = images[idx]
+        caption = image_descriptions.get(idx, "No description")
+        col_img, col_caption = st.columns([2, 1])
+        with col_img:
+            st.image(img_url, width=700)
+        with col_caption:
+            st.markdown(f"**{caption}**")
+            if st.button("Close", key=f"close_{idx}"):
+                st.session_state.view_image = None
+                st.rerun()
 
 # ------------------ ABOUT PAGE ------------------
 elif st.session_state.page == "About":
