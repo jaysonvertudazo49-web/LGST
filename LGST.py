@@ -78,6 +78,34 @@ body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin:0; pa
 
 /* Section headers */
 h2 { color: #800000; font-size: 1.8em; margin-top: 20px; border-bottom: 2px solid #800000; padding-bottom: 5px; }
+
+/* Modal Overlay */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    gap: 20px;
+    max-width: 90%;
+    max-height: 90%;
+}
+.modal-content img {
+    max-width: 700px;
+    max-height: 80vh;
+    object-fit: contain;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -131,7 +159,7 @@ if st.session_state.page == "Home":
 
     images = st.session_state.images
     image_descriptions = {
-        0: "dmsiamdioj jiocjijciojsocjoeckokesdbasbdhfnisno jucuiehicjeijcijeocj jfcieicisjciejocjosjco cfescjmsosjicjmsocjms cejcjesoicjosjcko", 1: "Pic 2: Yellow boys", 2: "Pic 3: Blackshirts",
+        0: "Pic 1: Vroom Vroom", 1: "Pic 2: Yellow boys", 2: "Pic 3: Blackshirts",
         3: "Pic 4: I love red", 4: "Pic 5: Blue is my color", 5: "Pic 6: Batelec 1",
         6: "Pic 7: Meralco", 7: "Pic 8: Stainless steel scraps for manufacturing",
         8: "Pic 9: Copper pipes cleaned and ready for reuse",
@@ -175,7 +203,6 @@ if st.session_state.page == "Home":
         if idx < len(current_images):
             img_url = current_images[idx]
             absolute_idx = images.index(img_url)
-            caption = image_descriptions.get(absolute_idx, "No description")
             col.markdown(
                 f"""
                 <div class="img-card">
@@ -187,11 +214,13 @@ if st.session_state.page == "Home":
                 st.session_state.view_image = absolute_idx
                 st.rerun()
 
-    # View Details Modal
+    # Modal-style View Details
     if st.session_state.view_image is not None:
         idx = st.session_state.view_image
         img_url = images[idx]
         caption = image_descriptions.get(idx, "No description")
+
+        st.markdown('<div class="modal">', unsafe_allow_html=True)
         col_img, col_caption = st.columns([2, 1])
         with col_img:
             st.image(img_url, width=700)
@@ -200,6 +229,7 @@ if st.session_state.page == "Home":
             if st.button("Close", key=f"close_{idx}"):
                 st.session_state.view_image = None
                 st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # ------------------ ABOUT PAGE ------------------
 elif st.session_state.page == "About":
@@ -240,5 +270,3 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
-
-
