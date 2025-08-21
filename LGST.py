@@ -35,59 +35,19 @@ st.markdown(
     .header-container img {
         height: 70px;
     }
-    .nav-right {
+    /* Nav links */
+    .nav-links {
         display: flex;
-        gap: 10px;
+        gap: 20px;
     }
-    .stButton>button {
-        background-color: #800000;
-        color: white;
-        border: none;
-        padding: 6px 14px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 0.9em;
+    .nav-links a {
+        color: black;
+        font-size: 1.1em;
+        text-decoration: none;
+        font-weight: bold;
     }
-    .stButton>button:hover {
-        background-color: #a00000;
-    }
-    /* Gallery */
-    .img-card {
-        background: white;
-        border-radius: 10px;
-        padding: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .img-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        border: 2px solid #800000;
-    }
-    .img-card img {
-        width: 100%;
-        height: 200px;
-        object-fit: contain;
-        border-radius: 8px;
-    }
-    .img-caption {
-        text-align: center;
-        font-size: 0.9em;
-        color: #333;
-        margin-top: 8px;
-    }
-    /* Footer */
-    .footer {
-        background: linear-gradient(90deg, #800000, #a00000);
-        color: white;
-        text-align: center;
-        padding: 20px;
-        margin-top: 40px;
-        border-radius: 12px 12px 0 0;
-    }
-    .footer h2 {
-        color: white;
-        margin-bottom: 10px;
+    .nav-links a:hover {
+        text-decoration: underline;
     }
     </style>
     """,
@@ -95,16 +55,20 @@ st.markdown(
 )
 
 # ---------------- HEADER ----------------
-col1, col2, col3 = st.columns([1, 4, 1])
+col1, col2, col3 = st.columns([1, 4, 2])
 with col1:
     st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=70)
 with col2:
     st.markdown("<h1 style='text-align:center;'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
 with col3:
-    if st.button("Home"):
+    # Fake nav links (just styled text, triggers rerun when clicked)
+    home_clicked = st.button("Home", key="nav_home")
+    about_clicked = st.button("About", key="nav_about")
+
+    if home_clicked:
         st.session_state.page = "Home"
         st.rerun()
-    if st.button("About"):
+    if about_clicked:
         st.session_state.page = "About"
         st.rerun()
 
