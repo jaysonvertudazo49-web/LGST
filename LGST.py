@@ -285,10 +285,11 @@ with st.form(key="contact_form"):
 
 st.markdown(
     """
-    <p>📧 Email: placeholder@gmail.com</p>
-    <p>📍 Address: Your Office Address Here</p>
+    <p>📧 Email: charlottevazquez78@gmail.com</p>
+    <p>📍 Address: Blk-5 Lot-7 Sta. Fe st. Amlac Ville Payatas B, Quezon City</p>
     <p>&copy; 2025 Lucas Grey Scrap Trading. All rights reserved.</p>
     </div>
     """,
     unsafe_allow_html=True
 )
+
