@@ -190,7 +190,7 @@ st.markdown(f"<p style='text-align: center; color: #333;'>Page {st.session_state
 
 col1, col2, col3 = st.columns([1, 10, 1])
 with col1:
-    if st.button("⬅️ Previous", use_container_width=True, key="prev_page", disabled=st.session_state.page == 0):
+    if st.button("⬅️ Back", use_container_width=True, key="prev_page", disabled=st.session_state.page == 0):
         st.session_state.page -= 1
         st.rerun()
 with col3:
@@ -263,6 +263,7 @@ with st.form(key="contact_form"):
             st.success(f"Thank you, {name}! Your message has been received. We'll get back to you at {email} soon.")
         else:
             st.error("Please fill out all fields.")
+
 
 
 
