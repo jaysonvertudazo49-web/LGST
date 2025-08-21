@@ -131,7 +131,7 @@ if st.session_state.page == "Home":
 
     images = st.session_state.images
     image_descriptions = {
-        0: "Pic 1: Vroom Vroom", 1: "Pic 2: Yellow boys", 2: "Pic 3: Blackshirts",
+        0: "Pic 1: dbasbdhfnisno jucuiehicjeijcijeocj jfcieicisjciejocjosjco cfescjmsosjicjmsocjms cejcjesoicjosjcko", 1: "Pic 2: Yellow boys", 2: "Pic 3: Blackshirts",
         3: "Pic 4: I love red", 4: "Pic 5: Blue is my color", 5: "Pic 6: Batelec 1",
         6: "Pic 7: Meralco", 7: "Pic 8: Stainless steel scraps for manufacturing",
         8: "Pic 9: Copper pipes cleaned and ready for reuse",
@@ -240,3 +240,4 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
