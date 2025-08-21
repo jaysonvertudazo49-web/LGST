@@ -33,18 +33,22 @@ st.markdown(
         height: 70px;
         margin-left: 20px;
     }
-    /* Nav buttons */
-    .stButton>button {
-        background: #800000;
-        border: none;
-        color: #000000;
-        font-size: 1.1em;
-        font-weight: bold;
-        cursor: pointer;
+    /* Nav bar */
+    .nav-bar {
+        display: flex;
+        justify-content: flex-end;
+        gap: 20px;
+        align-items: center;
     }
-    .stButton>button:hover {
+    .nav-bar a {
+        font-weight: bold;
+        color: black;
+        text-decoration: none;
+        font-size: 1.1em;
+    }
+    .nav-bar a.active {
+        color: #800000;
         text-decoration: underline;
-        background: none;
     }
     /* Gallery */
     .img-card {
@@ -95,21 +99,28 @@ if "page" not in st.session_state:
     st.session_state.page = "Home"
 
 # ------------------ HEADER ------------------
-col1, col2, col3 = st.columns([2, 6, 2])
+col1, col2, col3 = st.columns([2, 6, 4])
 with col1:
     st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
 with col2:
     st.markdown("<h1 style='text-align:center;'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
 with col3:
-    c1, c2 = st.columns(2)
-    with c1:
-        if st.button("About", key="about_btn"):
-            st.session_state.page = "About"
-            st.rerun()
-    with c2:
-        if st.button("Contact Us", key="contact_btn"):
-            st.session_state.page = "Contact"
-            st.rerun()
+    nav_items = {"Home": "Home", "About": "About", "Contact Us": "Contact"}
+    nav_html = "<div class='nav-bar'>"
+    for name, page in nav_items.items():
+        active_class = "active" if st.session_state.page == page else ""
+        nav_html += f"<a href='?nav={page}' class='{active_class}'>{name}</a>"
+    nav_html += "</div>"
+    st.markdown(nav_html, unsafe_allow_html=True)
+
+# Handle navigation clicks
+if "nav" in st.query_params:
+    clicked_link = st.query_params["nav"]
+    if clicked_link in nav_items.values():
+        st.session_state.page = clicked_link
+        st.query_params.clear()
+        st.rerun()
+
 st.markdown("<hr>", unsafe_allow_html=True)
 
 # ------------------ HOME PAGE ------------------
@@ -230,9 +241,6 @@ elif st.session_state.page == "About":
         - Partnerships for industrial recycling
         """
     )
-    if st.button("⬅️ Back to Home"):
-        st.session_state.page = "Home"
-        st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -255,10 +263,3 @@ elif st.session_state.page == "Contact":
         © 2025 Lucas Grey Scrap Trading. All rights reserved.
         """
     )
-    if st.button("⬅️ Back to Home"):
-        st.session_state.page = "Home"
-        st.rerun()
-
-
-
-
