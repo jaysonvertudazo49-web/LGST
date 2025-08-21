@@ -35,7 +35,7 @@ st.markdown(
     }
     /* Nav buttons */
     .stButton>button {
-        background: none;
+        background: #800000;
         border: none;
         color: #000000;
         font-size: 1.1em;
@@ -258,4 +258,5 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
 
