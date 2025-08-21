@@ -23,7 +23,7 @@ st.markdown(
         align-items: center;
     }
     .header-container h1 {
-        color: white;
+        color: black;
         font-size: 2.5em;
         text-align: center;
         flex: 1;
@@ -263,6 +263,7 @@ with st.form(key="contact_form"):
             st.success(f"Thank you, {name}! Your message has been received. We'll get back to you at {email} soon.")
         else:
             st.error("Please fill out all fields.")
+
 
 
 
