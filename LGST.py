@@ -98,6 +98,17 @@ with col1:
 with col2:
     st.markdown("<h1 style='text-align:center;'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
 with col3:
+    st.markdown("""
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <form method="post">
+                <button name="home_btn" type="submit" style="background:#800000;color:#000;font-weight:bold;border-radius:8px;padding:5px 15px;">Home</button>
+                <button name="about_btn" type="submit" style="background:#800000;color:#000;font-weight:bold;border-radius:8px;padding:5px 15px;">About</button>
+                <button name="contact_btn" type="submit" style="background:#800000;color:#000;font-weight:bold;border-radius:8px;padding:5px 15px;">Contact Us</button>
+            </form>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Streamlit button functionality
     if st.button("Home", key="home_btn"):
         st.session_state.page = "Home"
         st.rerun()
@@ -107,6 +118,7 @@ with col3:
     if st.button("Contact Us", key="contact_btn"):
         st.session_state.page = "Contact"
         st.rerun()
+
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -240,3 +252,4 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
