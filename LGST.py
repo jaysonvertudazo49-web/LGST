@@ -111,6 +111,7 @@ if st.session_state.page == "Home":
         14: "Pic 15: Scrap metal sorted by type for easy processing"
     }
 
+    # Search box
     search_query = st.text_input("Enter keywords to filter images (e.g., 'copper' or 'steel')", "")
     filtered_images = images
     if search_query:
@@ -130,6 +131,7 @@ if st.session_state.page == "Home":
     total_pages = (len(filtered_images) + images_per_page - 1) // images_per_page
     st.markdown(f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>", unsafe_allow_html=True)
 
+    # Navigation buttons
     col1, col2, col3 = st.columns([1, 10, 1])
     with col1:
         if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
@@ -140,6 +142,7 @@ if st.session_state.page == "Home":
             st.session_state.page_num += 1
             st.rerun()
 
+    # Gallery
     st.subheader("Image Gallery")
     img_cols = st.columns(min(len(current_images), 3))
     for idx, col in enumerate(img_cols):
@@ -147,7 +150,10 @@ if st.session_state.page == "Home":
             img_url = current_images[idx]
             absolute_idx = images.index(img_url)
             caption = image_descriptions.get(absolute_idx, "No description")
+            # Clickable expand images
             col.image(img_url, caption=caption, use_container_width=True)
+            with col.expander("🔍 Zoom In"):
+                st.image(img_url, caption=caption, use_container_width=True)
 
 # ------------------ ABOUT PAGE ------------------
 elif st.session_state.page == "About":
