@@ -20,29 +20,29 @@ body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin:0; pa
     justify-content: space-between;
     align-items: center;
 }
-.header-container h1 {
-    color: black;
-    font-size: 2.5em;
-    text-align: center;
-    flex: 1;
-    margin: 0;
+.header-title { 
+    flex: 1; 
+    text-align: center; 
+}
+.header-title h1 { 
+    margin: 0; 
+    color: black; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
-.header-container img { height: 70px; margin-right: 20px; }
-
-/* Nav buttons */
-.nav-buttons { display: flex; gap: 15px; }
-.stButton>button {
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+}
+.nav-buttons button {
     background: #800000;
-    border: none;
-    color: #000000;
-    font-size: 1.1em;
+    color: #000;
     font-weight: bold;
-    cursor: pointer;
     border-radius: 8px;
     padding: 5px 15px;
+    border: none;
+    cursor: pointer;
 }
-.stButton>button:hover { text-decoration: underline; background: none; }
+.nav-buttons button:hover { text-decoration: underline; background: #ffffff; }
 
 /* Gallery */
 .img-card {
@@ -62,11 +62,6 @@ body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin:0; pa
     height: 200px;
     object-fit: contain;
     border-radius: 8px;
-}
-.img-caption {
-    font-size: 1em;
-    color: #333;
-    margin-left: 20px;
 }
 
 /* Search bar */
@@ -92,27 +87,23 @@ if "view_image" not in st.session_state:
     st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
-col1, col2, col3 = st.columns([2, 6, 2])
-with col1:
-    st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
-with col2:
-    st.markdown("<h1 style='text-align:center;'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
-with col3:
-    st.markdown("""
-        <div style="display:flex; justify-content:flex-end; gap:10px;">
-        </div>
-    """, unsafe_allow_html=True)
-    if st.button("Home", key="home_btn"):
-        st.session_state.page = "Home"
-        st.rerun()
-    if st.button("About", key="about_btn"):
-        st.session_state.page = "About"
-        st.rerun()
-    if st.button("Contact Us", key="contact_btn"):
-        st.session_state.page = "Contact"
-        st.rerun()
+st.markdown("""
+<div class="header-container">
+    <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
+    <div class="header-title"><h1>LUCAS GREY SCRAP TRADING</h1></div>
+    <div class="nav-buttons">
+        <button onclick="window.location.href='?page=Home'">Home</button>
+        <button onclick="window.location.href='?page=About'">About</button>
+        <button onclick="window.location.href='?page=Contact'">Contact Us</button>
+    </div>
+</div>
+<hr>
+""", unsafe_allow_html=True)
 
-st.markdown("<hr>", unsafe_allow_html=True)
+# ------------------ NAVBAR HANDLING ------------------
+query_params = st.experimental_get_query_params()
+if "page" in query_params:
+    st.session_state.page = query_params["page"][0]
 
 # ------------------ HOME PAGE ------------------
 if st.session_state.page == "Home":
