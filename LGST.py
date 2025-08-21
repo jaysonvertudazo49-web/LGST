@@ -40,15 +40,20 @@ st.markdown(
         gap: 20px;
         align-items: center;
     }
-    .nav-bar a {
+    .nav-bar button {
+        background: none;
+        border: none;
         font-weight: bold;
         color: black;
-        text-decoration: none;
         font-size: 1.1em;
+        cursor: pointer;
     }
-    .nav-bar a.active {
+    .nav-bar button.active {
         color: #800000;
         text-decoration: underline;
+    }
+    .nav-bar button:hover {
+        color: #800000;
     }
     /* Gallery */
     .img-card {
@@ -109,17 +114,24 @@ with col3:
     nav_html = "<div class='nav-bar'>"
     for name, page in nav_items.items():
         active_class = "active" if st.session_state.page == page else ""
-        nav_html += f"<a href='?nav={page}' class='{active_class}'>{name}</a>"
+        nav_html += f"<button class='{active_class}' onclick=\"window.location.reload();\">{name}</button>"
     nav_html += "</div>"
     st.markdown(nav_html, unsafe_allow_html=True)
 
-# Handle navigation clicks
-if "nav" in st.query_params:
-    clicked_link = st.query_params["nav"]
-    if clicked_link in nav_items.values():
-        st.session_state.page = clicked_link
-        st.query_params.clear()
-        st.rerun()
+    # Fake buttons with Streamlit to trigger state change
+    nav1, nav2, nav3 = st.columns(3)
+    with nav1:
+        if st.button("Home", key="nav_home"):
+            st.session_state.page = "Home"
+            st.rerun()
+    with nav2:
+        if st.button("About", key="nav_about"):
+            st.session_state.page = "About"
+            st.rerun()
+    with nav3:
+        if st.button("Contact Us", key="nav_contact"):
+            st.session_state.page = "Contact"
+            st.rerun()
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
