@@ -179,7 +179,7 @@ if st.session_state.page == "Home":
                 """, unsafe_allow_html=True
             )
             if col.button("View Details", key=f"view_{absolute_idx}"):
-                st.image(img_url, caption=caption, use_container_width=True)
+                st.image(img_url, caption=caption, width=400)  # <- half size image
 
 # ------------------ ABOUT PAGE ------------------
 elif st.session_state.page == "About":
