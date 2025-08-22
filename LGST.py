@@ -8,7 +8,7 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 st.markdown("""
 <style>
 /* Global */
-body { font-family: 'Arial', sans-serif; background-color: #000000; margin:0; padding:0; }
+body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #111111, #222222); margin:0; padding:0; }
 
 /* Header */
 .header-container {
@@ -25,7 +25,7 @@ body { font-family: 'Arial', sans-serif; background-color: #000000; margin:0; pa
 }
 .header-title h1 { 
     margin: 0; 
-    color: #800000; 
+    color: black; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
@@ -224,5 +224,6 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
 
 
