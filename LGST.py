@@ -183,6 +183,48 @@ query_params = st.query_params
 if "page" in query_params:
     st.session_state.page = query_params["page"][0]
 
+# ------------------ ABOUT PAGE ------------------
+elif st.session_state.page == "About":
+    st.header("About Lucas Grey Scrap Trading")
+    st.write("""
+        Lucas Grey Scrap Trading provides sustainable scrap trading services.
+        We recycle metals such as copper, aluminum, and steel for small-scale and industrial clients.
+        
+        **Services Offered:**
+        - Scrap metal collection
+        - Sorting and processing
+        - Wholesale and retail supply
+        - Partnerships for industrial recycling
+    """)
+
+    st.subheader("Organization Chart")
+    st.graphviz_chart("""
+    digraph {
+        node [shape=box, style="rounded,filled", color=maroon, fontcolor=white, fontsize=12, fontname="Arial", fillcolor=black];
+
+        CEO [label="CEO\nLucas Grey"];
+        OPS [label="Operations Manager"];
+        SALES [label="Sales Manager"];
+        FIN [label="Finance & Admin"];
+        WAREHOUSE [label="Warehouse Supervisor"];
+        DRIVERS [label="Drivers"];
+        STAFF [label="Staff"];
+
+        CEO -> OPS;
+        CEO -> SALES;
+        CEO -> FIN;
+
+        OPS -> WAREHOUSE;
+        OPS -> DRIVERS;
+        OPS -> STAFF;
+    }
+    """)
+
+    if st.button("⬅️ Back to Home"):
+        st.session_state.page = "Home"
+        st.rerun()
+
+
 # ------------------ HOME PAGE ------------------
 if st.session_state.page == "Home":
     repo_url = "https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/"
@@ -330,3 +372,4 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
