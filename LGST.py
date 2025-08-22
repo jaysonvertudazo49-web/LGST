@@ -22,24 +22,25 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     display: flex;
-    justify-content: space-between; 
+    justify-content: flex-start; 
     align-items: center;
-}
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    position: relative;
 }
 .header-title h1 { 
     margin: 0; 
     color: black; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
-.nav-buttons {
+
+/* Top Right Nav Buttons */
+.nav-buttons-top {
+    position: absolute;
+    top: 20px;     
+    right: 30px;   
     display: flex;
     gap: 10px;
 }
-.nav-buttons button {
+.nav-buttons-top button {
     background: #800000;
     color: white;
     border: none;
@@ -48,7 +49,7 @@ body {
     cursor: pointer;
     transition: background 0.3s ease;
 }
-.nav-buttons button:hover {
+.nav-buttons-top button:hover {
     background: #a00000;
 }
 
@@ -158,34 +159,128 @@ if "view_image" not in st.session_state:
     st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
-st.markdown(
-    """
-    <div class="header-container">
-        <div class="header-left">
-            <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
-            <div class="header-title"><h1>LUCAS GREY SCRAP TRADING</h1></div>
-        </div>
-        <div class="nav-buttons">
-            <button onclick="window.location.href='?page=About'">About</button>
-            <button onclick="window.location.href='?page=Contact'">Contact Us</button>
-        </div>
+st.markdown("""
+<div class="header-container">
+    <div>
+        <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
     </div>
-    """,
-    unsafe_allow_html=True,
-)
+    <div class="header-title">
+        <h1>LUCAS GREY SCRAP TRADING</h1>
+    </div>
+    <div class="nav-buttons-top">
+        <form action="#" method="get">
+            <button name="page" value="About">About</button>
+            <button name="page" value="Contact">Contact Us</button>
+        </form>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# ------------------ NAVIGATION HANDLING ------------------
-# Map query params to session state
+# ------------------ NAVBAR HANDLING ------------------
 query_params = st.query_params
 if "page" in query_params:
     st.session_state.page = query_params["page"][0]
 
 # ------------------ HOME PAGE ------------------
 if st.session_state.page == "Home":
-    st.subheader("Welcome to Lucas Grey Scrap Trading")
-    st.write("This is the Home page with gallery and search (kept same as before).")
+    repo_url = "https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/"
+    max_images = 15
+    possible_exts = ["jpg", "jpeg", "png"]
+
+    # Load images
+    if not st.session_state.images:
+        with st.spinner("Loading images..."):
+            for i in range(1, max_images + 1):
+                for ext in possible_exts:
+                    url = f"{repo_url}pic{i}.{ext}"
+                    try:
+                        if requests.head(url).status_code == 200:
+                            st.session_state.images.append(url)
+                            break
+                    except:
+                        pass
+
+    images = st.session_state.images
+    image_descriptions = {
+        0: "Pic 1: Vroom Vroom", 1: "Pic 2: Yellow boys", 2: "Pic 3: Blackshirts",
+        3: "Pic 4: I love red", 4: "Pic 5: Blue is my color", 5: "Pic 6: Batelec 1",
+        6: "Pic 7: Meralco", 7: "Pic 8: Stainless steel scraps for manufacturing",
+        8: "Pic 9: Copper pipes cleaned and ready for reuse",
+        9: "Pic 10: Assorted metal alloys for specialized applications",
+        10: "Pic 11: Scrap aluminum sheets for construction projects",
+        11: "Pic 12: High-grade steel beams for recycling",
+        12: "Pic 13: Copper radiators in bulk quantities",
+        13: "Pic 14: Mixed non-ferrous metals for sale",
+        14: "Pic 15: Scrap metal sorted by type for easy processing"
+    }
+
+    # Search
+    st.subheader("Search Images")
+    search_query = st.text_input("", "")
+    filtered_images = images
+    if search_query:
+        filtered_images = [img for idx, img in enumerate(images) if search_query.lower() in image_descriptions.get(idx, "").lower()]
+        st.session_state.page_num = 0  # reset pagination on new search
+
+    # Pagination
+    images_per_page = 3
+    start_idx = st.session_state.page_num * images_per_page
+    end_idx = start_idx + images_per_page
+    current_images = filtered_images[start_idx:end_idx]
+    total_pages = (len(filtered_images) + images_per_page - 1) // images_per_page
+
+    if filtered_images:
+        st.markdown(f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>", unsafe_allow_html=True)
+    else:
+        st.warning("No results found.")
+
+    col1, col2, col3 = st.columns([1, 10, 1])
+    with col1:
+        if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
+            st.session_state.page_num -= 1
+            st.rerun()
+    with col3:
+        if st.button("Next ➡️", disabled=end_idx >= len(filtered_images)):
+            st.session_state.page_num += 1
+            st.rerun()
+
+    # Gallery
+    if filtered_images:
+        st.subheader("Image Gallery")
+        img_cols = st.columns(min(len(current_images), 3))
+        for idx, col in enumerate(img_cols):
+            if idx < len(current_images):
+                img_url = current_images[idx]
+                absolute_idx = images.index(img_url)
+                caption = image_descriptions.get(absolute_idx, "No description")
+                col.markdown(
+                    f"""
+                    <div class="img-card">
+                        <img src="{img_url}" alt="{caption}">
+                        <p>{caption}</p>
+                    </div>
+                    """, unsafe_allow_html=True
+                )
+                if col.button("View Details", key=f"view_{absolute_idx}"):
+                    st.session_state.view_image = absolute_idx
+                    st.rerun()
+
+    # View Details Modal
+    if st.session_state.view_image is not None:
+        idx = st.session_state.view_image
+        img_url = images[idx]
+        caption = image_descriptions.get(idx, "No description")
+        st.markdown(f"""
+        <div class="modal">
+            <img src="{img_url}" width="700">
+            <p><b>{caption}</b></p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Close", key=f"close_{idx}"):
+            st.session_state.view_image = None
+            st.rerun()
 
 # ------------------ ABOUT PAGE ------------------
 elif st.session_state.page == "About":
