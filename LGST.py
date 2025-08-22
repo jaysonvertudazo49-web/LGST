@@ -61,6 +61,18 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #11
     border-radius: 10px;
 }
 
+.modal {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    text-align: center;
+}
+.modal img {
+    border-radius: 12px;
+    max-width: 100%;
+    height: auto;
+}
 
 /* Search bar */
 .stTextInput input {
@@ -238,6 +250,7 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
 
 
 
