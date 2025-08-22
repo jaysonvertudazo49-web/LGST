@@ -153,24 +153,22 @@ if "view_image" not in st.session_state:
     st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
-col1, col2, col3 = st.columns([1, 6, 2])
-
-with col1:
-    st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
-
-with col2:
-    st.markdown("<h1 style='text-align:center;'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
-
-with col3:
-    col_btn1, col_btn2 = st.columns([1,1])
-    with col_btn1:
-        if st.button("About", key="about_btn"):
-            st.session_state.page = "About"
-            st.rerun()
-    with col_btn2:
-        if st.button("Contact Us", key="contact_btn"):
-            st.session_state.page = "Contact"
-            st.rerun()
+st.markdown("""
+<div class="header-container">
+    <div>
+        <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
+    </div>
+    <div class="header-title">
+        <h1>LUCAS GREY SCRAP TRADING</h1>
+    </div>
+    <div class="nav-buttons">
+        <form action="#" method="get">
+            <button name="page" value="About">About</button>
+            <button name="page" value="Contact">Contact Us</button>
+        </form>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -185,6 +183,7 @@ if st.session_state.page == "Home":
     max_images = 15
     possible_exts = ["jpg", "jpeg", "png"]
 
+    # Load images
     if not st.session_state.images:
         with st.spinner("Loading images..."):
             for i in range(1, max_images + 1):
@@ -211,12 +210,14 @@ if st.session_state.page == "Home":
         14: "Pic 15: Scrap metal sorted by type for easy processing"
     }
 
+    # Search
     st.subheader("Search Images")
     search_query = st.text_input("", "")
     filtered_images = images
     if search_query:
         filtered_images = [img for idx, img in enumerate(images) if search_query.lower() in image_descriptions.get(idx, "").lower()]
 
+    # Pagination
     images_per_page = 3
     start_idx = st.session_state.page_num * images_per_page
     end_idx = start_idx + images_per_page
@@ -234,6 +235,7 @@ if st.session_state.page == "Home":
             st.session_state.page_num += 1
             st.rerun()
 
+    # Gallery
     st.subheader("Image Gallery")
     img_cols = st.columns(min(len(current_images), 3))
     for idx, col in enumerate(img_cols):
@@ -253,6 +255,7 @@ if st.session_state.page == "Home":
                 st.session_state.view_image = absolute_idx
                 st.rerun()
 
+    # View Details Modal
     if st.session_state.view_image is not None:
         idx = st.session_state.view_image
         img_url = images[idx]
