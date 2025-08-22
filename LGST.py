@@ -130,7 +130,7 @@ if st.session_state.page == "Home":
 
     # Search
     st.subheader("Search Images")
-    search_query = st.text_input("", "")
+    
     filtered_images = images
     if search_query:
         filtered_images = [img for idx, img in enumerate(images) if search_query.lower() in image_descriptions.get(idx, "").lower()]
@@ -225,6 +225,7 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
 
 
 
