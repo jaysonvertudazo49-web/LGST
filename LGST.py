@@ -290,7 +290,7 @@ if st.session_state.page == "Home":
 
     # Gallery
     if filtered_images:
-        st.subheader("Image Gallery")
+        st.subheader("CURRENT PROJECT")
         img_cols = st.columns(min(len(current_images), 3))
         for idx, col in enumerate(img_cols):
             if idx < len(current_images):
@@ -372,4 +372,5 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
