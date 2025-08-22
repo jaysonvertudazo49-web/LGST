@@ -40,22 +40,27 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #11
 /* Gallery */
 .img-card {
     background: white;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 280px;  /* fixed height for uniformity */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .img-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    border: 2px solid #800000;
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 .img-card img {
     width: 100%;
-    height: 200px;
-    object-fit: contain;
-    border-radius: 8px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
 }
+
 
 /* Search bar */
 .stTextInput input {
@@ -233,6 +238,7 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
 
 
 
