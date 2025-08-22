@@ -74,6 +74,17 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #11
     background-size: 18px;
 }
 
+h2 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.footer {
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+    color: #aaa;
+}
 
 /* Section headers */
 h2 { color: #800000; font-size: 1.8em; margin-top: 20px; border-bottom: 2px solid #800000; padding-bottom: 5px; }
@@ -244,6 +255,7 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
 
 
 
