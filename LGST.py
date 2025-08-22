@@ -10,24 +10,32 @@ st.markdown("""
 /* Global */
 body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #111111, #222222); margin:0; padding:0; }
 
-/* Header */
 .header-container {
     background: linear-gradient(90deg, #800000, #ffffff);
-    padding: 20px;
+    padding: 15px 30px;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     display: flex;
+    justify-content: space-between; /* Logo left, title center, buttons right */
     align-items: center;
 }
-.header-title { 
-    flex: 1; 
-    text-align: center; 
+.nav-buttons {
+    display: flex;
+    gap: 10px;
 }
-.header-title h1 { 
-    margin: 0; 
-    color: black; 
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+.nav-buttons button {
+    background: #800000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
+.nav-buttons button:hover {
+    background: #a00000;
+}
+
 
 /* Gallery */
 .img-card {
@@ -225,6 +233,7 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
 
 
 
