@@ -49,7 +49,7 @@ body {
 
 /* Gallery */
 .img-card {
-    background: white;
+    background: black;
     border-radius: 12px;
     padding: 10px;
     height: 280px;
@@ -101,7 +101,7 @@ body {
 /* Buttons */
 .stButton button {
     background: #800000;
-    color: black;
+    color: white;
     border-radius: 8px;
     padding: 6px 14px;
     font-weight: bold;
@@ -318,4 +318,5 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
