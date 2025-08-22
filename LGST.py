@@ -8,16 +8,27 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 st.markdown("""
 <style>
 /* Global */
-body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #111111, #222222); margin:0; padding:0; }
+body { 
+    font-family: 'Arial', sans-serif; 
+    background: linear-gradient(135deg, #111111, #222222); 
+    margin:0; 
+    padding:0; 
+}
 
+/* Header */
 .header-container {
     background: linear-gradient(90deg, #800000, #ffffff);
     padding: 15px 30px;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     display: flex;
-    justify-content: space-between; /* Logo left, title center, buttons right */
+    justify-content: space-between; 
     align-items: center;
+}
+.header-title h1 { 
+    margin: 0; 
+    color: black; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 .nav-buttons {
     display: flex;
@@ -36,13 +47,12 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #11
     background: #a00000;
 }
 
-
 /* Gallery */
 .img-card {
     background: white;
     border-radius: 12px;
     padding: 10px;
-    height: 280px;  /* fixed height for uniformity */
+    height: 280px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -61,7 +71,21 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #11
     border-radius: 10px;
 }
 
+/* Modal */
+.modal {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    text-align: center;
+}
+.modal img {
+    border-radius: 12px;
+    max-width: 100%;
+    height: auto;
+}
 
+/* Search bar */
 .stTextInput input {
     border: 2px solid #800000;
     border-radius: 12px;
@@ -74,20 +98,47 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #11
     background-size: 18px;
 }
 
-h2 {
-    margin-top: 15px;
-    margin-bottom: 10px;
+/* Buttons */
+.stButton button {
+    background: #800000;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: bold;
+    border: none;
+    transition: 0.3s;
+}
+.stButton button:hover {
+    background: #a00000;
 }
 
+/* Contact form */
+.contact-form {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    max-width: 500px;
+    margin: auto;
+}
+
+/* Section headers */
+h2 { 
+    color: #800000; 
+    font-size: 1.8em; 
+    margin-top: 15px; 
+    margin-bottom: 10px; 
+    border-bottom: 2px solid #800000; 
+    padding-bottom: 5px; 
+}
+
+/* Footer */
 .footer {
     text-align: center;
     padding: 15px;
     font-size: 14px;
     color: #aaa;
 }
-
-/* Section headers */
-h2 { color: #800000; font-size: 1.8em; margin-top: 20px; border-bottom: 2px solid #800000; padding-bottom: 5px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -102,21 +153,22 @@ if "view_image" not in st.session_state:
     st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
-col1, col2, col3, col4, col5 = st.columns([2, 4, 1, 0.8, 0.8])
-
-with col1:
-    st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
-with col2:
-    st.markdown("<h1 style='text-align:center;'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
-
-with col4:
-    if st.button("About", key="about_btn"):
-        st.session_state.page = "About"
-        st.rerun()
-with col5:
-    if st.button("Contact Us", key="contact_btn"):
-        st.session_state.page = "Contact"
-        st.rerun()
+st.markdown("""
+<div class="header-container">
+    <div>
+        <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
+    </div>
+    <div class="header-title">
+        <h1>LUCAS GREY SCRAP TRADING</h1>
+    </div>
+    <div class="nav-buttons">
+        <form action="#" method="get">
+            <button name="page" value="About">About</button>
+            <button name="page" value="Contact">Contact Us</button>
+        </form>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -195,6 +247,7 @@ if st.session_state.page == "Home":
                 f"""
                 <div class="img-card">
                     <img src="{img_url}" alt="project image">
+                    <p>{caption}</p>
                 </div>
                 """, unsafe_allow_html=True
             )
@@ -207,14 +260,15 @@ if st.session_state.page == "Home":
         idx = st.session_state.view_image
         img_url = images[idx]
         caption = image_descriptions.get(idx, "No description")
-        col_img, col_caption = st.columns([2, 1])
-        with col_img:
-            st.image(img_url, width=700)
-        with col_caption:
-            st.markdown(f"**{caption}**")
-            if st.button("Close", key=f"close_{idx}"):
-                st.session_state.view_image = None
-                st.rerun()
+        st.markdown(f"""
+        <div class="modal">
+            <img src="{img_url}" width="700">
+            <p><b>{caption}</b></p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Close", key=f"close_{idx}"):
+            st.session_state.view_image = None
+            st.rerun()
 
 # ------------------ ABOUT PAGE ------------------
 elif st.session_state.page == "About":
@@ -236,6 +290,7 @@ elif st.session_state.page == "About":
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
     st.header("Contact Us")
+    st.markdown('<div class="contact-form">', unsafe_allow_html=True)
     with st.form(key="contact_form"):
         name = st.text_input("Name", placeholder="Enter your full name")
         email = st.text_input("Email", placeholder="Enter your email address")
@@ -246,25 +301,20 @@ elif st.session_state.page == "Contact":
                 st.success(f"Thank you, {name}! Your message has been received. We'll get back to you at {email}.")
             else:
                 st.error("Please fill out all fields.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("""
         📧 Email: **charlottevazquez78@gmail.com**  
         📍 Address: Blk-5 Lot-7 Sta. Fe st. Amlac Ville Payatas B, Quezon City  
-        © 2025 Lucas Grey Scrap Trading. All rights reserved.
     """)
+
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
 
-
-
-
-
-
-
-
-
-
-
-
-
+# ------------------ FOOTER ------------------
+st.markdown("""
+<div class="footer">
+    © 2025 Lucas Grey Scrap Trading. All rights reserved.
+</div>
+""", unsafe_allow_html=True)
