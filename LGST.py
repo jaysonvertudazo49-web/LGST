@@ -61,25 +61,19 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #11
     border-radius: 10px;
 }
 
-.modal {
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-    text-align: center;
-}
-.modal img {
-    border-radius: 12px;
-    max-width: 100%;
-    height: auto;
-}
 
-/* Search bar */
 .stTextInput input {
     border: 2px solid #800000;
-    border-radius: 8px;
-    padding: 8px;
+    border-radius: 12px;
+    padding: 10px 40px 10px 12px;
+    font-size: 16px;
+    width: 100%;
+    background-image: url("https://img.icons8.com/ios-filled/24/search.png");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
 }
+
 
 /* Section headers */
 h2 { color: #800000; font-size: 1.8em; margin-top: 20px; border-bottom: 2px solid #800000; padding-bottom: 5px; }
@@ -250,6 +244,7 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
 
 
 
