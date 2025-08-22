@@ -72,7 +72,7 @@ if "view_image" not in st.session_state:
     st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
-col1, col2, col3, col4, col5 = st.columns([2, 4, 1, 0.6, 0.6])
+col1, col2, col3, col4, col5 = st.columns([2, 4, 1, 0.8, 0.8])
 
 with col1:
     st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
@@ -225,6 +225,7 @@ elif st.session_state.page == "Contact":
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
+
 
 
 
