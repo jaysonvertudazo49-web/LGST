@@ -259,7 +259,7 @@ if st.session_state.page == "Home":
     }
 
     # Search
-    st.subheader("Search Images")
+    st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
     search_query = st.text_input("", "")
     filtered_images = images
     if search_query:
@@ -372,3 +372,4 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
