@@ -153,29 +153,23 @@ if "view_image" not in st.session_state:
     st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
-st.markdown("""
-<div class="header-container">
-    <div>
-        <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
-    </div>
-    <div class="header-title">
-        <h1>LUCAS GREY SCRAP TRADING</h1>
-    </div>
-    <div class="nav-buttons">
-        <form action="#" method="get">
-            <button name="page" value="About">About</button>
-            <button name="page" value="Contact">Contact Us</button>
-        </form>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+col1, col2, col3 = st.columns([1, 6, 2])
+with col1:
+    st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
+with col2:
+    st.markdown("<h1 style='color:black;text-shadow:1px 1px 2px rgba(0,0,0,0.3);'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
+with col3:
+    nav_col1, nav_col2 = st.columns(2)
+    if nav_col1.button("About"):
+        st.session_state.page = "About"
+        st.session_state.page_num = 0
+        st.session_state.view_image = None
+    if nav_col2.button("Contact Us"):
+        st.session_state.page = "Contact"
+        st.session_state.page_num = 0
+        st.session_state.view_image = None
 
 st.markdown("<hr>", unsafe_allow_html=True)
-
-# ------------------ NAVBAR HANDLING ------------------
-query_params = st.query_params
-if "page" in query_params:
-    st.session_state.page = query_params["page"][0]
 
 # ------------------ HOME PAGE ------------------
 if st.session_state.page == "Home":
@@ -183,7 +177,6 @@ if st.session_state.page == "Home":
     max_images = 15
     possible_exts = ["jpg", "jpeg", "png"]
 
-    # Load images
     if not st.session_state.images:
         with st.spinner("Loading images..."):
             for i in range(1, max_images + 1):
@@ -215,7 +208,11 @@ if st.session_state.page == "Home":
     search_query = st.text_input("", "")
     filtered_images = images
     if search_query:
-        filtered_images = [img for idx, img in enumerate(images) if search_query.lower() in image_descriptions.get(idx, "").lower()]
+        filtered_images = [
+            img for idx, img in enumerate(images) 
+            if search_query.lower() in image_descriptions.get(idx, "").lower()
+        ]
+        st.session_state.page_num = 0  # reset pagination on new search
 
     # Pagination
     images_per_page = 3
@@ -318,7 +315,3 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
-
-
-
-
