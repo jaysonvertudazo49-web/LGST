@@ -248,6 +248,7 @@ if st.session_state.page == "About":
 
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
+        st.query_params.clear()
         st.rerun()
 
 # ------------------ HOME PAGE ------------------
@@ -373,6 +374,7 @@ elif st.session_state.page == "Contact":
 
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
+        st.query_params.clear()
         st.rerun()
 
 # ------------------ FOOTER ------------------
