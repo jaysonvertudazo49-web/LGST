@@ -208,7 +208,7 @@ if st.session_state.page == "About":
     digraph {
         node [shape=box, style="rounded,filled", fontcolor=white, fontsize=12, fontname="Arial"];
 
-        CEO [label="CEO\\nLucas Grey", fillcolor=black];
+        CEO [label="CEO\\nNick Veloso", fillcolor=black];
         OPS [label="Operations Manager", fillcolor=maroon];
         SALES [label="Sales Manager", fillcolor=maroon];
         FIN [label="Finance & Admin", fillcolor=maroon];
@@ -383,6 +383,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
