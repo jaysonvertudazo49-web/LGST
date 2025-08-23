@@ -92,6 +92,7 @@ body {
     font-weight: bold;
     border: none;
     transition: 0.3s;
+    align-content: flex-start;
 }
 .stButton button:hover {
     background: #a00000;
@@ -347,6 +348,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
