@@ -14,6 +14,21 @@ body {
     margin:0; 
     padding:0; 
 }
+/* Header */
+.header-container {
+    background: linear-gradient(90deg, #800000, #ffffff);
+    padding: 15px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+.header-title h1 { 
+    margin: 0; 
+    color: black; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
 
 
 /* Gallery */
@@ -332,6 +347,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
