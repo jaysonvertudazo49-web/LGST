@@ -280,7 +280,7 @@ elif st.session_state.page == "Home":
     else:
         st.warning("No results found.")
 
-    col1, col2, col3 = st.columns([1, 10, 1])
+    col1, col2, col3 = st.columns([1, 1, 1])
     with col1:
         if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
             st.session_state.page_num -= 1
@@ -355,3 +355,4 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
