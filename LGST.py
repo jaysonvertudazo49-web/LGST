@@ -22,35 +22,13 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     display: flex;
-    justify-content: flex-start; 
+    justify-content: space-between; 
     align-items: center;
-    position: relative;
 }
 .header-title h1 { 
     margin: 0; 
     color: black; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-}
-
-/* Top Right Nav Buttons */
-.nav-buttons-top {
-    position: absolute;
-    top: 20px;     
-    right: 30px;   
-    display: flex;
-    gap: 10px;
-}
-.nav-buttons-top button {
-    background: #800000;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 6px 12px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-.nav-buttons-top button:hover {
-    background: #a00000;
 }
 
 /* Gallery */
@@ -159,35 +137,24 @@ if "view_image" not in st.session_state:
     st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
-st.markdown("""
-<div class="header-container">
-    <div>
-        <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
-    </div>
-    <div class="header-title">
-        <h1>LUCAS GREY SCRAP TRADING</h1>
-    </div>
-    <div class="nav-buttons-top">
-        <form action="#" method="get">
-            <button name="page" value="About">About</button>
-            <button name="page" value="Contact">Contact Us</button>
-        </form>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+col1, col2 = st.columns([8,2])
+with col1:
+    st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
+    st.markdown("<h1 style='margin:0;color:black;text-shadow:1px 1px 2px rgba(0,0,0,0.3);'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
+with col2:
+    if st.button("About"):
+        st.session_state.page = "About"
+        st.rerun()
+    if st.button("Contact Us"):
+        st.session_state.page = "Contact"
+        st.rerun()
 
 st.markdown("<hr>", unsafe_allow_html=True)
-
-# ------------------ NAVBAR HANDLING ------------------
-query_params = st.query_params
-if "page" in query_params:
-    st.session_state.page = query_params["page"][0]
 
 # ------------------ ABOUT PAGE ------------------
 if st.session_state.page == "About":
     st.header("About Lucas Grey Scrap Trading")
     
-    # Company Profile
     st.subheader("Who We Are")
     st.write("""
         Lucas Grey Scrap Trading is a leading scrap metal recycling company in Quezon City.  
@@ -208,7 +175,6 @@ if st.session_state.page == "About":
     - 👥 **Community** – We create partnerships for growth.  
     """)
 
-    # Organization Chart
     st.subheader("Organization Chart")
     st.graphviz_chart("""
     digraph {
@@ -232,7 +198,6 @@ if st.session_state.page == "About":
     }
     """)
 
-    # Roles
     st.subheader("Key Roles & Responsibilities")
     st.write("""
     - **CEO (Lucas Grey):** Oversees company strategy and growth.  
@@ -243,7 +208,6 @@ if st.session_state.page == "About":
     - **Drivers & Staff:** Collect, deliver, and sort materials.  
     """)
 
-    # Milestones
     st.subheader("Company Milestones")
     milestones = [
         {"year": "2015", "event": "Founded in Quezon City"},
@@ -264,7 +228,6 @@ elif st.session_state.page == "Home":
     max_images = 15
     possible_exts = ["jpg", "jpeg", "png"]
 
-    # Load images
     if not st.session_state.images:
         with st.spinner("Loading images..."):
             for i in range(1, max_images + 1):
@@ -291,15 +254,13 @@ elif st.session_state.page == "Home":
         14: "Pic 15: Scrap metal sorted by type for easy processing"
     }
 
-    # Search
     st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
     search_query = st.text_input("", "")
     filtered_images = images
     if search_query:
         filtered_images = [img for idx, img in enumerate(images) if search_query.lower() in image_descriptions.get(idx, "").lower()]
-        st.session_state.page_num = 0  # reset pagination on new search
+        st.session_state.page_num = 0
 
-    # Pagination
     images_per_page = 3
     start_idx = st.session_state.page_num * images_per_page
     end_idx = start_idx + images_per_page
@@ -321,7 +282,6 @@ elif st.session_state.page == "Home":
             st.session_state.page_num += 1
             st.rerun()
 
-    # Gallery
     if filtered_images:
         st.subheader("CURRENT PROJECT")
         img_cols = st.columns(min(len(current_images), 3))
@@ -342,7 +302,6 @@ elif st.session_state.page == "Home":
                     st.session_state.view_image = absolute_idx
                     st.rerun()
 
-    # View Details Modal
     if st.session_state.view_image is not None:
         idx = st.session_state.view_image
         img_url = images[idx]
