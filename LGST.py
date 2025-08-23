@@ -31,13 +31,12 @@ body {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
-
 /* Gallery */
 .img-card {
     background: maroon;
     border-radius: 12px;
     padding: 10px;
-    height: 280px;
+    min-height: 280px; /* more flexible */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -51,7 +50,7 @@ body {
 }
 .img-card img {
     width: 100%;
-    height: 180px;
+    max-height: 180px;
     object-fit: cover;
     border-radius: 10px;
 }
@@ -92,7 +91,6 @@ body {
     font-weight: bold;
     border: none;
     transition: 0.3s;
-    align-content: flex-start;
 }
 .stButton button:hover {
     background: #a00000;
@@ -138,17 +136,20 @@ if "view_image" not in st.session_state:
     st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
-col1, col2 = st.columns([8,2])
+col1, col2 = st.columns([7,3])
 with col1:
     st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
     st.markdown("<h1 style='margin:0;color:black;text-shadow:1px 1px 2px rgba(0,0,0,0.3);'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
 with col2:
-    if st.button("About"):
-        st.session_state.page = "About"
-        st.rerun()
-    if st.button("Contact Us"):
-        st.session_state.page = "Contact"
-        st.rerun()
+    nav1, nav2 = st.columns(2)
+    with nav1:
+        if st.button("About"):
+            st.session_state.page = "About"
+            st.rerun()
+    with nav2:
+        if st.button("Contact Us"):
+            st.session_state.page = "Contact"
+            st.rerun()
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -179,15 +180,15 @@ if st.session_state.page == "About":
     st.subheader("Organization Chart")
     st.graphviz_chart("""
     digraph {
-        node [shape=box, style="rounded,filled", color=maroon, fontcolor=white, fontsize=12, fontname="Arial", fillcolor=black];
+        node [shape=box, style="rounded,filled", fontcolor=white, fontsize=12, fontname="Arial"];
 
-        CEO [label="CEO\nLucas Grey"];
-        OPS [label="Operations Manager"];
-        SALES [label="Sales Manager"];
-        FIN [label="Finance & Admin"];
-        WAREHOUSE [label="Warehouse Supervisor"];
-        DRIVERS [label="Drivers"];
-        STAFF [label="Staff"];
+        CEO [label="CEO\\nLucas Grey", fillcolor=black];
+        OPS [label="Operations Manager", fillcolor=maroon];
+        SALES [label="Sales Manager", fillcolor=maroon];
+        FIN [label="Finance & Admin", fillcolor=maroon];
+        WAREHOUSE [label="Warehouse Supervisor", fillcolor=gray20];
+        DRIVERS [label="Drivers", fillcolor=gray20];
+        STAFF [label="Staff", fillcolor=gray20];
 
         CEO -> OPS;
         CEO -> SALES;
@@ -257,6 +258,12 @@ elif st.session_state.page == "Home":
 
     st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
     search_query = st.text_input("", "")
+    col_clear = st.columns([8,2])
+    with col_clear[1]:
+        if st.button("Clear Search"):
+            search_query = ""
+            st.session_state.page_num = 0
+
     filtered_images = images
     if search_query:
         filtered_images = [img for idx, img in enumerate(images) if search_query.lower() in image_descriptions.get(idx, "").lower()]
@@ -348,11 +355,3 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
-
-
-
-
-
-
-
-
