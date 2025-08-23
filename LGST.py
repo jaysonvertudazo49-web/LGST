@@ -285,7 +285,7 @@ elif st.session_state.page == "Home":
 
     st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
     search_query = st.text_input("", "")
-    col_clear = st.columns([8,1.5])
+    col_clear = st.columns([8,1.2])
     with col_clear[1]:
         if st.button("Clear Search"):
             search_query = ""
@@ -383,6 +383,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
