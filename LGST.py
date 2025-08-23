@@ -24,11 +24,33 @@ body {
     justify-content: space-between; 
     align-items: center;
 }
+.header-title {
+    display: flex;
+    align-items: center;
+}
+.header-title img {
+    margin-right: 10px;
+}
 .header-title h1 { 
     margin: 0; 
     color: black; 
-    text-align: center;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+.header-buttons button {
+    background: black;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+.header-buttons button:hover {
+    background: #a00000;
 }
 
 /* Gallery */
@@ -36,7 +58,7 @@ body {
     background: maroon;
     border-radius: 12px;
     padding: 10px;
-    min-height: 280px; /* more flexible */
+    min-height: 280px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -136,22 +158,26 @@ if "view_image" not in st.session_state:
     st.session_state.view_image = None
 
 # ------------------ HEADER ------------------
-col1, col2 = st.columns([7,3])
-with col1:
-    st.image("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png", width=80)
-    st.markdown("<h1 style='margin:0;color:black;text-shadow:1px 1px 2px rgba(0,0,0,0.3);'>LUCAS GREY SCRAP TRADING</h1>", unsafe_allow_html=True)
-with col2:
-    nav1, nav2 = st.columns(2)
-    with nav1:
-        if st.button("About"):
-            st.session_state.page = "About"
-            st.rerun()
-    with nav2:
-        if st.button("Contact Us"):
-            st.session_state.page = "Contact"
-            st.rerun()
+st.markdown("""
+<div class="header-container">
+    <div class="header-title">
+        <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
+        <h1>LUCAS GREY SCRAP TRADING</h1>
+    </div>
+    <div class="header-buttons">
+        <form action="" method="get">
+            <button type="submit" name="page" value="About">About</button>
+            <button type="submit" name="page" value="Contact">Contact Us</button>
+        </form>
+    </div>
+</div>
+<hr>
+""", unsafe_allow_html=True)
 
-st.markdown("<hr>", unsafe_allow_html=True)
+# Handle button clicks via query params
+query_params = st.query_params
+if "page" in query_params:
+    st.session_state.page = query_params["page"]
 
 # ------------------ ABOUT PAGE ------------------
 if st.session_state.page == "About":
@@ -280,7 +306,7 @@ elif st.session_state.page == "Home":
     else:
         st.warning("No results found.")
 
-    col1, col2, col3 = st.columns([1, 1, 1])
+    col1, col2, col3 = st.columns([1, 10, 1])
     with col1:
         if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
             st.session_state.page_num -= 1
@@ -355,4 +381,3 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
-
