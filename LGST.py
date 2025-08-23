@@ -372,9 +372,7 @@ elif st.session_state.page == "Contact":
     """)
 
     if st.button("⬅️ Back to Home"):
-        st.session_state.page = "Home"
-        st.query_params.clear()  # This removes ?page=About / ?page=Contact
-        st.rerun()
+        navigate_to("Home")
 
 
 # ------------------ FOOTER ------------------
@@ -383,5 +381,6 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
