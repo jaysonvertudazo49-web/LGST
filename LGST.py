@@ -212,10 +212,13 @@ if st.session_state.page == "About":
             <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="black">
                 <TR>
                     <TD FIXEDSIZE="TRUE" WIDTH="40" HEIGHT="40"><IMG SRC="https://via.placeholder.com/40"/></TD>
-                    <TD><FONT COLOR="white">VON RYAN VELOSO<br/>Proprier/Owner</FONT></TD>
+                    <TD ALIGN="CENTER" VALIGN="MIDDLE">
+                        <FONT COLOR="white"><B>VON RYAN VELOSO</B><br/>Proprier/Owner</FONT>
+                    </TD>
                 </TR>
             </TABLE>
         >];
+
     
         H_SEC_PRIVATE [label=<
             <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="maroon">
@@ -432,6 +435,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
