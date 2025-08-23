@@ -99,7 +99,6 @@ body {
 /* Contact form */
 .contact-form {
     background: #ffffff;
-    padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     max-width: 500px;
@@ -347,6 +346,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
