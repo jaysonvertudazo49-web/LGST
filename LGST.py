@@ -204,30 +204,30 @@ if st.session_state.page == "About":
     """)
 
     st.subheader("Organization Chart")
-st.graphviz_chart("""
-digraph {
-    node [shape=box, style="rounded,filled", fontcolor=white, fontsize=12, fontname="Arial"];
-
-    CEO [label="Proprier/Owner\\nVON RYAN VELOSO", fillcolor=black];
-
-    H_SEC_PRIVATE [label="HEAD SECRETARY OF PRIVATE COMPANIES\\nABIGAEL NEGRETE", fillcolor=maroon];
-    H_SEC_GOV [label="HEAD SECRETARY OF GOVERNMENT AGENCIES\\nABIGAEL NEGRETE", fillcolor=maroon];
-
-    A_SEC_PRIVATE [label="ASSISTANT SECRETARY OF PRIVATE COMPANIES\\nCHARLOTTE VAZQUEZ", fillcolor=maroon];
-
-    SEC1 [label="SECRETARY OF PRIVATE COMPANIES\\nFRANCHESKA PEREZ", fillcolor=maroon];
-    SEC2 [label="SECRETARY OF PRIVATE COMPANIES\\nCRISTINA ANADON", fillcolor=gray20];
-
-    # Connections
-    CEO -> H_SEC_PRIVATE;
-    CEO -> H_SEC_GOV;
-
-    H_SEC_PRIVATE -> A_SEC_PRIVATE;
-
-    A_SEC_PRIVATE -> SEC1;
-    A_SEC_PRIVATE -> SEC2;
-}
-""")
+     st.graphviz_chart("""
+        digraph {
+        node [shape=box, style="rounded,filled", fontcolor=white, fontsize=12, fontname="Arial"];
+    
+        CEO [label="Proprier/Owner\\nVON RYAN VELOSO", fillcolor=black];
+    
+        H_SEC_PRIVATE [label="HEAD SECRETARY OF PRIVATE COMPANIES\\nABIGAEL NEGRETE", fillcolor=maroon];
+        H_SEC_GOV [label="HEAD SECRETARY OF GOVERNMENT AGENCIES\\nABIGAEL NEGRETE", fillcolor=maroon];
+    
+        A_SEC_PRIVATE [label="ASSISTANT SECRETARY OF PRIVATE COMPANIES\\nCHARLOTTE VAZQUEZ", fillcolor=maroon];
+    
+        SEC1 [label="SECRETARY OF PRIVATE COMPANIES\\nFRANCHESKA PEREZ", fillcolor=maroon];
+        SEC2 [label="SECRETARY OF PRIVATE COMPANIES\\nCRISTINA ANADON", fillcolor=gray20];
+    
+        # Connections
+        CEO -> H_SEC_PRIVATE;
+        CEO -> H_SEC_GOV;
+    
+        H_SEC_PRIVATE -> A_SEC_PRIVATE;
+    
+        A_SEC_PRIVATE -> SEC1;
+        A_SEC_PRIVATE -> SEC2;
+    }
+    """)
 
 
     st.subheader("Key Roles & Responsibilities")
@@ -387,6 +387,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
