@@ -184,19 +184,31 @@ if "page" in query_params:
     st.session_state.page = query_params["page"][0]
 
 # ------------------ ABOUT PAGE ------------------
-elif st.session_state.page == "About":
+if st.session_state.page == "About":
     st.header("About Lucas Grey Scrap Trading")
+    
+    # Company Profile
+    st.subheader("Who We Are")
     st.write("""
-        Lucas Grey Scrap Trading provides sustainable scrap trading services.
-        We recycle metals such as copper, aluminum, and steel for small-scale and industrial clients.
-        
-        **Services Offered:**
-        - Scrap metal collection
-        - Sorting and processing
-        - Wholesale and retail supply
-        - Partnerships for industrial recycling
+        Lucas Grey Scrap Trading is a leading scrap metal recycling company in Quezon City.  
+        We are committed to sustainability by collecting, processing, and supplying high-quality scrap metals.
     """)
 
+    st.subheader("Our Mission")
+    st.info("To provide eco-friendly recycling services while supporting industries with sustainable raw materials.")
+
+    st.subheader("Our Vision")
+    st.success("To be the trusted partner in scrap metal recycling across the Philippines.")
+
+    st.subheader("Core Values")
+    st.markdown("""
+    - ♻️ **Sustainability** – We recycle to reduce waste.  
+    - 🤝 **Integrity** – We value fairness and transparency.  
+    - ⚡ **Efficiency** – We deliver timely and reliable services.  
+    - 👥 **Community** – We create partnerships for growth.  
+    """)
+
+    # Organization Chart
     st.subheader("Organization Chart")
     st.graphviz_chart("""
     digraph {
@@ -220,13 +232,34 @@ elif st.session_state.page == "About":
     }
     """)
 
+    # Roles
+    st.subheader("Key Roles & Responsibilities")
+    st.write("""
+    - **CEO (Lucas Grey):** Oversees company strategy and growth.  
+    - **Operations Manager:** Manages logistics, warehouse, and drivers.  
+    - **Sales Manager:** Handles clients, partnerships, and pricing.  
+    - **Finance & Admin:** Controls accounting, payroll, and documentation.  
+    - **Warehouse Supervisor:** Ensures safe and organized scrap handling.  
+    - **Drivers & Staff:** Collect, deliver, and sort materials.  
+    """)
+
+    # Milestones
+    st.subheader("Company Milestones")
+    milestones = [
+        {"year": "2015", "event": "Founded in Quezon City"},
+        {"year": "2018", "event": "Expanded to industrial scrap collection"},
+        {"year": "2021", "event": "Reached 1,000+ tons of recycled metal"},
+        {"year": "2024", "event": "Partnered with major construction firms"},
+    ]
+    for item in milestones:
+        st.write(f"**{item['year']}** – {item['event']}")
+
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.rerun()
 
-
 # ------------------ HOME PAGE ------------------
-if st.session_state.page == "Home":
+elif st.session_state.page == "Home":
     repo_url = "https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/"
     max_images = 15
     possible_exts = ["jpg", "jpeg", "png"]
@@ -324,23 +357,6 @@ if st.session_state.page == "Home":
             st.session_state.view_image = None
             st.rerun()
 
-# ------------------ ABOUT PAGE ------------------
-elif st.session_state.page == "About":
-    st.header("About Lucas Grey Scrap Trading")
-    st.write("""
-        Lucas Grey Scrap Trading provides sustainable scrap trading services.
-        We recycle metals such as copper, aluminum, and steel for small-scale and industrial clients.
-        
-        **Services Offered:**
-        - Scrap metal collection
-        - Sorting and processing
-        - Wholesale and retail supply
-        - Partnerships for industrial recycling
-    """)
-    if st.button("⬅️ Back to Home"):
-        st.session_state.page = "Home"
-        st.rerun()
-
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
     st.header("Contact Us")
@@ -372,5 +388,3 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
-
-
