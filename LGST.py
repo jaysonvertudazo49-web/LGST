@@ -27,6 +27,7 @@ body {
 .header-title h1 { 
     margin: 0; 
     color: black; 
+    text-align: center;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
@@ -346,6 +347,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
