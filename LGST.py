@@ -161,17 +161,18 @@ if "view_image" not in st.session_state:
 st.markdown("""
 <div class="header-container">
     <div class="header-title">
-        <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80" style="vertical-align:middle;margin-right:10px;">
-        <h1 style="display:inline;vertical-align:middle;">LUCAS GREY SCRAP TRADING</h1>
+        <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
+        <h1>LUCAS GREY SCRAP TRADING</h1>
     </div>
     <div class="header-buttons">
-        <button onclick="window.location.href='?page=About'">About</button>
-        <button onclick="window.location.href='?page=Contact'">Contact Us</button>
+        <form action="" method="get">
+            <button type="submit" name="page" value="About">About</button>
+            <button type="submit" name="page" value="Contact">Contact Us</button>
+        </form>
     </div>
 </div>
 <hr>
 """, unsafe_allow_html=True)
-
 
 # Handle button clicks via query params
 query_params = st.query_params
@@ -371,8 +372,8 @@ elif st.session_state.page == "Contact":
     """)
 
     if st.button("⬅️ Back to Home"):
-        navigate_to("Home")
-
+        st.session_state.page = "Home"
+        st.rerun()
 
 # ------------------ FOOTER ------------------
 st.markdown("""
@@ -380,7 +381,3 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
-
-
-
-
