@@ -204,8 +204,8 @@ if st.session_state.page == "About":
     """)
 
     st.subheader("Organization Chart")
-        st.graphviz_chart("""
-        digraph {
+    st.graphviz_chart("""
+    digraph {
         node [shape=box, style="rounded,filled", fontcolor=white, fontsize=12, fontname="Arial"];
     
         CEO [label="Proprier/Owner\\nVON RYAN VELOSO", fillcolor=black];
@@ -387,6 +387,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
