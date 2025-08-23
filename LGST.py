@@ -209,16 +209,13 @@ if st.session_state.page == "About":
         node [shape=plaintext, fontname="Arial"];
     
         CEO [label=<
-            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="black">
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="black">
                 <TR>
                     <TD FIXEDSIZE="TRUE" WIDTH="40" HEIGHT="40" VALIGN="MIDDLE">
                         <IMG SRC="https://via.placeholder.com/40"/>
                     </TD>
-                    <TD ALIGN="CENTER" VALIGN="MIDDLE">
-                        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
-                            <TR><TD ALIGN="CENTER"><FONT COLOR="white"><B>VON RYAN VELOSO</B></FONT></TD></TR>
-                            <TR><TD ALIGN="CENTER"><FONT COLOR="white">Proprier/Owner</FONT></TD></TR>
-                        </TABLE>
+                    <TD VALIGN="MIDDLE">
+                        <FONT COLOR="white"><B>VON RYAN VELOSO</B><BR/>Proprier/Owner</FONT>
                     </TD>
                 </TR>
             </TABLE>
@@ -441,6 +438,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
