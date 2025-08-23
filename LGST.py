@@ -208,15 +208,15 @@ if st.session_state.page == "About":
     digraph {
         node [shape=box, style="rounded,filled", fontcolor=white, fontsize=12, fontname="Arial"];
     
-        CEO [label="Proprier/Owner\\nVON RYAN VELOSO", fillcolor=black];
+        CEO [label="VON RYAN VELOSO\\nProprier/Owner", fillcolor=black];
     
-        H_SEC_PRIVATE [label="HEAD SECRETARY OF PRIVATE COMPANIES\\nABIGAEL NEGRETE", fillcolor=maroon];
-        H_SEC_GOV [label="HEAD SECRETARY OF GOVERNMENT AGENCIES\\nABIGAEL NEGRETE", fillcolor=maroon];
+        H_SEC_PRIVATE [label="ABIGAEL NEGRETE\\nHead Secretary of Private Componies", fillcolor=maroon];
+        H_SEC_GOV [label="MARY ANN VELOSO\\nHead Secretary of Government Agencies", fillcolor=maroon];
     
-        A_SEC_PRIVATE [label="ASSISTANT SECRETARY OF PRIVATE COMPANIES\\nCHARLOTTE VAZQUEZ", fillcolor=pink];
+        A_SEC_PRIVATE [label="CHARLOTTE VAZQUEZ\\nAssistant Secretary", fillcolor=pink];
     
-        SEC1 [label="SECRETARY OF PRIVATE COMPANIES\\nFRANCHESKA PEREZ", fillcolor=gray20];
-        SEC2 [label="SECRETARY OF PRIVATE COMPANIES\\nCRISTINA ANADON", fillcolor=gray20];
+        SEC1 [label="FRANCHESKA PEREZ\\nSecretary", fillcolor=gray20];
+        SEC2 [label="CRISTINA ANADON\\nSecretary", fillcolor=gray20];
     
         # Connections
         CEO -> H_SEC_PRIVATE;
@@ -387,6 +387,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
