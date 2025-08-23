@@ -206,17 +206,61 @@ if st.session_state.page == "About":
     st.subheader("Organization Chart")
     st.graphviz_chart("""
     digraph {
-        node [shape=box, style="rounded,filled", fontcolor=white, fontsize=12, fontname="Arial"];
+        node [shape=plaintext, fontname="Arial"];
     
-        CEO [label="VON RYAN VELOSO\\nProprier/Owner", fillcolor=black];
+        CEO [label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="black">
+                <TR>
+                    <TD FIXEDSIZE="TRUE" WIDTH="40" HEIGHT="40"><IMG SRC="https://via.placeholder.com/40"/></TD>
+                    <TD><FONT COLOR="white">VON RYAN VELOSO<br/>Proprier/Owner</FONT></TD>
+                </TR>
+            </TABLE>
+        >];
     
-        H_SEC_PRIVATE [label="ABIGAEL NEGRETE\\nHead Secretary of Private Componies", fillcolor=maroon];
-        H_SEC_GOV [label="MARY ANN VELOSO\\nHead Secretary of Government Agencies", fillcolor=maroon];
+        H_SEC_PRIVATE [label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="maroon">
+                <TR>
+                    <TD FIXEDSIZE="TRUE" WIDTH="40" HEIGHT="40"><IMG SRC="https://via.placeholder.com/40"/></TD>
+                    <TD><FONT COLOR="white">ABIGAEL NEGRETE<br/>Head Secretary of Private Companies</FONT></TD>
+                </TR>
+            </TABLE>
+        >];
     
-        A_SEC_PRIVATE [label="CHARLOTTE VAZQUEZ\\nAssistant Secretary", fillcolor=pink];
+        H_SEC_GOV [label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="maroon">
+                <TR>
+                    <TD FIXEDSIZE="TRUE" WIDTH="40" HEIGHT="40"><IMG SRC="https://via.placeholder.com/40"/></TD>
+                    <TD><FONT COLOR="white">MARY ANN VELOSO<br/>Head Secretary of Government Agencies</FONT></TD>
+                </TR>
+            </TABLE>
+        >];
     
-        SEC1 [label="FRANCHESKA PEREZ\\nSecretary", fillcolor=gray20];
-        SEC2 [label="CRISTINA ANADON\\nSecretary", fillcolor=gray20];
+        A_SEC_PRIVATE [label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="pink">
+                <TR>
+                    <TD FIXEDSIZE="TRUE" WIDTH="40" HEIGHT="40"><IMG SRC="https://via.placeholder.com/40"/></TD>
+                    <TD>CHARLOTTE VAZQUEZ<br/>Assistant Secretary</TD>
+                </TR>
+            </TABLE>
+        >];
+    
+        SEC1 [label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="gray20">
+                <TR>
+                    <TD FIXEDSIZE="TRUE" WIDTH="40" HEIGHT="40"><IMG SRC="https://via.placeholder.com/40"/></TD>
+                    <TD><FONT COLOR="white">FRANCHESKA PEREZ<br/>Secretary</FONT></TD>
+                </TR>
+            </TABLE>
+        >];
+    
+        SEC2 [label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="gray20">
+                <TR>
+                    <TD FIXEDSIZE="TRUE" WIDTH="40" HEIGHT="40"><IMG SRC="https://via.placeholder.com/40"/></TD>
+                    <TD><FONT COLOR="white">CRISTINA ANADON<br/>Secretary</FONT></TD>
+                </TR>
+            </TABLE>
+        >];
     
         # Connections
         CEO -> H_SEC_PRIVATE;
@@ -228,6 +272,7 @@ if st.session_state.page == "About":
         A_SEC_PRIVATE -> SEC2;
     }
     """)
+
 
 
     st.subheader("Key Roles & Responsibilities")
@@ -387,6 +432,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
