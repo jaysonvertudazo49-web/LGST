@@ -208,21 +208,21 @@ if st.session_state.page == "About":
     digraph {
         node [shape=box, style="rounded,filled", fontcolor=white, fontsize=12, fontname="Arial"];
 
-        CEO [label="CEO\\nNick Veloso", fillcolor=black];
-        OPS [label="Operations Manager", fillcolor=maroon];
-        SALES [label="Sales Manager", fillcolor=maroon];
-        FIN [label="Finance & Admin", fillcolor=maroon];
-        WAREHOUSE [label="Warehouse Supervisor", fillcolor=gray20];
-        DRIVERS [label="Drivers", fillcolor=gray20];
-        STAFF [label="Staff", fillcolor=gray20];
+        CEO [label="Prorier/Owner\\nVON RYAN VELOSO", fillcolor=black];
+        H.SEC [label="HEAD SECRETARY OF PRIVATE COMPONIES\\nABIGAEL NEGRETE", fillcolor=maroon];
+        H.SEC [label="HEAD SECRETARY OF GOVERNMENT AGENCIES\\nABIGAEL NEGRETE", fillcolor=maroon];
+        A.SEC [label="ASSISTANT SECRETARY OF PRIVATE COMPANIES\\n CHARLOTTE VAZQUEZ", fillcolor=maroon];
+        SEC [label="SECRETARY OF PRIVATE COMPONIES\\nFRANCHESKA PEREZ", fillcolor=maroon];
+        SEC [label="SECRETARY OF PRIVATE COMPANIES\\nCRISTINA ANADON", fillcolor=gray20];
+        
 
-        CEO -> OPS;
-        CEO -> SALES;
-        CEO -> FIN;
+        CEO -> H.SEC;
+        CEO -> H.SEC;
+        
+        H.SEC -> A.SEC;
 
-        OPS -> WAREHOUSE;
-        OPS -> DRIVERS;
-        OPS -> STAFF;
+        A.SEC -> SEC;
+        A.SEC -> SEC;
     }
     """)
 
@@ -383,6 +383,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
