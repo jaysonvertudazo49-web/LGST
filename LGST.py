@@ -1,7 +1,16 @@
 import streamlit as st
 import requests
 import base64
+import json
 import re
+from io import BytesIO
+
+# Pillow for image conversion to JPG
+try:
+    from PIL import Image
+    PIL_AVAILABLE = True
+except Exception:
+    PIL_AVAILABLE = False
 
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
@@ -153,7 +162,7 @@ h2 {
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 if "images" not in st.session_state:
-    st.session_state.images = []
+    st.session_state.images = []  # list of raw URLs
 if "page_num" not in st.session_state:
     st.session_state.page_num = 0
 if "view_image" not in st.session_state:
@@ -161,46 +170,163 @@ if "view_image" not in st.session_state:
 if "is_admin" not in st.session_state:
     st.session_state.is_admin = False
 if "descriptions" not in st.session_state:
+    # maps filename (e.g., "pic12.jpg") -> description
     st.session_state.descriptions = {}
 
 # ------------------ GITHUB CONFIG ------------------
-GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
+try:
+    GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
+except Exception:
+    GITHUB_TOKEN = None
+
 REPO_OWNER = "jaysonvertudazo49-web"
 REPO_NAME = "LGST"
 BRANCH = "main"
 
-headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+# If your images live in a subfolder, set IMAGE_DIR = "images"
+IMAGE_DIR = ""  # root directory
 
-def get_latest_pic_number():
-    """Check repo for the latest picX file and return the highest number."""
-    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents"
-    r = requests.get(url, headers=headers)
-    if r.status_code != 200:
-        return 0
-    files = r.json()
-    max_num = 0
-    for f in files:
-        match = re.match(r"pic(\d+)\.(jpg|jpeg|png)", f["name"], re.IGNORECASE)
-        if match:
-            num = int(match.group(1))
-            max_num = max(max_num, num)
-    return max_num
+API_ROOT = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}"
+RAW_ROOT = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{BRANCH}"
 
-def upload_to_github(file_content, filename):
-    """Upload a file to GitHub repo."""
-    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{filename}"
-    encoded = base64.b64encode(file_content).decode()
+def _headers():
+    if not GITHUB_TOKEN:
+        return {"Accept": "application/vnd.github+json"}
+    return {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github+json"
+    }
+
+def _join_path(*parts):
+    # safe join for GitHub paths (no leading slash)
+    return "/".join([p.strip("/") for p in parts if p is not None and p != ""])
+
+def _raw_url(filename):
+    path = _join_path(IMAGE_DIR, filename)
+    return f"{RAW_ROOT}/{path}"
+
+def github_list(path=""):
+    """List files in a path on a specific branch."""
+    url = f"{API_ROOT}/contents/{path}" if path else f"{API_ROOT}/contents"
+    resp = requests.get(url, headers=_headers(), params={"ref": BRANCH})
+    if resp.status_code != 200:
+        raise RuntimeError(f"GitHub list failed [{resp.status_code}]: {resp.text}")
+    return resp.json()
+
+def github_get_file(path):
+    """Get a single file metadata including sha and content (base64)."""
+    url = f"{API_ROOT}/contents/{path}"
+    resp = requests.get(url, headers=_headers(), params={"ref": BRANCH})
+    if resp.status_code == 200:
+        return resp.json()  # includes 'sha' and 'content' (base64)
+    elif resp.status_code == 404:
+        return None
+    else:
+        raise RuntimeError(f"GitHub get file failed [{resp.status_code}]: {resp.text}")
+
+def github_put_file(path, content_bytes, message, sha=None):
+    """Create or update a file via the Contents API."""
+    url = f"{API_ROOT}/contents/{path}"
     data = {
-        "message": f"Add {filename}",
-        "content": encoded,
+        "message": message,
+        "content": base64.b64encode(content_bytes).decode("utf-8"),
         "branch": BRANCH
     }
-    r = requests.put(url, headers=headers, json=data)
-    if r.status_code in [200,201]:
-        return True
+    if sha:
+        data["sha"] = sha
+    resp = requests.put(url, headers=_headers(), data=json.dumps(data))
+    if resp.status_code in (200, 201):
+        return resp.json()
     else:
-        st.error(f"GitHub upload failed: {r.json()}")
-        return False
+        raise RuntimeError(f"GitHub put file failed [{resp.status_code}]: {resp.text}")
+
+def get_latest_pic_number():
+    """Check repo for highest existing picX.(jpg|jpeg|png) in IMAGE_DIR and return that number."""
+    try:
+        files = github_list(IMAGE_DIR)
+    except Exception as e:
+        st.error(f"Unable to list repository contents: {e}")
+        return 0
+
+    max_num = 0
+    for f in files:
+        if f.get("type") != "file":
+            continue
+        name = f.get("name", "")
+        m = re.fullmatch(r"pic(\d+)\.(jpg|jpeg|png)", name, flags=re.IGNORECASE)
+        if m:
+            max_num = max(max_num, int(m.group(1)))
+    return max_num
+
+def list_pic_urls_sorted():
+    """Return list of raw URLs for picX files sorted by X ascending."""
+    try:
+        files = github_list(IMAGE_DIR)
+    except Exception as e:
+        st.error(f"Unable to load image list from GitHub: {e}")
+        return []
+
+    pics = []
+    for f in files:
+        if f.get("type") != "file":
+            continue
+        name = f.get("name", "")
+        m = re.fullmatch(r"pic(\d+)\.(jpg|jpeg|png)", name, flags=re.IGNORECASE)
+        if m:
+            num = int(m.group(1))
+            pics.append((num, name))
+    pics.sort(key=lambda x: x[0])
+    return [_raw_url(name) for _, name in pics]
+
+def load_state_json():
+    """Load existing state.json, return dict. If not found, return default structure."""
+    try:
+        file_info = github_get_file("state.json")
+        if not file_info:
+            return {"descriptions": {}}, None  # content, sha
+        content_b64 = file_info.get("content", "")
+        sha = file_info.get("sha", None)
+        content = base64.b64decode(content_b64).decode("utf-8")
+        data = json.loads(content) if content.strip() else {}
+        if not isinstance(data, dict):
+            data = {}
+        if "descriptions" not in data or not isinstance(data["descriptions"], dict):
+            data["descriptions"] = {}
+        return data, sha
+    except Exception as e:
+        st.warning(f"Could not load state.json: {e}")
+        return {"descriptions": {}}, None
+
+def save_state_json(state_data, sha_before):
+    """Update state.json (requires sha) or create if missing."""
+    try:
+        payload = json.dumps(state_data, ensure_ascii=False, indent=2).encode("utf-8")
+        return github_put_file("state.json", payload, "Update state.json", sha=sha_before)
+    except RuntimeError as e:
+        # If file didn't exist (sha None) and server expects no sha, retry without sha
+        if sha_before is None:
+            payload = json.dumps(state_data, ensure_ascii=False, indent=2).encode("utf-8")
+            return github_put_file("state.json", payload, "Create state.json")
+        raise
+
+def convert_to_jpg_bytes(uploaded_file):
+    """
+    Convert any uploaded image to JPEG bytes.
+    If Pillow isn't available, return original bytes and hope it's already JPEG.
+    """
+    data = uploaded_file.getvalue()
+    if not PIL_AVAILABLE:
+        return data  # fallback
+    try:
+        with Image.open(BytesIO(data)) as im:
+            # Convert to RGB to avoid issues with PNG transparency / P mode
+            rgb = im.convert("RGB")
+            buf = BytesIO()
+            rgb.save(buf, format="JPEG", quality=92, optimize=True)
+            return buf.getvalue()
+    except Exception:
+        # If conversion fails, return original
+        return data
 
 # ------------------ HEADER ------------------
 st.markdown("""
@@ -251,23 +377,14 @@ if st.session_state.page == "About":
 
 # ------------------ HOME PAGE ------------------
 elif st.session_state.page == "Home":
-    repo_url = "https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/"
-    max_images = 50
-    possible_exts = ["jpg", "jpeg", "png"]
-
+    # Load images from GitHub (only once)
     if not st.session_state.images:
-        with st.spinner("Loading images..."):
-            for i in range(1, max_images + 1):
-                for ext in possible_exts:
-                    url = f"{repo_url}pic{i}.{ext}"
-                    try:
-                        if requests.head(url).status_code == 200:
-                            st.session_state.images.append(url)
-                            break
-                    except:
-                        pass
+        with st.spinner("Loading images from GitHub..."):
+            st.session_state.images = list_pic_urls_sorted()
 
-    images = st.session_state.images
+    # Load state.json to bring in persistent descriptions
+    state_data, _sha = load_state_json()
+    repo_descriptions = state_data.get("descriptions", {})
 
     st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
 
@@ -279,13 +396,20 @@ elif st.session_state.page == "Home":
             search_query = ""
             st.session_state.page_num = 0
 
-    # Filtering
+    # Build a helper: URL -> filename
+    def filename_from_url(url: str) -> str:
+        return url.rsplit("/", 1)[-1]
+
+    images = st.session_state.images
+
+    # Filtering by description (from state.json)
+    def desc_for_url(url: str) -> str:
+        fname = filename_from_url(url)
+        return repo_descriptions.get(fname, "")
+
     filtered_images = images
     if search_query:
-        filtered_images = [
-            img for idx, img in enumerate(images)
-            if search_query.lower() in st.session_state.descriptions.get(idx, "").lower()
-        ]
+        filtered_images = [u for u in images if search_query.lower() in desc_for_url(u).lower()]
         st.session_state.page_num = 0
 
     # Pagination
@@ -293,7 +417,7 @@ elif st.session_state.page == "Home":
     start_idx = st.session_state.page_num * images_per_page
     end_idx = start_idx + images_per_page
     current_images = filtered_images[start_idx:end_idx]
-    total_pages = (len(filtered_images) + images_per_page - 1) // images_per_page
+    total_pages = (len(filtered_images) + images_per_page - 1) // images_per_page if filtered_images else 1
 
     if filtered_images:
         st.markdown(
@@ -321,8 +445,7 @@ elif st.session_state.page == "Home":
         for idx, col in enumerate(img_cols):
             if idx < len(current_images):
                 img_url = current_images[idx]
-                absolute_idx = images.index(img_url)
-                caption = st.session_state.descriptions.get(absolute_idx, "No description")
+                caption = desc_for_url(img_url) or "No description"
                 col.markdown(
                     f"""
                     <div class="img-card">
@@ -332,15 +455,14 @@ elif st.session_state.page == "Home":
                     """,
                     unsafe_allow_html=True,
                 )
-                if col.button("View Details", key=f"view_{absolute_idx}"):
-                    st.session_state.view_image = absolute_idx
+                if col.button("View Details", key=f"view_{img_url}"):
+                    st.session_state.view_image = img_url
                     st.rerun()
 
     # Modal
     if st.session_state.view_image is not None:
-        idx = st.session_state.view_image
-        img_url = images[idx]
-        caption = st.session_state.descriptions.get(idx, "No description")
+        img_url = st.session_state.view_image
+        caption = (state_data.get("descriptions", {}) or {}).get(filename_from_url(img_url), "No description")
         st.markdown(
             f"""
             <div class="modal">
@@ -350,7 +472,7 @@ elif st.session_state.page == "Home":
             """,
             unsafe_allow_html=True,
         )
-        if st.button("Close", key=f"close_{idx}"):
+        if st.button("Close", key=f"close_{img_url}"):
             st.session_state.view_image = None
             st.rerun()
 
@@ -395,33 +517,75 @@ elif st.session_state.page == "Admin":
             else:
                 st.error("Invalid credentials")
     else:
+        if not GITHUB_TOKEN:
+            st.error("Missing GITHUB_TOKEN in st.secrets. Add it first to enable uploads.")
         uploaded_files = st.file_uploader(
-            "Upload new project images", 
-            accept_multiple_files=True, 
+            "Upload new project images (they will be renamed to picX.jpg)",
+            accept_multiple_files=True,
             type=["jpg", "jpeg", "png"]
         )
 
-        descriptions = {}
+        descriptions_local = {}
         if uploaded_files:
             for i, file in enumerate(uploaded_files):
                 desc = st.text_area(f"Description for {file.name}", key=f"desc_{i}")
-                descriptions[file.name] = desc
+                descriptions_local[file.name] = desc
 
             if st.button("Save Project"):
+                if not GITHUB_TOKEN:
+                    st.stop()
+
+                # Load state.json (existing)
+                state_data, state_sha = load_state_json()
+                if "descriptions" not in state_data or not isinstance(state_data["descriptions"], dict):
+                    state_data["descriptions"] = {}
+
+                # Determine latest pic number
                 latest_num = get_latest_pic_number()
+
+                # Upload each file -> pic{num}.jpg
+                new_urls = []
+                errors = []
                 for i, file in enumerate(uploaded_files):
                     file_num = latest_num + i + 1
-                    ext = file.name.split(".")[-1].lower()
-                    filename = f"pic{file_num}.{ext}"
-                    success = upload_to_github(file.getvalue(), filename)
-                    if success:
-                        st.session_state.images.append(
-                            f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{BRANCH}/{filename}"
-                        )
-                        st.session_state.descriptions[len(st.session_state.images)-1] = descriptions[file.name]
+                    new_filename = f"pic{file_num}.jpg"
 
-                st.success("✅ Project(s) uploaded to GitHub successfully!")
-                st.rerun()
+                    # Convert to jpg bytes
+                    img_bytes = convert_to_jpg_bytes(file)
+
+                    # Upload image
+                    img_path = _join_path(IMAGE_DIR, new_filename)
+                    try:
+                        github_put_file(
+                            img_path,
+                            img_bytes,
+                            message=f"Add {new_filename}"
+                        )
+                        # Update state.json descriptions
+                        desc_value = descriptions_local.get(file.name, "").strip()
+                        if desc_value:
+                            state_data["descriptions"][new_filename] = desc_value
+                        new_urls.append(_raw_url(new_filename))
+                    except Exception as e:
+                        errors.append(f"{new_filename}: {e}")
+
+                # Save updated state.json
+                try:
+                    save_state_json(state_data, state_sha)
+                except Exception as e:
+                    errors.append(f"state.json update failed: {e}")
+
+                if errors:
+                    st.error("Some items failed to upload:\n- " + "\n- ".join(errors))
+                if new_urls:
+                    # Refresh local gallery list (merge and re-sort by pic number)
+                    try:
+                        st.session_state.images = list_pic_urls_sorted()
+                    except Exception:
+                        # Fallback: just append the new ones
+                        st.session_state.images.extend(new_urls)
+                    st.success("✅ Project(s) uploaded to GitHub successfully!")
+                    st.rerun()
 
         if st.button("Logout"):
             st.session_state.is_admin = False
