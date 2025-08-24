@@ -204,7 +204,6 @@ if st.session_state.page == "About":
     - ⚡ **Efficiency** – We deliver timely and reliable services.  
     - 👥 **Community** – We create partnerships for growth.  
     """)
-    # (Keep your org chart here unchanged for brevity...)
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.query_params.clear()
@@ -216,6 +215,7 @@ elif st.session_state.page == "Home":
     max_images = 15
     possible_exts = ["jpg", "jpeg", "png"]
 
+    # Load repo images only once
     if not st.session_state.images:
         with st.spinner("Loading images..."):
             for i in range(1, max_images + 1):
@@ -230,7 +230,7 @@ elif st.session_state.page == "Home":
 
     images = st.session_state.images
 
-    # Default image descriptions
+    # Default descriptions (repo images only)
     default_descriptions = {
         0: "Pic 1: Vroom Vroom",
         1: "Pic 2: Yellow boys",
@@ -248,25 +248,31 @@ elif st.session_state.page == "Home":
         13: "Pic 14: Groupies",
         14: "Pic 15: Macho",
     }
-    
-    # Merge admin-added descriptions
+
+    # Merge descriptions
     image_descriptions = default_descriptions.copy()
     image_descriptions.update(st.session_state.descriptions)
 
-
     st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
+
+    # Search
     search_query = st.text_input("", "")
-    col_clear = st.columns([8,1.1])
+    col_clear = st.columns([8, 1.1])
     with col_clear[1]:
         if st.button("Clear Search"):
             search_query = ""
             st.session_state.page_num = 0
 
+    # Filtering
     filtered_images = images
     if search_query:
-        filtered_images = [img for idx, img in enumerate(images) if search_query.lower() in image_descriptions.get(idx, "").lower()]
+        filtered_images = [
+            img for idx, img in enumerate(images)
+            if search_query.lower() in image_descriptions.get(idx, "").lower()
+        ]
         st.session_state.page_num = 0
 
+    # Pagination
     images_per_page = 3
     start_idx = st.session_state.page_num * images_per_page
     end_idx = start_idx + images_per_page
@@ -274,10 +280,14 @@ elif st.session_state.page == "Home":
     total_pages = (len(filtered_images) + images_per_page - 1) // images_per_page
 
     if filtered_images:
-        st.markdown(f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>", unsafe_allow_html=True)
+        st.markdown(
+            f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>",
+            unsafe_allow_html=True,
+        )
     else:
         st.warning("No results found.")
 
+    # Pagination buttons
     col1, col2, col3 = st.columns([1, 10, 1])
     with col1:
         if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
@@ -288,6 +298,7 @@ elif st.session_state.page == "Home":
             st.session_state.page_num += 1
             st.rerun()
 
+    # Display images
     if filtered_images:
         st.subheader("CURRENT PROJECT")
         img_cols = st.columns(min(len(current_images), 3))
@@ -302,22 +313,27 @@ elif st.session_state.page == "Home":
                         <img src="{img_url}" alt="{caption}">
                         <p>{caption}</p>
                     </div>
-                    """, unsafe_allow_html=True
+                    """,
+                    unsafe_allow_html=True,
                 )
                 if col.button("View Details", key=f"view_{absolute_idx}"):
                     st.session_state.view_image = absolute_idx
                     st.rerun()
 
+    # Modal
     if st.session_state.view_image is not None:
         idx = st.session_state.view_image
         img_url = images[idx]
         caption = image_descriptions.get(idx, "No description")
-        st.markdown(f"""
-        <div class="modal">
-            <img src="{img_url}" width="700">
-            <p><b>{caption}</b></p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            f"""
+            <div class="modal">
+                <img src="{img_url}" width="700">
+                <p><b>{caption}</b></p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         if st.button("Close", key=f"close_{idx}"):
             st.session_state.view_image = None
             st.rerun()
@@ -356,42 +372,38 @@ elif st.session_state.page == "Admin":
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
         if st.button("Login"):
-            if username == "admin" and password == "1234":  # simple credentials
+            if username == "admin" and password == "1234":
                 st.session_state.is_admin = True
                 st.success("Login successful!")
                 st.rerun()
             else:
                 st.error("Invalid credentials")
     else:
-        # File uploader
         uploaded_files = st.file_uploader(
             "Upload new project images", 
             accept_multiple_files=True, 
             type=["jpg", "jpeg", "png"]
         )
-        description = st.text_area("Image Description", placeholder="Enter a description for the uploaded image(s)")
-        
-        if st.button("Save Project"):
-            if uploaded_files:
-                import base64
-                for file in uploaded_files:
-                    # Convert uploaded file to base64 for inline display
+
+        if uploaded_files:
+            descriptions = {}
+            for i, file in enumerate(uploaded_files):
+                desc = st.text_area(f"Description for {file.name}", key=f"desc_{i}")
+                descriptions[file.name] = desc
+
+            if st.button("Save Project"):
+                for i, file in enumerate(uploaded_files):
                     encoded = base64.b64encode(file.getvalue()).decode()
                     img_url = f"data:image/png;base64,{encoded}"
-                    
-                    # Append to gallery
                     st.session_state.images.append(img_url)
-                    st.session_state.descriptions[len(st.session_state.images)-1] = description
-                
+                    st.session_state.descriptions[len(st.session_state.images)-1] = descriptions[file.name]
+
                 st.success("✅ Project(s) added successfully!")
                 st.rerun()
-            else:
-                st.warning("⚠️ Please upload at least one image.")
 
         if st.button("Logout"):
             st.session_state.is_admin = False
             st.rerun()
-
 
 # ------------------ FOOTER ------------------
 st.markdown("""
@@ -399,5 +411,3 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
-
-
