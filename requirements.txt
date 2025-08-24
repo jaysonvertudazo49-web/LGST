@@ -1,8 +1,9 @@
 streamlit>=1.37.0
 requests
-base64
-re
-json
-BytesIO
+Pillow
+PyGithub
+python-dotenv
+
+
 
 
