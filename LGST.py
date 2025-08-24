@@ -241,14 +241,11 @@ if st.session_state.page == "About":
         A_SEC_PRIVATE [label=<
             <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="pink">
                 <TR>
-                    <TD FIXEDSIZE="TRUE" WIDTH="40" HEIGHT="40">
-                        <IMG SRC="khyla.jpg"/>
-                    </TD>
+                    <TD FIXEDSIZE="TRUE" WIDTH="40" HEIGHT="40"><IMG SRC="https://raw.github.com/jaysonvertudazo49-web/LGST/main/khyla.jpg"/></TD>
                     <TD>CHARLOTTE VAZQUEZ<br/>Assistant Secretary</TD>
                 </TR>
             </TABLE>
         >];
-
     
         SEC1 [label=<
             <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" STYLE="rounded" BGCOLOR="gray20">
@@ -438,8 +435,6 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
-
-
 
 
 
