@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import base64
+import re
 
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
@@ -162,6 +163,45 @@ if "is_admin" not in st.session_state:
 if "descriptions" not in st.session_state:
     st.session_state.descriptions = {}
 
+# ------------------ GITHUB CONFIG ------------------
+GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
+REPO_OWNER = "jaysonvertudazo49-web"
+REPO_NAME = "LGST"
+BRANCH = "main"
+
+headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+
+def get_latest_pic_number():
+    """Check repo for the latest picX file and return the highest number."""
+    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents"
+    r = requests.get(url, headers=headers)
+    if r.status_code != 200:
+        return 0
+    files = r.json()
+    max_num = 0
+    for f in files:
+        match = re.match(r"pic(\d+)\.(jpg|jpeg|png)", f["name"], re.IGNORECASE)
+        if match:
+            num = int(match.group(1))
+            max_num = max(max_num, num)
+    return max_num
+
+def upload_to_github(file_content, filename):
+    """Upload a file to GitHub repo."""
+    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{filename}"
+    encoded = base64.b64encode(file_content).decode()
+    data = {
+        "message": f"Add {filename}",
+        "content": encoded,
+        "branch": BRANCH
+    }
+    r = requests.put(url, headers=headers, json=data)
+    if r.status_code in [200,201]:
+        return True
+    else:
+        st.error(f"GitHub upload failed: {r.json()}")
+        return False
+
 # ------------------ HEADER ------------------
 st.markdown("""
 <div class="header-container">
@@ -212,10 +252,9 @@ if st.session_state.page == "About":
 # ------------------ HOME PAGE ------------------
 elif st.session_state.page == "Home":
     repo_url = "https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/"
-    max_images = 15
+    max_images = 50
     possible_exts = ["jpg", "jpeg", "png"]
 
-    # Load repo images only once
     if not st.session_state.images:
         with st.spinner("Loading images..."):
             for i in range(1, max_images + 1):
@@ -229,29 +268,6 @@ elif st.session_state.page == "Home":
                         pass
 
     images = st.session_state.images
-
-    # Default descriptions (repo images only)
-    default_descriptions = {
-        0: "Pic 1: Vroom Vroom",
-        1: "Pic 2: Yellow boys",
-        2: "Pic 3: Blackshirts",
-        3: "Pic 4: Dudes",
-        4: "Pic 5: Form",
-        5: "Pic 6: Pic niyo",
-        6: "Pic 7: More Pic",
-        7: "Pic 8: Karunungan",
-        8: "Pic 9: Lights",
-        9: "Pic 10: Toga",
-        10: "Pic 11: Graduate",
-        11: "Pic 12: BlackToga",
-        12: "Pic 13: BlueToga",
-        13: "Pic 14: Groupies",
-        14: "Pic 15: Macho",
-    }
-
-    # Merge descriptions
-    image_descriptions = default_descriptions.copy()
-    image_descriptions.update(st.session_state.descriptions)
 
     st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
 
@@ -268,7 +284,7 @@ elif st.session_state.page == "Home":
     if search_query:
         filtered_images = [
             img for idx, img in enumerate(images)
-            if search_query.lower() in image_descriptions.get(idx, "").lower()
+            if search_query.lower() in st.session_state.descriptions.get(idx, "").lower()
         ]
         st.session_state.page_num = 0
 
@@ -306,7 +322,7 @@ elif st.session_state.page == "Home":
             if idx < len(current_images):
                 img_url = current_images[idx]
                 absolute_idx = images.index(img_url)
-                caption = image_descriptions.get(absolute_idx, "No description")
+                caption = st.session_state.descriptions.get(absolute_idx, "No description")
                 col.markdown(
                     f"""
                     <div class="img-card">
@@ -324,7 +340,7 @@ elif st.session_state.page == "Home":
     if st.session_state.view_image is not None:
         idx = st.session_state.view_image
         img_url = images[idx]
-        caption = image_descriptions.get(idx, "No description")
+        caption = st.session_state.descriptions.get(idx, "No description")
         st.markdown(
             f"""
             <div class="modal">
@@ -385,20 +401,26 @@ elif st.session_state.page == "Admin":
             type=["jpg", "jpeg", "png"]
         )
 
+        descriptions = {}
         if uploaded_files:
-            descriptions = {}
             for i, file in enumerate(uploaded_files):
                 desc = st.text_area(f"Description for {file.name}", key=f"desc_{i}")
                 descriptions[file.name] = desc
 
             if st.button("Save Project"):
+                latest_num = get_latest_pic_number()
                 for i, file in enumerate(uploaded_files):
-                    encoded = base64.b64encode(file.getvalue()).decode()
-                    img_url = f"data:image/png;base64,{encoded}"
-                    st.session_state.images.append(img_url)
-                    st.session_state.descriptions[len(st.session_state.images)-1] = descriptions[file.name]
+                    file_num = latest_num + i + 1
+                    ext = file.name.split(".")[-1].lower()
+                    filename = f"pic{file_num}.{ext}"
+                    success = upload_to_github(file.getvalue(), filename)
+                    if success:
+                        st.session_state.images.append(
+                            f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{BRANCH}/{filename}"
+                        )
+                        st.session_state.descriptions[len(st.session_state.images)-1] = descriptions[file.name]
 
-                st.success("✅ Project(s) added successfully!")
+                st.success("✅ Project(s) uploaded to GitHub successfully!")
                 st.rerun()
 
         if st.button("Logout"):
