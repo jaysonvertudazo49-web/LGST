@@ -230,21 +230,29 @@ elif st.session_state.page == "Home":
 
     images = st.session_state.images
 
-    # default descriptions
-    image_descriptions = {
-        0: "Pic 1: Vroom Vroom", 1: "Pic 2: Yellow boys", 2: "Pic 3: Blackshirts",
-        3: "Pic 4: I love red", 4: "Pic 5: Blue is my color", 5: "Pic 6: Batelec 1",
-        6: "Pic 7: Meralco", 7: "Pic 8: Stainless steel scraps for manufacturing",
-        8: "Pic 9: Copper pipes cleaned and ready for reuse",
-        9: "Pic 10: Assorted metal alloys for specialized applications",
-        10: "Pic 11: Scrap aluminum sheets for construction projects",
-        11: "Pic 12: High-grade steel beams for recycling",
-        12: "Pic 13: Copper radiators in bulk quantities",
-        13: "Pic 14: Mixed non-ferrous metals for sale",
-        14: "Pic 15: Scrap metal sorted by type for easy processing"
-    }
-    # merge with admin uploads
-    image_descriptions.update(st.session_state.descriptions)
+    # Default image descriptions
+default_descriptions = {
+    0: "Pic 1: Vroom Vroom",
+    1: "Pic 2: Yellow boys",
+    2: "Pic 3: Blackshirts",
+    3: "Pic 4: Dudes",
+    4: "Pic 5: Form",
+    5: "Pic 6: Pic niyo",
+    6: "Pic 7: More Pic",
+    7: "Pic 8: Karunungan",
+    8: "Pic 9: Lights",
+    9: "Pic 10: Toga",
+    10: "Pic 11: Graduate",
+    11: "Pic 12: BlackToga",
+    12: "Pic 13: BlueToga",
+    13: "Pic 14: Groupies",
+    14: "Pic 15: Macho",
+}
+
+# Merge admin-added descriptions
+image_descriptions = default_descriptions.copy()
+image_descriptions.update(st.session_state.descriptions)
+
 
     st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
     search_query = st.text_input("", "")
@@ -355,25 +363,35 @@ elif st.session_state.page == "Admin":
             else:
                 st.error("Invalid credentials")
     else:
-        uploaded_files = st.file_uploader("Upload new project images", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
+        # File uploader
+        uploaded_files = st.file_uploader(
+            "Upload new project images", 
+            accept_multiple_files=True, 
+            type=["jpg", "jpeg", "png"]
+        )
         description = st.text_area("Image Description", placeholder="Enter a description for the uploaded image(s)")
         
         if st.button("Save Project"):
             if uploaded_files:
+                import base64
                 for file in uploaded_files:
-                    # Store image in base64 format
-                    b64 = base64.b64encode(file.getvalue()).decode()
-                    img_url = f"data:image/png;base64,{b64}"
+                    # Convert uploaded file to base64 for inline display
+                    encoded = base64.b64encode(file.getvalue()).decode()
+                    img_url = f"data:image/png;base64,{encoded}"
+                    
+                    # Append to gallery
                     st.session_state.images.append(img_url)
                     st.session_state.descriptions[len(st.session_state.images)-1] = description
-                st.success("Project(s) added successfully!")
+                
+                st.success("✅ Project(s) added successfully!")
                 st.rerun()
             else:
-                st.warning("Please upload at least one image.")
+                st.warning("⚠️ Please upload at least one image.")
 
         if st.button("Logout"):
             st.session_state.is_admin = False
             st.rerun()
+
 
 # ------------------ FOOTER ------------------
 st.markdown("""
@@ -381,3 +399,4 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
