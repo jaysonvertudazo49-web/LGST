@@ -231,27 +231,27 @@ elif st.session_state.page == "Home":
     images = st.session_state.images
 
     # Default image descriptions
-default_descriptions = {
-    0: "Pic 1: Vroom Vroom",
-    1: "Pic 2: Yellow boys",
-    2: "Pic 3: Blackshirts",
-    3: "Pic 4: Dudes",
-    4: "Pic 5: Form",
-    5: "Pic 6: Pic niyo",
-    6: "Pic 7: More Pic",
-    7: "Pic 8: Karunungan",
-    8: "Pic 9: Lights",
-    9: "Pic 10: Toga",
-    10: "Pic 11: Graduate",
-    11: "Pic 12: BlackToga",
-    12: "Pic 13: BlueToga",
-    13: "Pic 14: Groupies",
-    14: "Pic 15: Macho",
-}
-
-# Merge admin-added descriptions
-image_descriptions = default_descriptions.copy()
-image_descriptions.update(st.session_state.descriptions)
+    default_descriptions = {
+        0: "Pic 1: Vroom Vroom",
+        1: "Pic 2: Yellow boys",
+        2: "Pic 3: Blackshirts",
+        3: "Pic 4: Dudes",
+        4: "Pic 5: Form",
+        5: "Pic 6: Pic niyo",
+        6: "Pic 7: More Pic",
+        7: "Pic 8: Karunungan",
+        8: "Pic 9: Lights",
+        9: "Pic 10: Toga",
+        10: "Pic 11: Graduate",
+        11: "Pic 12: BlackToga",
+        12: "Pic 13: BlueToga",
+        13: "Pic 14: Groupies",
+        14: "Pic 15: Macho",
+    }
+    
+    # Merge admin-added descriptions
+    image_descriptions = default_descriptions.copy()
+    image_descriptions.update(st.session_state.descriptions)
 
 
     st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
@@ -399,4 +399,5 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
