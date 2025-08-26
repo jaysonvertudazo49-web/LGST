@@ -90,7 +90,7 @@ body {
 
 /* Modal */
 .modal {
-    background: maroon;
+    background: black;
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 6px 15px rgba(0,0,0,0.4);
@@ -634,6 +634,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
