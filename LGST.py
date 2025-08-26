@@ -362,11 +362,11 @@ if st.session_state.page == "About":
         reliability, and competitive pricing. Our strong workforce and organized system ensure that every project is handled with efficiency, professionalism, and care for the environment.
     """)
     st.subheader("Our Mission")
-    st.info("To deliver top-quality scrap trading and copper wire dismantling that prioritize client satisfaction.
-        We are committed to honesty, safety, and efficiency in every transaction, ensuring value and trust in our long-term partnerships.")
+    st.info("""To deliver top-quality scrap trading and copper wire dismantling that prioritize client satisfaction.
+        We are committed to honesty, safety, and efficiency in every transaction, ensuring value and trust in our long-term partnerships.""")
     st.subheader("Our Vision")
-    st.success("To become one of the most recognized and respected service providers in the scrap and dismantling industry in the Philippines—offering excellence, 
-        sustainability, and integrity while upholding our responsibility to society and the environment.")
+    st.success("""To become one of the most recognized and respected service providers in the scrap and dismantling industry in the Philippines—offering excellence, 
+        sustainability, and integrity while upholding our responsibility to society and the environment.""")
     st.subheader("Core Values")
     st.markdown("""
         * Integrity & Honesty – We uphold transparency and fairness in every deal.
@@ -376,10 +376,10 @@ if st.session_state.page == "About":
         * Commitment to Relationships – We aim to build long-term partnerships based on trust, reliability, and mutual growth.
         """)
     st.subheader("Brief History")
-    st.info("Lucas Grey Scrap Trading was formally established in 2021 by Von Ryan Veloso, following more than four years of active experience in the scrap and dismantling business. 
+    st.info("""Lucas Grey Scrap Trading was formally established in 2021 by Von Ryan Veloso, following more than four years of active experience in the scrap and dismantling business. 
         Starting from small transactions involving scrap and unserviceable goods, LGST expanded its services to include large-scale dismantling projects.
         Today, the company manages a warehouse team of over 40 staff members, operates with modern hauling and transport vehicles, and continues to serve both government and private institutions. 
-        Accredited by PHILGEPS, LGST has built its reputation on competitive pricing, timely service completion, and client satisfaction.")
+        Accredited by PHILGEPS, LGST has built its reputation on competitive pricing, timely service completion, and client satisfaction.""")
     st.subheader("What We Do")
     st.markdown("""* Scrap Buying – Purchase of various scrap materials, including copper wires, IT equipment, office supplies, and unserviceable vehicles.
         * Copper Wire Dismantling – Safe and efficient dismantling of copper wires to recover valuable materials.
@@ -619,6 +619,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
