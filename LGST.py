@@ -117,7 +117,7 @@ body {
 
 /* Buttons */
 .stButton button {
-    background: black;
+    background: maroon;
     color: white;
     border-radius: 8px;
     padding: 6px 14px;
@@ -634,6 +634,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
