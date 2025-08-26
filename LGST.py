@@ -1,4 +1,4 @@
-fimport streamlit as st
+import streamlit as st
 import requests
 import base64
 import json
@@ -599,6 +599,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
