@@ -561,7 +561,7 @@ elif st.session_state.page == "Admin":
                 desc = st.text_area(f"Description for {file.name}", key=f"desc_{i}")
                 descriptions_local[file.name] = desc
 
-            if st.button("Save Project"):
+            if st.button("Save Project", key="save_project"):
                 if not GITHUB_TOKEN:
                     st.stop()
 
@@ -608,25 +608,25 @@ elif st.session_state.page == "Admin":
                 if errors:
                     st.error("Some items failed to upload:\n- " + "\n- ".join(errors))
                 if new_urls:
-                    # Refresh local gallery list (merge and re-sort by pic number)
                     try:
                         st.session_state.images = list_pic_urls_sorted()
                     except Exception:
-                        # Fallback: just append the new ones
                         st.session_state.images.extend(new_urls)
                     st.success("✅ Project(s) uploaded to GitHub successfully!")
                     st.rerun()
 
-        # 🏠 Back to Home button (without logout)
-        if st.button("🏠 Back to Home"):
-            st.session_state.page = "Home"
-            st.rerun()
+        # ------------------ NAVIGATION BUTTONS ------------------
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🏠 Back to Home", key="back_home"):
+                st.session_state.page = "Home"
+                st.rerun()
 
-        # 🚪 Logout button
-        if st.button("Logout"):
-            st.session_state.is_admin = False
-            st.session_state.page = "Home"  # set to Home page
-            st.rerun()
+        with col2:
+            if st.button("🚪 Logout", key="logout"):
+                st.session_state.is_admin = False
+                st.session_state.page = "Home"
+                st.rerun()
 
 
 # ------------------ FOOTER ------------------
@@ -635,6 +635,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
