@@ -362,8 +362,7 @@ if st.session_state.page == "About":
         reliability, and competitive pricing. Our strong workforce and organized system ensure that every project is handled with efficiency, professionalism, and care for the environment.
     """)
     st.subheader("Our Mission")
-    st.write("""
-        To deliver top-quality scrap trading and copper wire dismantling that prioritize client satisfaction.
+    st.info("""To deliver top-quality scrap trading and copper wire dismantling that prioritize client satisfaction.
         We are committed to honesty, safety, and efficiency in every transaction, ensuring value and trust in our long-term partnerships.
     """)
     st.subheader("Our Vision")
@@ -392,8 +391,7 @@ if st.session_state.page == "About":
         * Sustainable Recycling – We support environmental responsibility by ensuring proper recycling and waste management practices.
     """)
     st.subheader("Our Commitment")
-    sr.markdown("""
-        At Lucas Grey Scrap Trading, we are dedicated to:
+    sr.markdown("""At Lucas Grey Scrap Trading, we are dedicated to:
         * Providing safe and efficient services for every client.
         * Completing projects on time with guaranteed satisfaction.
         * Building long-term, mutually beneficial business relationships.
@@ -628,6 +626,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
