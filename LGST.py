@@ -1,4 +1,4 @@
-import streamlit as st
+fimport streamlit as st
 import requests
 import base64
 import json
@@ -352,12 +352,12 @@ if "page" in query_params:
     st.session_state.page = query_params["page"]
 
 # ------------------ ABOUT PAGE ------------------
-if st.session_state.page == "About":
+if st.session_state.page == "About Us":
     st.header("About Lucas Grey Scrap Trading")
     st.subheader("Who We Are")
     st.write("""
-        Lucas Grey Scrap Trading is a leading scrap metal recycling company in Quezon City.  
-        We are committed to sustainability by collecting, processing, and supplying high-quality scrap metals.
+        Lucas Grey Scrap Trading (LGST) is a trusted scrap buying and dismantling company based in Quezon City, Philippines. We specialize in the purchase of scrap materials, dismantling of copper wires, and hauling services of unserviceable equipment and properties.
+With years of hands-on experience, we have proudly served both private companies and government agencies—including hospitals and public institutions—earning a reputation for honesty, reliability, and competitive pricing. Our strong workforce and organized system ensure that every project is handled with efficiency, professionalism, and care for the environment.
     """)
     st.subheader("Our Mission")
     st.info("To provide eco-friendly recycling services while supporting industries with sustainable raw materials.")
@@ -599,6 +599,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
