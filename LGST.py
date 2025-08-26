@@ -625,7 +625,6 @@ elif st.session_state.page == "Admin":
         with col2:
             if st.button("🚪 Logout", key="logout"):
                 st.session_state.is_admin = False
-                st.session_state.page = "Home"
                 st.rerun()
 
 
@@ -635,6 +634,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
