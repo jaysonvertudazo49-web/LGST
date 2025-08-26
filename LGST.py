@@ -493,7 +493,7 @@ elif st.session_state.page == "Contact":
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("""
-        📧 Email: **vonryan0110@gmail.com**  
+        📧 Email: **charlottevazquez78@gmail.com**  
         📍 Address: Blk-5 Lot-7 Sta. Fe st. Amlac Ville Payatas B, Quezon City  
     """)
 
@@ -506,7 +506,6 @@ elif st.session_state.page == "Contact":
 elif st.session_state.page == "Admin":
     st.header("🔑 Admin Login" if not st.session_state.is_admin else "📂 Admin Dashboard")
 
-    # ------------------ LOGIN ------------------
     if not st.session_state.is_admin:
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
@@ -517,13 +516,9 @@ elif st.session_state.page == "Admin":
                 st.rerun()
             else:
                 st.error("Invalid credentials")
-
-    # ------------------ DASHBOARD ------------------
     else:
         if not GITHUB_TOKEN:
             st.error("Missing GITHUB_TOKEN in st.secrets. Add it first to enable uploads.")
-
-        # Upload file(s)
         uploaded_files = st.file_uploader(
             "Upload new project images (they will be renamed to picX.jpg)",
             accept_multiple_files=True,
@@ -536,7 +531,6 @@ elif st.session_state.page == "Admin":
                 desc = st.text_area(f"Description for {file.name}", key=f"desc_{i}")
                 descriptions_local[file.name] = desc
 
-            # ------------------ SAVE PROJECT ------------------
             if st.button("Save Project"):
                 if not GITHUB_TOKEN:
                     st.stop()
@@ -593,20 +587,10 @@ elif st.session_state.page == "Admin":
                     st.success("✅ Project(s) uploaded to GitHub successfully!")
                     st.rerun()
 
-        # ------------------ NAVIGATION BUTTONS ------------------
-        col1, col2 = st.columns(2)
-
-        with col1:
-            if st.button("🏠 Return Home"):
-                st.session_state.page = "Home"  # Go back to Home, stay logged in
-                st.rerun()
-
-        with col2:
-            if st.button("🚪 Logout"):
+            if st.button("Logout"):
                 st.session_state.is_admin = False
-                st.session_state.page = "Home"  # Logout and return Home
+                st.session_state.page = "Home"  # set to Home page
                 st.rerun()
-
 
 
 # ------------------ FOOTER ------------------
@@ -615,10 +599,6 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
-
-
-
-
 
 
 
