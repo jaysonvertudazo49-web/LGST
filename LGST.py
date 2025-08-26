@@ -391,7 +391,8 @@ if st.session_state.page == "About":
         * Sustainable Recycling – We support environmental responsibility by ensuring proper recycling and waste management practices.
     """)
     st.subheader("Our Commitment")
-    sr.markdown("""At Lucas Grey Scrap Trading, we are dedicated to:
+    sr.markdown("""
+        ### At Lucas Grey Scrap Trading, we are dedicated to:
         * Providing safe and efficient services for every client.
         * Completing projects on time with guaranteed satisfaction.
         * Building long-term, mutually beneficial business relationships.
@@ -626,6 +627,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
