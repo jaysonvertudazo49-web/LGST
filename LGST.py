@@ -27,7 +27,7 @@ body {
 }
 /* Header */
 .header-container {
-    background: linear-gradient(90deg, #800000, #ffffff);
+    background: white;
     padding: 15px 30px;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -634,6 +634,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
