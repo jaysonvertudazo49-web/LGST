@@ -621,6 +621,11 @@ elif st.session_state.page == "Admin":
                 st.session_state.is_admin = False
                 st.session_state.page = "Home"  # set to Home page
                 st.rerun()
+                
+            if st.session_state.page == "Home":
+                home_page()
+            elif st.session_state.page == "Admin":
+                admin_page()
 
 
 # ------------------ FOOTER ------------------
@@ -629,6 +634,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
