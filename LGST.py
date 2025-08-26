@@ -362,7 +362,8 @@ if st.session_state.page == "About":
         reliability, and competitive pricing. Our strong workforce and organized system ensure that every project is handled with efficiency, professionalism, and care for the environment.
     """)
     st.subheader("Our Mission")
-    st.info("""To deliver top-quality scrap trading and copper wire dismantling that prioritize client satisfaction.
+    st.write("""
+        To deliver top-quality scrap trading and copper wire dismantling that prioritize client satisfaction.
         We are committed to honesty, safety, and efficiency in every transaction, ensuring value and trust in our long-term partnerships.
     """)
     st.subheader("Our Vision")
@@ -378,7 +379,7 @@ if st.session_state.page == "About":
         * Commitment to Relationships – We aim to build long-term partnerships based on trust, reliability, and mutual growth.
     """)
     st.subheader("Brief History")
-    st.info("""
+    st.write("""
         Lucas Grey Scrap Trading was formally established in 2021 by Von Ryan Veloso, following more than four years of active experience in the scrap and dismantling business. 
         Starting from small transactions involving scrap and unserviceable goods, LGST expanded its services to include large-scale dismantling projects.
         Today, the company manages a warehouse team of over 40 staff members, operates with modern hauling and transport vehicles, and continues to serve both government and private institutions. 
@@ -627,6 +628,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
