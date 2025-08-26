@@ -617,15 +617,16 @@ elif st.session_state.page == "Admin":
                     st.success("✅ Project(s) uploaded to GitHub successfully!")
                     st.rerun()
 
-            if st.button("Logout"):
-                st.session_state.is_admin = False
-                st.session_state.page = "Home"  # set to Home page
-                st.rerun()
-                
-            if st.session_state.page == "Home":
-                home_page()
-            elif st.session_state.page == "Admin":
-                admin_page()
+        # 🏠 Back to Home button (without logout)
+        if st.button("🏠 Back to Home"):
+            st.session_state.page = "Home"
+            st.rerun()
+
+        # 🚪 Logout button
+        if st.button("Logout"):
+            st.session_state.is_admin = False
+            st.session_state.page = "Home"  # set to Home page
+            st.rerun()
 
 
 # ------------------ FOOTER ------------------
@@ -634,6 +635,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
