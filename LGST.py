@@ -390,7 +390,7 @@ elif st.session_state.page == "Home":
 
     # Search
     search_query = st.text_input("", "")
-    col_clear = st.columns([8, 1.0])
+    col_clear = st.columns([9, 1.1])
     with col_clear[1]:
         if st.button("Clear Search"):
             search_query = ""
@@ -597,5 +597,6 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
