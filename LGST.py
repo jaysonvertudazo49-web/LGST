@@ -394,10 +394,10 @@ if st.session_state.page == "About":
     st.markdown("""
         ### At Lucas Grey Scrap Trading, we are dedicated to:
         
-        * ✅ Providing safe and efficient services for every client.  
-        * ⏱️ Completing projects on time with guaranteed satisfaction.  
-        * 🤝 Building long-term, mutually beneficial business relationships.  
-        * 🌍 Upholding our social and environmental responsibilities.  
+        ✅ Providing safe and efficient services for every client.  
+        ⏱️ Completing projects on time with guaranteed satisfaction.  
+        🤝 Building long-term, mutually beneficial business relationships.  
+        🌍 Upholding our social and environmental responsibilities.  
         """)
 
     if st.button("⬅️ Back to Home"):
@@ -635,6 +635,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
