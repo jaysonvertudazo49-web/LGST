@@ -493,7 +493,7 @@ elif st.session_state.page == "Contact":
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("""
-        📧 Email: **charlottevazquez78@gmail.com**  
+        📧 Email: **vonryan0110@gmail.com**  
         📍 Address: Blk-5 Lot-7 Sta. Fe st. Amlac Ville Payatas B, Quezon City  
     """)
 
@@ -599,6 +599,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
