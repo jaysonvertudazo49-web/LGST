@@ -352,7 +352,7 @@ if "page" in query_params:
     st.session_state.page = query_params["page"]
 
 # ------------------ ABOUT PAGE ------------------
-if st.session_state.page == "About Us":
+if st.session_state.page == "About":
     st.header("About Lucas Grey Scrap Trading")
     st.subheader("Who We Are")
     st.write("""
@@ -601,6 +601,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
