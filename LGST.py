@@ -30,7 +30,7 @@ body {
     background: white;
     padding: 15px 30px;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    /* box-shadow: 0 4px 8px rgba(0,0,0,0.2); */
     display: flex;
     justify-content: space-between; 
     align-items: center;
@@ -634,6 +634,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
