@@ -188,19 +188,23 @@ elif st.session_state.page == "Admin":
     if not st.session_state.is_admin:
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
-        if st.button("Login", key="login_btn"):
+        if st.button("Login", key="admin_login_btn"):
             if username == "admin" and password == "1234":
                 st.session_state.is_admin = True
                 st.success("Login successful!")
-                st.query_params.clear()
                 st.rerun()
             else:
                 st.error("Invalid credentials")
 
+        # Back to home when not logged in
+        if st.button("🏠 Back to Home", key="admin_back_home_not_logged"):
+            st.session_state.page = "Home"
+            st.query_params.clear()
+            st.rerun()
+
     else:
         if not GITHUB_TOKEN:
             st.error("Missing GITHUB_TOKEN in st.secrets. Add it first to enable uploads.")
-
         uploaded_files = st.file_uploader(
             "Upload new project images (they will be renamed to picX.jpg)",
             accept_multiple_files=True,
@@ -213,25 +217,37 @@ elif st.session_state.page == "Admin":
                 desc = st.text_area(f"Description for {file.name}", key=f"desc_{i}")
                 descriptions_local[file.name] = desc
 
-            if st.button("Save Project", key="save_project"):
+            if st.button("Save Project", key="save_project_btn"):
                 if not GITHUB_TOKEN:
                     st.stop()
 
+                # Load state.json (existing)
                 state_data, state_sha = load_state_json()
                 if "descriptions" not in state_data or not isinstance(state_data["descriptions"], dict):
                     state_data["descriptions"] = {}
 
+                # Determine latest pic number
                 latest_num = get_latest_pic_number()
-                new_urls, errors = [], []
 
+                # Upload each file -> pic{num}.jpg
+                new_urls = []
+                errors = []
                 for i, file in enumerate(uploaded_files):
                     file_num = latest_num + i + 1
                     new_filename = f"pic{file_num}.jpg"
-                    img_bytes = convert_to_jpg_bytes(file)
-                    img_path = _join_path(IMAGE_DIR, new_filename)
 
+                    # Convert to jpg bytes
+                    img_bytes = convert_to_jpg_bytes(file)
+
+                    # Upload image
+                    img_path = _join_path(IMAGE_DIR, new_filename)
                     try:
-                        github_put_file(img_path, img_bytes, message=f"Add {new_filename}")
+                        github_put_file(
+                            img_path,
+                            img_bytes,
+                            message=f"Add {new_filename}"
+                        )
+                        # Update state.json descriptions
                         desc_value = descriptions_local.get(file.name, "").strip()
                         if desc_value:
                             state_data["descriptions"][new_filename] = desc_value
@@ -239,6 +255,7 @@ elif st.session_state.page == "Admin":
                     except Exception as e:
                         errors.append(f"{new_filename}: {e}")
 
+                # Save updated state.json
                 try:
                     save_state_json(state_data, state_sha)
                 except Exception as e:
@@ -254,16 +271,19 @@ elif st.session_state.page == "Admin":
                     st.success("✅ Project(s) uploaded to GitHub successfully!")
                     st.rerun()
 
-        # --- NAV BUTTONS (Back + Logout) ---
+        # ------------------ NAVIGATION BUTTONS ------------------
         col1, col2 = st.columns(2)
         with col1:
-            if st.button("🏠 Back to Home", key="admin_back_home"):
+            if st.button("🏠 Back to Home", key="admin_back_home_logged"):
                 st.session_state.page = "Home"
                 st.query_params.clear()
                 st.rerun()
+
         with col2:
-            if st.button("🚪 Logout", key="admin_logout"):
+            if st.button("🚪 Logout", key="admin_logout_btn"):
                 st.session_state.is_admin = False
                 st.session_state.page = "Home"
                 st.query_params.clear()
                 st.rerun()
+
+
