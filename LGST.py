@@ -587,9 +587,11 @@ elif st.session_state.page == "Admin":
                     st.success("✅ Project(s) uploaded to GitHub successfully!")
                     st.rerun()
 
-        if st.button("Logout"):
-            st.session_state.is_admin = False
-            st.rerun()
+            if st.button("Logout"):
+                st.session_state.is_admin = False
+                st.session_state.page = "Home"  # set to Home page
+                st.rerun()
+
 
 # ------------------ FOOTER ------------------
 st.markdown("""
@@ -597,6 +599,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
