@@ -381,15 +381,19 @@ if st.session_state.page == "About":
         Today, the company manages a warehouse team of over 40 staff members, operates with modern hauling and transport vehicles, and continues to serve both government and private institutions. 
         Accredited by PHILGEPS, LGST has built its reputation on competitive pricing, timely service completion, and client satisfaction.""")
     st.subheader("What We Do")
-    st.markdown("""* Scrap Buying – Purchase of various scrap materials, including copper wires, IT equipment, office supplies, and unserviceable vehicles.
+    st.markdown("""
+        * Scrap Buying – Purchase of various scrap materials, including copper wires, IT equipment, office supplies, and unserviceable vehicles.
         * Copper Wire Dismantling – Safe and efficient dismantling of copper wires to recover valuable materials.
-        * Sustainable Recycling – We support environmental responsibility by ensuring proper recycling and waste management practices.""")
+        * Sustainable Recycling – We support environmental responsibility by ensuring proper recycling and waste management practices.
+        """)
     st.subheader("Our Commitment")
-    sr.markdown("""At Lucas Grey Scrap Trading, we are dedicated to:
+    sr.markdown("""
+        At Lucas Grey Scrap Trading, we are dedicated to:
         * Providing safe and efficient services for every client.
         * Completing projects on time with guaranteed satisfaction.
         * Building long-term, mutually beneficial business relationships.
-        * Upholding our social and environmental responsibilities.""")
+        * Upholding our social and environmental responsibilities.
+        """)
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.query_params.clear()
@@ -619,6 +623,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
