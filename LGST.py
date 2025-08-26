@@ -357,7 +357,7 @@ if st.session_state.page == "About Us":
     st.subheader("Who We Are")
     st.write("""
         Lucas Grey Scrap Trading (LGST) is a trusted scrap buying and dismantling company based in Quezon City, Philippines. We specialize in the purchase of scrap materials, dismantling of copper wires, and hauling services of unserviceable equipment and properties.
-With years of hands-on experience, we have proudly served both private companies and government agencies—including hospitals and public institutions—earning a reputation for honesty, reliability, and competitive pricing. Our strong workforce and organized system ensure that every project is handled with efficiency, professionalism, and care for the environment.
+        With years of hands-on experience, we have proudly served both private companies and government agencies—including hospitals and public institutions—earning a reputation for honesty, reliability, and competitive pricing. Our strong workforce and organized system ensure that every project is handled with efficiency, professionalism, and care for the environment.
     """)
     st.subheader("Our Mission")
     st.info("To provide eco-friendly recycling services while supporting industries with sustainable raw materials.")
@@ -599,6 +599,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
