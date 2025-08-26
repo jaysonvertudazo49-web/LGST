@@ -66,7 +66,7 @@ body {
 
 /* Gallery */
 .img-card {
-    background: maroon;
+    background: black;
     border-radius: 12px;
     padding: 10px;
     min-height: 280px;
@@ -634,6 +634,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
