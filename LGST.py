@@ -135,7 +135,6 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     max-width: 500px;
     margin: auto;
-    padding: 15px;
 }
 
 /* Section headers */
@@ -509,5 +508,6 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
