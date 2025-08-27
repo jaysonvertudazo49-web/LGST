@@ -30,7 +30,6 @@ body {
     background: white;
     padding: 15px 30px;
     border-radius: 12px;
-    /* box-shadow: 0 4px 8px rgba(0,0,0,0.2); */
     display: flex;
     justify-content: space-between; 
     align-items: center;
@@ -162,7 +161,7 @@ h2 {
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 if "images" not in st.session_state:
-    st.session_state.images = []  # list of raw URLs
+    st.session_state.images = []
 if "page_num" not in st.session_state:
     st.session_state.page_num = 0
 if "view_image" not in st.session_state:
@@ -170,7 +169,6 @@ if "view_image" not in st.session_state:
 if "is_admin" not in st.session_state:
     st.session_state.is_admin = False
 if "descriptions" not in st.session_state:
-    # maps filename (e.g., "pic12.jpg") -> description
     st.session_state.descriptions = {}
 
 # ------------------ GITHUB CONFIG ------------------
@@ -183,8 +181,7 @@ REPO_OWNER = "jaysonvertudazo49-web"
 REPO_NAME = "LGST"
 BRANCH = "main"
 
-# If your images live in a subfolder, set IMAGE_DIR = "images"
-IMAGE_DIR = ""  # root directory
+IMAGE_DIR = ""
 
 API_ROOT = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}"
 RAW_ROOT = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{BRANCH}"
@@ -198,7 +195,6 @@ def _headers():
     }
 
 def _join_path(*parts):
-    # safe join for GitHub paths (no leading slash)
     return "/".join([p.strip("/") for p in parts if p is not None and p != ""])
 
 def _raw_url(filename):
@@ -206,7 +202,6 @@ def _raw_url(filename):
     return f"{RAW_ROOT}/{path}"
 
 def github_list(path=""):
-    """List files in a path on a specific branch."""
     url = f"{API_ROOT}/contents/{path}" if path else f"{API_ROOT}/contents"
     resp = requests.get(url, headers=_headers(), params={"ref": BRANCH})
     if resp.status_code != 200:
@@ -214,18 +209,16 @@ def github_list(path=""):
     return resp.json()
 
 def github_get_file(path):
-    """Get a single file metadata including sha and content (base64)."""
     url = f"{API_ROOT}/contents/{path}"
     resp = requests.get(url, headers=_headers(), params={"ref": BRANCH})
     if resp.status_code == 200:
-        return resp.json()  # includes 'sha' and 'content' (base64)
+        return resp.json()
     elif resp.status_code == 404:
         return None
     else:
         raise RuntimeError(f"GitHub get file failed [{resp.status_code}]: {resp.text}")
 
 def github_put_file(path, content_bytes, message, sha=None):
-    """Create or update a file via the Contents API."""
     url = f"{API_ROOT}/contents/{path}"
     data = {
         "message": message,
@@ -241,7 +234,6 @@ def github_put_file(path, content_bytes, message, sha=None):
         raise RuntimeError(f"GitHub put file failed [{resp.status_code}]: {resp.text}")
 
 def get_latest_pic_number():
-    """Check repo for highest existing picX.(jpg|jpeg|png) in IMAGE_DIR and return that number."""
     try:
         files = github_list(IMAGE_DIR)
     except Exception as e:
@@ -259,7 +251,7 @@ def get_latest_pic_number():
     return max_num
 
 def list_pic_urls_sorted():
-    """Return list of raw URLs for picX files sorted by X ascending."""
+    """Return list of raw URLs for picX files sorted by X descending (newest first)."""
     try:
         files = github_list(IMAGE_DIR)
     except Exception as e:
@@ -275,15 +267,14 @@ def list_pic_urls_sorted():
         if m:
             num = int(m.group(1))
             pics.append((num, name))
-    pics.sort(key=lambda x: x[0])
+    pics.sort(key=lambda x: x[0], reverse=True)  # newest first
     return [_raw_url(name) for _, name in pics]
 
 def load_state_json():
-    """Load existing state.json, return dict. If not found, return default structure."""
     try:
         file_info = github_get_file("state.json")
         if not file_info:
-            return {"descriptions": {}}, None  # content, sha
+            return {"descriptions": {}}, None
         content_b64 = file_info.get("content", "")
         sha = file_info.get("sha", None)
         content = base64.b64decode(content_b64).decode("utf-8")
@@ -298,34 +289,26 @@ def load_state_json():
         return {"descriptions": {}}, None
 
 def save_state_json(state_data, sha_before):
-    """Update state.json (requires sha) or create if missing."""
     try:
         payload = json.dumps(state_data, ensure_ascii=False, indent=2).encode("utf-8")
         return github_put_file("state.json", payload, "Update state.json", sha=sha_before)
     except RuntimeError as e:
-        # If file didn't exist (sha None) and server expects no sha, retry without sha
         if sha_before is None:
             payload = json.dumps(state_data, ensure_ascii=False, indent=2).encode("utf-8")
             return github_put_file("state.json", payload, "Create state.json")
         raise
 
 def convert_to_jpg_bytes(uploaded_file):
-    """
-    Convert any uploaded image to JPEG bytes.
-    If Pillow isn't available, return original bytes and hope it's already JPEG.
-    """
     data = uploaded_file.getvalue()
     if not PIL_AVAILABLE:
-        return data  # fallback
+        return data
     try:
         with Image.open(BytesIO(data)) as im:
-            # Convert to RGB to avoid issues with PNG transparency / P mode
             rgb = im.convert("RGB")
             buf = BytesIO()
             rgb.save(buf, format="JPEG", quality=92, optimize=True)
             return buf.getvalue()
     except Exception:
-        # If conversion fails, return original
         return data
 
 # ------------------ HEADER ------------------
@@ -356,50 +339,8 @@ if st.session_state.page == "About":
     st.header("About Lucas Grey Scrap Trading")
     st.subheader("Who We Are")
     st.write("""
-        Lucas Grey Scrap Trading (LGST) is a trusted scrap buying and dismantling company based in Quezon City, Philippines. We specialize in the purchase of scrap materials, 
-        dismantling of copper wires, and hauling services of unserviceable equipment and properties.
-        With years of hands-on experience, we have proudly served both private companies and government agencies—including hospitals and public institutions—earning a reputation for honesty, 
-        reliability, and competitive pricing. Our strong workforce and organized system ensure that every project is handled with efficiency, professionalism, and care for the environment.
+        Lucas Grey Scrap Trading (LGST) is a trusted scrap buying and dismantling company based in Quezon City, Philippines.
     """)
-    st.subheader("Our Mission")
-    st.info("""To deliver top-quality scrap trading and copper wire dismantling that prioritize client satisfaction.
-        We are committed to honesty, safety, and efficiency in every transaction, ensuring value and trust in our long-term partnerships.
-    """)
-    st.subheader("Our Vision")
-    st.success("""To become one of the most recognized and respected service providers in the scrap and dismantling industry in the Philippines—offering excellence, 
-        sustainability, and integrity while upholding our responsibility to society and the environment.
-    """)
-    st.subheader("Core Values")
-    st.markdown("""
-        * Integrity & Honesty – We uphold transparency and fairness in every deal.
-        * Customer Priority – Our clients’ needs and satisfaction are always at the center of our service.
-        * Excellence in Service – We are committed to delivering high-quality work without compromise.
-        * Safety & Responsibility – We ensure safe, compliant, and environmentally responsible practices in all operations.
-        * Commitment to Relationships – We aim to build long-term partnerships based on trust, reliability, and mutual growth.
-    """)
-    st.subheader("Brief History")
-    st.write("""
-        Lucas Grey Scrap Trading was formally established in 2021 by Von Ryan Veloso, following more than four years of active experience in the scrap and dismantling business. 
-        Starting from small transactions involving scrap and unserviceable goods, LGST expanded its services to include large-scale dismantling projects.
-        Today, the company manages a warehouse team of over 40 staff members, operates with modern hauling and transport vehicles, and continues to serve both government and private institutions. 
-        Accredited by PHILGEPS, LGST has built its reputation on competitive pricing, timely service completion, and client satisfaction.
-    """)
-    st.subheader("What We Do")
-    st.markdown("""
-        * Scrap Buying – Purchase of various scrap materials, including copper wires, IT equipment, office supplies, and unserviceable vehicles.
-        * Copper Wire Dismantling – Safe and efficient dismantling of copper wires to recover valuable materials.
-        * Sustainable Recycling – We support environmental responsibility by ensuring proper recycling and waste management practices.
-    """)
-    st.subheader("Our Commitment")
-    st.markdown("""
-        ### At Lucas Grey Scrap Trading, we are dedicated to:
-        
-        ✅ Providing safe and efficient services for every client.  
-        ⏱️ Completing projects on time with guaranteed satisfaction.  
-        🤝 Building long-term, mutually beneficial business relationships.  
-        🌍 Upholding our social and environmental responsibilities.  
-        """)
-
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.query_params.clear()
@@ -407,32 +348,27 @@ if st.session_state.page == "About":
 
 # ------------------ HOME PAGE ------------------
 elif st.session_state.page == "Home":
-    # Load images from GitHub (only once)
     if not st.session_state.images:
         with st.spinner("Loading images from GitHub..."):
             st.session_state.images = list_pic_urls_sorted()
 
-    # Load state.json to bring in persistent descriptions
     state_data, _sha = load_state_json()
     repo_descriptions = state_data.get("descriptions", {})
 
     st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
 
-    # Search
-    search_query = st.text_input("", "")
+    search_query = st.text_input("Search projects")
     col_clear = st.columns([9, 1.1])
     with col_clear[1]:
         if st.button("Clear Search"):
             search_query = ""
             st.session_state.page_num = 0
 
-    # Build a helper: URL -> filename
     def filename_from_url(url: str) -> str:
         return url.rsplit("/", 1)[-1]
 
     images = st.session_state.images
 
-    # Filtering by description (from state.json)
     def desc_for_url(url: str) -> str:
         fname = filename_from_url(url)
         return repo_descriptions.get(fname, "")
@@ -442,7 +378,6 @@ elif st.session_state.page == "Home":
         filtered_images = [u for u in images if search_query.lower() in desc_for_url(u).lower()]
         st.session_state.page_num = 0
 
-    # Pagination
     images_per_page = 3
     start_idx = st.session_state.page_num * images_per_page
     end_idx = start_idx + images_per_page
@@ -457,7 +392,6 @@ elif st.session_state.page == "Home":
     else:
         st.warning("No results found.")
 
-    # Pagination buttons
     col1, col2, col3 = st.columns([1, 10, 1])
     with col1:
         if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
@@ -468,7 +402,6 @@ elif st.session_state.page == "Home":
             st.session_state.page_num += 1
             st.rerun()
 
-    # Display images
     if filtered_images:
         st.subheader("CURRENT PROJECT")
         img_cols = st.columns(min(len(current_images), 3))
@@ -489,7 +422,6 @@ elif st.session_state.page == "Home":
                     st.session_state.view_image = img_url
                     st.rerun()
 
-    # Modal
     if st.session_state.view_image is not None:
         img_url = st.session_state.view_image
         caption = (state_data.get("descriptions", {}) or {}).get(filename_from_url(img_url), "No description")
@@ -520,147 +452,4 @@ elif st.session_state.page == "Contact":
                 st.success(f"Thank you, {name}! Your message has been received. We'll get back to you at {email}.")
             else:
                 st.error("Please fill out all fields.")
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown("""
-        📧 Email: **vonryan0110@gmail.com**  
-        📍 Address: Blk-5 Lot-7 Sta. Fe st. Amlac Ville Payatas B, Quezon City  
-    """)
-
-    if st.button("⬅️ Back to Home"):
-        st.session_state.page = "Home"
-        st.query_params.clear()
-        st.rerun()
-
-# ------------------ ADMIN PAGE ------------------
-elif st.session_state.page == "Admin":
-    st.header("🔑 Admin Login" if not st.session_state.is_admin else "📂 Admin Dashboard")
-
-    if not st.session_state.is_admin:
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        if st.button("Login"):
-            if username == "admin" and password == "1234":
-                st.session_state.is_admin = True
-                st.success("Login successful!")
-                st.rerun()
-            else:
-                st.error("Invalid credentials")
-    else:
-        if not GITHUB_TOKEN:
-            st.error("Missing GITHUB_TOKEN in st.secrets. Add it first to enable uploads.")
-        uploaded_files = st.file_uploader(
-            "Upload new project images (they will be renamed to picX.jpg)",
-            accept_multiple_files=True,
-            type=["jpg", "jpeg", "png"]
-        )
-
-        descriptions_local = {}
-        if uploaded_files:
-            for i, file in enumerate(uploaded_files):
-                desc = st.text_area(f"Description for {file.name}", key=f"desc_{i}")
-                descriptions_local[file.name] = desc
-
-            if st.button("Save Project", key="save_project"):
-                if not GITHUB_TOKEN:
-                    st.stop()
-
-                # Load state.json (existing)
-                state_data, state_sha = load_state_json()
-                if "descriptions" not in state_data or not isinstance(state_data["descriptions"], dict):
-                    state_data["descriptions"] = {}
-
-                # Determine latest pic number
-                latest_num = get_latest_pic_number()
-
-                # Upload each file -> pic{num}.jpg
-                new_urls = []
-                errors = []
-                for i, file in enumerate(uploaded_files):
-                    file_num = latest_num + i + 1
-                    new_filename = f"pic{file_num}.jpg"
-
-                    # Convert to jpg bytes
-                    img_bytes = convert_to_jpg_bytes(file)
-
-                    # Upload image
-                    img_path = _join_path(IMAGE_DIR, new_filename)
-                    try:
-                        github_put_file(
-                            img_path,
-                            img_bytes,
-                            message=f"Add {new_filename}"
-                        )
-                        # Update state.json descriptions
-                        desc_value = descriptions_local.get(file.name, "").strip()
-                        if desc_value:
-                            state_data["descriptions"][new_filename] = desc_value
-                        new_urls.append(_raw_url(new_filename))
-                    except Exception as e:
-                        errors.append(f"{new_filename}: {e}")
-
-                # Save updated state.json
-                try:
-                    save_state_json(state_data, state_sha)
-                except Exception as e:
-                    errors.append(f"state.json update failed: {e}")
-
-                if errors:
-                    st.error("Some items failed to upload:\n- " + "\n- ".join(errors))
-                if new_urls:
-                    try:
-                        st.session_state.images = list_pic_urls_sorted()
-                    except Exception:
-                        st.session_state.images.extend(new_urls)
-                    st.success("✅ Project(s) uploaded to GitHub successfully!")
-                    st.rerun()
-
-        # ------------------ NAVIGATION BUTTONS ------------------
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("🏠 Back to Home", key="back_home"):
-                st.session_state.page = "Home"
-                st.rerun()
-
-        with col2:
-            if st.button("🚪 Logout", key="logout"):
-                st.session_state.is_admin = False
-                st.rerun()
-
-
-# ------------------ FOOTER ------------------
-st.markdown("""
-<div class="footer">
-    © 2025 Lucas Grey Scrap Trading. All rights reserved.
-</div>
-""", unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    st.markdown('</div
