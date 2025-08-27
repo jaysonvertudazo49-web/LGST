@@ -534,7 +534,7 @@ elif st.session_state.page == "Contact":
         st.query_params.clear()
         st.rerun()
 
-       # ------------------ ADMIN PAGE ------------------
+# ------------------ ADMIN PAGE ------------------
 elif st.session_state.page == "Admin":
     st.header("🔑 Admin Login" if not st.session_state.is_admin else "📂 Admin Dashboard")
 
@@ -549,30 +549,6 @@ elif st.session_state.page == "Admin":
             else:
                 st.error("Invalid credentials")
     else:
-        # ---- Show Contact Messages ----
-        st.subheader("📩 Contact Messages")
-        state_data, state_sha = load_state_json()
-        messages = state_data.get("messages", [])
-        if messages:
-            for i, msg in enumerate(reversed(messages), 1):  # newest first
-                idx = len(messages) - i  # original index in list
-                with st.expander(f"Message {i} from {msg['name']} ({msg['email']})"):
-                    st.write(msg["message"])
-                    if st.button(f"🗑️ Delete Message {i}", key=f"del_msg_{i}"):
-                        try:
-                            # Remove message
-                            state_data["messages"].pop(idx)
-                            save_state_json(state_data, state_sha)
-                            st.success(f"Message {i} deleted successfully.")
-                            st.rerun()
-                        except Exception as e:
-                            st.error(f"Failed to delete message: {e}")
-        else:
-            st.info("No messages received yet.")
-
-        st.markdown("---")
-
-        # ---- Upload Images Section ----
         if not GITHUB_TOKEN:
             st.error("Missing GITHUB_TOKEN in st.secrets. Add it first to enable uploads.")
         uploaded_files = st.file_uploader(
@@ -588,9 +564,35 @@ elif st.session_state.page == "Admin":
                 descriptions_local[file.name] = desc
 
             if st.button("Save Project", key="save_project"):
-                ...
+                if not GITHUB_TOKEN:
+                    st.stop()
 
+                # Load state.json (existing)
+                state_data, state_sha = load_state_json()
+                if "descriptions" not in state_data or not isinstance(state_data["descriptions"], dict):
+                    state_data["descriptions"] = {}
 
+                # Determine latest pic number
+                latest_num = get_latest_pic_number()
+
+                # Upload each file -> pic{num}.jpg
+                new_urls = []
+                errors = []
+                for i, file in enumerate(uploaded_files):
+                    file_num = latest_num + i + 1
+                    new_filename = f"pic{file_num}.jpg"
+
+                    # Convert to jpg bytes
+                    img_bytes = convert_to_jpg_bytes(file)
+
+                    # Upload image
+                    img_path = _join_path(IMAGE_DIR, new_filename)
+                    try:
+                        github_put_file(
+                            img_path,
+                            img_bytes,
+                            message=f"Add {new_filename}"
+                        )
                         # Update state.json descriptions
                         desc_value = descriptions_local.get(file.name, "").strip()
                         if desc_value:
@@ -634,7 +636,3 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
-
-
-
-
