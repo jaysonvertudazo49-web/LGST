@@ -259,7 +259,7 @@ def get_latest_pic_number():
     return max_num
 
 def list_pic_urls_sorted():
-    """Return list of raw URLs for picX files sorted by X ascending."""
+    """Return list of raw URLs for picX files sorted by X descending (newest first)."""
     try:
         files = github_list(IMAGE_DIR)
     except Exception as e:
@@ -275,8 +275,10 @@ def list_pic_urls_sorted():
         if m:
             num = int(m.group(1))
             pics.append((num, name))
-    pics.sort(key=lambda x: x[0])
+    # sort descending instead of ascending
+    pics.sort(key=lambda x: x[0], reverse=True)
     return [_raw_url(name) for _, name in pics]
+
 
 def load_state_json():
     """Load existing state.json, return dict. If not found, return default structure."""
@@ -634,3 +636,4 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
