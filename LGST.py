@@ -433,11 +433,34 @@ elif st.session_state.page == "Contact":
         name = st.text_input("Name")
         email = st.text_input("Email")
         message = st.text_area("Message")
+        attachments = st.file_uploader(
+            "Attach files or images", 
+            accept_multiple_files=True, 
+            type=["jpg","jpeg","png","pdf","docx","txt"]
+        )
         submit = st.form_submit_button("Send Message")
+
         if submit:
             if name and email and message:
                 state_data, sha = load_state_json()
-                state_data["messages"].append({"name": name, "email": email, "message": message})
+
+                # Save uploaded files to GitHub
+                attachment_names = []
+                if attachments:
+                    for file in attachments:
+                        file_bytes = file.getvalue()
+                        safe_name = f"msg_{len(state_data['messages'])+1}_{file.name}"
+                        github_put_file(f"attachments/{safe_name}", file_bytes, f"Add attachment {safe_name}")
+                        attachment_names.append(safe_name)
+
+                # Store message + attachments in state.json
+                state_data["messages"].append({
+                    "name": name,
+                    "email": email,
+                    "message": message,
+                    "attachments": attachment_names
+                })
+
                 try:
                     save_state_json(state_data, sha)
                     st.success(f"✅ Thank you, {name}! Your message has been sent.")
@@ -445,17 +468,21 @@ elif st.session_state.page == "Contact":
                     st.error(f"⚠️ Failed to save: {e}")
             else:
                 st.error("Please fill out all fields.")
+
     st.markdown('</div>', unsafe_allow_html=True)
     st.markdown("""📧 Email: **vonryan0110@gmail.com**  
 📍 Address: Amlac Ville Payatas B, Quezon City""")
+
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.query_params.clear()
         st.rerun()
 
+
 # ------------------ ADMIN PAGE ------------------
 elif st.session_state.page == "Admin":
     st.header("🔑 Admin Login" if not st.session_state.is_admin else "📂 Admin Dashboard")
+
     if not st.session_state.is_admin:
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
@@ -466,10 +493,12 @@ elif st.session_state.page == "Admin":
                 st.rerun()
             else:
                 st.error("Invalid credentials")
+
     else:
         st.subheader("📩 Received Messages")
         state_data, _ = load_state_json()
         msgs = state_data.get("messages", [])
+
         if msgs:
             for i, m in enumerate(reversed(msgs), 1):
                 st.markdown(f"""
@@ -477,12 +506,30 @@ elif st.session_state.page == "Admin":
                 - 👤 {m['name']}
                 - 📧 {m['email']}
                 - 📝 {m['message']}
-                ---""")
+                """)
+
+                if m.get("attachments"):
+                    st.markdown("📎 **Attachments:**")
+                    for att in m["attachments"]:
+                        url = _raw_url(f"attachments/{att}")
+                        if att.lower().endswith((".jpg", ".jpeg", ".png")):
+                            st.image(url, caption=att, use_container_width=True)
+                        else:
+                            st.markdown(f"- [{att}]({url})")
+                st.markdown("---")
         else:
             st.info("No messages yet.")
+
+        # Project upload feature
         if not GITHUB_TOKEN:
             st.error("Missing GITHUB_TOKEN in st.secrets.")
-        uploaded_files = st.file_uploader("Upload project images", accept_multiple_files=True, type=["jpg","jpeg","png"])
+
+        uploaded_files = st.file_uploader(
+            "Upload project images", 
+            accept_multiple_files=True, 
+            type=["jpg","jpeg","png"]
+        )
+
         if uploaded_files:
             descs = {f.name: st.text_area(f"Description for {f.name}") for f in uploaded_files}
             if st.button("Save Project"):
@@ -498,6 +545,7 @@ elif st.session_state.page == "Admin":
                 st.success("✅ Uploaded successfully!")
                 st.session_state.images = list_pic_urls_sorted()
                 st.rerun()
+
         col1, col2 = st.columns(2)
         with col1:
             if st.button("🏠 Back to Home"): 
@@ -506,7 +554,9 @@ elif st.session_state.page == "Admin":
             if st.button("🚪 Logout"): 
                 st.session_state.is_admin = False; st.rerun()
 
+
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
