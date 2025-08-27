@@ -534,61 +534,62 @@ elif st.session_state.page == "Contact":
         st.query_params.clear()
         st.rerun()
 
-        # ------------------ ADMIN PAGE ------------------
-        elif st.session_state.page == "Admin":
-            st.header("🔑 Admin Login" if not st.session_state.is_admin else "📂 Admin Dashboard")
-        
-            if not st.session_state.is_admin:
-                username = st.text_input("Username")
-                password = st.text_input("Password", type="password")
-                if st.button("Login"):
-                    if username == "admin" and password == "1234":
-                        st.session_state.is_admin = True
-                        st.success("Login successful!")
-                        st.rerun()
-                    else:
-                        st.error("Invalid credentials")
+       # ------------------ ADMIN PAGE ------------------
+elif st.session_state.page == "Admin":
+    st.header("🔑 Admin Login" if not st.session_state.is_admin else "📂 Admin Dashboard")
+
+    if not st.session_state.is_admin:
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        if st.button("Login"):
+            if username == "admin" and password == "1234":
+                st.session_state.is_admin = True
+                st.success("Login successful!")
+                st.rerun()
             else:
-                # ---- Show Contact Messages ----
-                st.subheader("📩 Contact Messages")
-                state_data, state_sha = load_state_json()
-                messages = state_data.get("messages", [])
-                if messages:
-                    for i, msg in enumerate(reversed(messages), 1):  # newest first
-                        idx = len(messages) - i  # original index in list
-                        with st.expander(f"Message {i} from {msg['name']} ({msg['email']})"):
-                            st.write(msg["message"])
-                            if st.button(f"🗑️ Delete Message {i}", key=f"del_msg_{i}"):
-                                try:
-                                    # Remove message
-                                    state_data["messages"].pop(idx)
-                                    save_state_json(state_data, state_sha)
-                                    st.success(f"Message {i} deleted successfully.")
-                                    st.rerun()
-                                except Exception as e:
-                                    st.error(f"Failed to delete message: {e}")
-                else:
-                    st.info("No messages received yet.")
-        
-                st.markdown("---")
-        
-                # ---- Upload Images Section ----
-                if not GITHUB_TOKEN:
-                    st.error("Missing GITHUB_TOKEN in st.secrets. Add it first to enable uploads.")
-                uploaded_files = st.file_uploader(
-                    "Upload new project images (they will be renamed to picX.jpg)",
-                    accept_multiple_files=True,
-                    type=["jpg", "jpeg", "png"]
-                )
-        
-                descriptions_local = {}
-                if uploaded_files:
-                    for i, file in enumerate(uploaded_files):
-                        desc = st.text_area(f"Description for {file.name}", key=f"desc_{i}")
-                        descriptions_local[file.name] = desc
-        
-                    if st.button("Save Project", key="save_project"):
-                        ...
+                st.error("Invalid credentials")
+    else:
+        # ---- Show Contact Messages ----
+        st.subheader("📩 Contact Messages")
+        state_data, state_sha = load_state_json()
+        messages = state_data.get("messages", [])
+        if messages:
+            for i, msg in enumerate(reversed(messages), 1):  # newest first
+                idx = len(messages) - i  # original index in list
+                with st.expander(f"Message {i} from {msg['name']} ({msg['email']})"):
+                    st.write(msg["message"])
+                    if st.button(f"🗑️ Delete Message {i}", key=f"del_msg_{i}"):
+                        try:
+                            # Remove message
+                            state_data["messages"].pop(idx)
+                            save_state_json(state_data, state_sha)
+                            st.success(f"Message {i} deleted successfully.")
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Failed to delete message: {e}")
+        else:
+            st.info("No messages received yet.")
+
+        st.markdown("---")
+
+        # ---- Upload Images Section ----
+        if not GITHUB_TOKEN:
+            st.error("Missing GITHUB_TOKEN in st.secrets. Add it first to enable uploads.")
+        uploaded_files = st.file_uploader(
+            "Upload new project images (they will be renamed to picX.jpg)",
+            accept_multiple_files=True,
+            type=["jpg", "jpeg", "png"]
+        )
+
+        descriptions_local = {}
+        if uploaded_files:
+            for i, file in enumerate(uploaded_files):
+                desc = st.text_area(f"Description for {file.name}", key=f"desc_{i}")
+                descriptions_local[file.name] = desc
+
+            if st.button("Save Project", key="save_project"):
+                ...
+
 
                         # Update state.json descriptions
                         desc_value = descriptions_local.get(file.name, "").strip()
@@ -633,6 +634,7 @@ st.markdown("""
     © 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
