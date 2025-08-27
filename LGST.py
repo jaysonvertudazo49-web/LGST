@@ -470,9 +470,9 @@ elif st.session_state.page == "Contact":
                 st.error("Please fill out all fields.")
 
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown("""📧 Email: **vonryan0110@gmail.com**  
-📍 Address: Amlac Ville Payatas B, Quezon City""")
-
+    st.markdown(""" Email: **vonryan0110@gmail.com**  
+ Address: Amlac Ville Payatas B, Quezon City""")
+    st.markdown(""" Tel #: 85365516, 84632485, 84632412""")
     if st.button("⬅️ Back to Home"):
         st.session_state.page = "Home"
         st.query_params.clear()
@@ -557,6 +557,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
