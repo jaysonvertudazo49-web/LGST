@@ -425,88 +425,59 @@ elif st.session_state.page == "Home":
             st.session_state.view_image = None
             st.rerun()
 
-# ------------------ CONTACT US PAGE ------------------
-elif st.session_state.page == "Contact Us":
-    st.title("📞 Contact Us")
-    st.subheader("📩 Contact Form")
-
+# ------------------ CONTACT PAGE ------------------
+elif st.session_state.page == "Contact":
+    st.header("Contact Us")
+    st.markdown('<div class="contact-form">', unsafe_allow_html=True)
     with st.form("contact_form"):
-        name = st.text_input("Your Name")
-        email = st.text_input("Your Email")
-        message = st.text_area("Your Message")
-        uploaded_file = st.file_uploader(
-            "Attach a file or picture (optional)",
-            type=["jpg", "jpeg", "png", "pdf", "docx", "txt"]
-        )
-        submit_button = st.form_submit_button("Send Message")
-
-    if submit_button:
-        if name and email and message:
-            attachment_data, attachment_name = None, None
-            if uploaded_file is not None:
-                attachment_data = base64.b64encode(uploaded_file.read()).decode("utf-8")
-                attachment_name = uploaded_file.name
-
-            # Save message
-            state_data, state_sha = load_state_json()
-            new_msg = {
-                "name": name,
-                "email": email,
-                "message": message,
-                "attachment_name": attachment_name,
-                "attachment_data": attachment_data,
-            }
-            state_data["messages"].append(new_msg)
-            try:
-                save_state_json(state_data, state_sha)
-                st.success(f"✅ Thank you, {name}! Your message has been sent successfully.")
-            except Exception as e:
-                st.error(f"⚠️ Could not save message: {e}")
-        else:
-            st.error("Please fill out all fields.")
+        name = st.text_input("Name")
+        email = st.text_input("Email")
+        message = st.text_area("Message")
+        submit = st.form_submit_button("Send Message")
+        if submit:
+            if name and email and message:
+                state_data, sha = load_state_json()
+                state_data["messages"].append({"name": name, "email": email, "message": message})
+                try:
+                    save_state_json(state_data, sha)
+                    st.success(f"✅ Thank you, {name}! Your message has been sent.")
+                except Exception as e:
+                    st.error(f"⚠️ Failed to save: {e}")
+            else:
+                st.error("Please fill out all fields.")
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("""📧 Email: **vonryan0110@gmail.com**  
+📍 Address: Amlac Ville Payatas B, Quezon City""")
+    if st.button("⬅️ Back to Home"):
+        st.session_state.page = "Home"
+        st.query_params.clear()
+        st.rerun()
 
 # ------------------ ADMIN PAGE ------------------
 elif st.session_state.page == "Admin":
     st.header("🔑 Admin Login" if not st.session_state.is_admin else "📂 Admin Dashboard")
-
     if not st.session_state.is_admin:
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
         if st.button("Login"):
-            if username == "admin" and password == "admin123":
+            if username == "admin" and password == "1234":
                 st.session_state.is_admin = True
+                st.success("Login successful!")
                 st.rerun()
             else:
-                st.error("Invalid credentials.")
+                st.error("Invalid credentials")
     else:
-        if st.button("Logout"):
-            st.session_state.is_admin = False
-            st.session_state.page = "Home"
-            st.rerun()
-
         st.subheader("📩 Received Messages")
         state_data, _ = load_state_json()
-        messages = state_data.get("messages", [])
-
-        if messages:
-            for i, msg in enumerate(reversed(messages), 1):  # newest first
+        msgs = state_data.get("messages", [])
+        if msgs:
+            for i, m in enumerate(reversed(msgs), 1):
                 st.markdown(f"""
-                **Message {i}:**  
-                - 👤 **Name:** {msg['name']}  
-                - 📧 **Email:** {msg['email']}  
-                - 📝 **Message:** {msg['message']}  
-                """)
-                if msg.get("attachment_data") and msg.get("attachment_name"):
-                    file_bytes = base64.b64decode(msg["attachment_data"])
-                    if msg["attachment_name"].lower().endswith((".png", ".jpg", ".jpeg")):
-                        st.image(file_bytes, caption=msg["attachment_name"], use_container_width=True)
-                    else:
-                        st.download_button(
-                            label=f"📂 Download {msg['attachment_name']}",
-                            data=file_bytes,
-                            file_name=msg["attachment_name"]
-                        )
-                st.markdown("---")
+                **Message {i}:**
+                - 👤 {m['name']}
+                - 📧 {m['email']}
+                - 📝 {m['message']}
+                ---""")
         else:
             st.info("No messages yet.")
         if not GITHUB_TOKEN:
@@ -537,7 +508,5 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
 
 
