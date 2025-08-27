@@ -21,67 +21,139 @@ st.markdown("""
 /* Global */
 body { 
     font-family: 'Arial', sans-serif; 
-    background-color: #f9f9f9;
-    margin: 0; 
-    padding: 0;
+    background: linear-gradient(135deg, #111111, #222222); 
+    margin:0; 
+    padding:0; 
 }
-
 /* Header */
 .header-container {
     background: white;
     padding: 15px 30px;
     border-radius: 12px;
+    /* box-shadow: 0 4px 8px rgba(0,0,0,0.2); */
     display: flex;
     justify-content: space-between; 
     align-items: center;
 }
+.header-title {
+    display: flex;
+    align-items: center;
+}
+.header-title img {
+    margin-right: 10px;
+}
+.header-title h1 { 
+    margin: 0; 
+    color: black; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+.header-buttons button {
+    background: maroon;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+.header-buttons button:hover {
+    background: #a00000;
+}
 
 /* Gallery */
-.gallery-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-}
-.gallery-card {
-    background: white;
-    padding: 15px;
+.img-card {
+    background: black;
     border-radius: 12px;
+    padding: 10px;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.gallery-card img {
+.img-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.img-card img {
     width: 100%;
-    border-radius: 8px;
-    cursor: pointer;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 /* Modal */
 .modal {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.modal-content {
-    background: white;
+    background: black;
+    border-radius: 15px;
     padding: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    text-align: center;
+}
+.modal img {
     border-radius: 12px;
-    max-width: 600px;
+    max-width: 100%;
+    height: auto;
 }
 
-/* Search */
-.search-container {
-    margin: 20px 0;
+/* Search bar */
+.stTextInput input {
+    border: 2px solid #800000;
+    border-radius: 12px;
+    padding: 10px 40px 10px 12px;
+    font-size: 16px;
+    width: 100%;
+    background-image: url("https://img.icons8.com/ios-filled/24/search.png");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
 }
 
-/* Contact */
-.contact-container {
-    background: white;
-    padding: 20px;
+/* Buttons */
+.stButton button {
+    background: maroon;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: bold;
+    border: none;
+    transition: 0.3s;
+}
+.stButton button:hover {
+    background: #a00000;
+}
+
+/* Contact form */
+.contact-form {
+    background: #ffffff;
     border-radius: 12px;
-    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    max-width: 500px;
+    margin: auto;
+}
+
+/* Section headers */
+h2 { 
+    color: #800000; 
+    font-size: 1.8em; 
+    margin-top: 15px; 
+    margin-bottom: 10px; 
+    border-bottom: 2px solid #800000; 
+    padding-bottom: 5px; 
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+    color: #aaa;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -90,230 +162,504 @@ body {
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 if "images" not in st.session_state:
-    st.session_state.images = []
+    st.session_state.images = []  # list of raw URLs
+if "page_num" not in st.session_state:
+    st.session_state.page_num = 0
 if "view_image" not in st.session_state:
     st.session_state.view_image = None
 if "is_admin" not in st.session_state:
     st.session_state.is_admin = False
+if "descriptions" not in st.session_state:
+    # maps filename (e.g., "pic12.jpg") -> description
+    st.session_state.descriptions = {}
 
 # ------------------ GITHUB CONFIG ------------------
-GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
-GITHUB_REPO = "jaysonvertudazo49-web/LGST"
-GITHUB_API = "https://api.github.com"
-IMAGE_DIR = "project"
-STATE_FILE = "state.json"
+try:
+    GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
+except Exception:
+    GITHUB_TOKEN = None
 
-def github_headers():
-    return {"Authorization": f"Bearer {GITHUB_TOKEN}"} if GITHUB_TOKEN else {}
+REPO_OWNER = "jaysonvertudazo49-web"
+REPO_NAME = "LGST"
+BRANCH = "main"
 
-def github_list(path):
-    url = f"{GITHUB_API}/repos/{GITHUB_REPO}/contents/{path}"
-    r = requests.get(url, headers=github_headers())
-    r.raise_for_status()
-    return r.json()
+# If your images live in a subfolder, set IMAGE_DIR = "images"
+IMAGE_DIR = ""  # root directory
 
-def github_get(path):
-    url = f"{GITHUB_API}/repos/{GITHUB_REPO}/contents/{path}"
-    r = requests.get(url, headers=github_headers())
-    if r.status_code == 404:
-        return None, None
-    r.raise_for_status()
-    data = r.json()
-    content = base64.b64decode(data["content"]).decode("utf-8")
-    return content, data["sha"]
+API_ROOT = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}"
+RAW_ROOT = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{BRANCH}"
 
-def github_put(path, content_b64, message, sha=None):
-    url = f"{GITHUB_API}/repos/{GITHUB_REPO}/contents/{path}"
-    payload = {"message": message, "content": content_b64}
-    if sha: payload["sha"] = sha
-    r = requests.put(url, headers=github_headers(), json=payload)
-    r.raise_for_status()
-    return r.json()
+def _headers():
+    if not GITHUB_TOKEN:
+        return {"Accept": "application/vnd.github+json"}
+    return {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github+json"
+    }
 
-# ------------------ STATE JSON ------------------
-def load_state():
-    text, _ = github_get(STATE_FILE)
-    if not text:
-        return {}
-    return json.loads(text)
+def _join_path(*parts):
+    # safe join for GitHub paths (no leading slash)
+    return "/".join([p.strip("/") for p in parts if p is not None and p != ""])
 
-def save_state(state):
-    text, sha = github_get(STATE_FILE)
-    content_b64 = base64.b64encode(json.dumps(state, indent=2).encode()).decode()
-    return github_put(STATE_FILE, content_b64, "Update state.json", sha)
-
-# ------------------ IMAGE HANDLING ------------------
 def _raw_url(filename):
-    return f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/{IMAGE_DIR}/{filename}"
+    path = _join_path(IMAGE_DIR, filename)
+    return f"{RAW_ROOT}/{path}"
+
+def github_list(path=""):
+    """List files in a path on a specific branch."""
+    url = f"{API_ROOT}/contents/{path}" if path else f"{API_ROOT}/contents"
+    resp = requests.get(url, headers=_headers(), params={"ref": BRANCH})
+    if resp.status_code != 200:
+        raise RuntimeError(f"GitHub list failed [{resp.status_code}]: {resp.text}")
+    return resp.json()
+
+def github_get_file(path):
+    """Get a single file metadata including sha and content (base64)."""
+    url = f"{API_ROOT}/contents/{path}"
+    resp = requests.get(url, headers=_headers(), params={"ref": BRANCH})
+    if resp.status_code == 200:
+        return resp.json()  # includes 'sha' and 'content' (base64)
+    elif resp.status_code == 404:
+        return None
+    else:
+        raise RuntimeError(f"GitHub get file failed [{resp.status_code}]: {resp.text}")
+
+def github_put_file(path, content_bytes, message, sha=None):
+    """Create or update a file via the Contents API."""
+    url = f"{API_ROOT}/contents/{path}"
+    data = {
+        "message": message,
+        "content": base64.b64encode(content_bytes).decode("utf-8"),
+        "branch": BRANCH
+    }
+    if sha:
+        data["sha"] = sha
+    resp = requests.put(url, headers=_headers(), data=json.dumps(data))
+    if resp.status_code in (200, 201):
+        return resp.json()
+    else:
+        raise RuntimeError(f"GitHub put file failed [{resp.status_code}]: {resp.text}")
+
+def get_latest_pic_number():
+    """Check repo for highest existing picX.(jpg|jpeg|png) in IMAGE_DIR and return that number."""
+    try:
+        files = github_list(IMAGE_DIR)
+    except Exception as e:
+        st.error(f"Unable to list repository contents: {e}")
+        return 0
+
+    max_num = 0
+    for f in files:
+        if f.get("type") != "file":
+            continue
+        name = f.get("name", "")
+        m = re.fullmatch(r"pic(\d+)\.(jpg|jpeg|png)", name, flags=re.IGNORECASE)
+        if m:
+            max_num = max(max_num, int(m.group(1)))
+    return max_num
 
 def list_pic_urls_sorted():
-    """Return list of raw URLs for picX files sorted newest first."""
+    """Return list of raw URLs for picX files sorted by X ascending."""
     try:
         files = github_list(IMAGE_DIR)
     except Exception as e:
         st.error(f"Unable to load image list from GitHub: {e}")
         return []
+
     pics = []
     for f in files:
-        if f.get("type") != "file": continue
+        if f.get("type") != "file":
+            continue
         name = f.get("name", "")
         m = re.fullmatch(r"pic(\d+)\.(jpg|jpeg|png)", name, flags=re.IGNORECASE)
         if m:
             num = int(m.group(1))
             pics.append((num, name))
-    pics.sort(key=lambda x: x[0], reverse=True)   # NEWEST first
+    pics.sort(key=lambda x: x[0])
     return [_raw_url(name) for _, name in pics]
 
-def get_next_pic_name():
+def load_state_json():
+    """Load existing state.json, return dict. If not found, return default structure."""
     try:
-        files = github_list(IMAGE_DIR)
-    except: return "pic1.jpg"
-    maxn = 0
-    for f in files:
-        name = f.get("name","")
-        m = re.fullmatch(r"pic(\d+)\.(jpg|jpeg|png)", name, flags=re.IGNORECASE)
-        if m: maxn = max(maxn, int(m.group(1)))
-    return f"pic{maxn+1}.jpg"
+        file_info = github_get_file("state.json")
+        if not file_info:
+            return {"descriptions": {}}, None  # content, sha
+        content_b64 = file_info.get("content", "")
+        sha = file_info.get("sha", None)
+        content = base64.b64decode(content_b64).decode("utf-8")
+        data = json.loads(content) if content.strip() else {}
+        if not isinstance(data, dict):
+            data = {}
+        if "descriptions" not in data or not isinstance(data["descriptions"], dict):
+            data["descriptions"] = {}
+        return data, sha
+    except Exception as e:
+        st.warning(f"Could not load state.json: {e}")
+        return {"descriptions": {}}, None
 
-def upload_image_and_description(file, description):
-    if not file: return
-    if PIL_AVAILABLE:
-        image = Image.open(file).convert("RGB")
-        buffer = BytesIO()
-        image.save(buffer, format="JPEG")
-        content = buffer.getvalue()
+def save_state_json(state_data, sha_before):
+    """Update state.json (requires sha) or create if missing."""
+    try:
+        payload = json.dumps(state_data, ensure_ascii=False, indent=2).encode("utf-8")
+        return github_put_file("state.json", payload, "Update state.json", sha=sha_before)
+    except RuntimeError as e:
+        # If file didn't exist (sha None) and server expects no sha, retry without sha
+        if sha_before is None:
+            payload = json.dumps(state_data, ensure_ascii=False, indent=2).encode("utf-8")
+            return github_put_file("state.json", payload, "Create state.json")
+        raise
+
+def convert_to_jpg_bytes(uploaded_file):
+    """
+    Convert any uploaded image to JPEG bytes.
+    If Pillow isn't available, return original bytes and hope it's already JPEG.
+    """
+    data = uploaded_file.getvalue()
+    if not PIL_AVAILABLE:
+        return data  # fallback
+    try:
+        with Image.open(BytesIO(data)) as im:
+            # Convert to RGB to avoid issues with PNG transparency / P mode
+            rgb = im.convert("RGB")
+            buf = BytesIO()
+            rgb.save(buf, format="JPEG", quality=92, optimize=True)
+            return buf.getvalue()
+    except Exception:
+        # If conversion fails, return original
+        return data
+
+# ------------------ HEADER ------------------
+st.markdown("""
+<div class="header-container">
+    <div class="header-title">
+        <img src="https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png" width="80">
+        <h1>LUCAS GREY SCRAP TRADING</h1>
+    </div>
+    <div class="header-buttons">
+        <form action="" method="get">
+            <button type="submit" name="page" value="About">About</button>
+            <button type="submit" name="page" value="Contact">Contact Us</button>
+            <button type="submit" name="page" value="Admin">Admin</button>
+        </form>
+    </div>
+</div>
+<hr>
+""", unsafe_allow_html=True)
+
+# Handle button clicks via query params
+query_params = st.query_params
+if "page" in query_params:
+    st.session_state.page = query_params["page"]
+
+# ------------------ ABOUT PAGE ------------------
+if st.session_state.page == "About":
+    st.header("About Lucas Grey Scrap Trading")
+    st.subheader("Who We Are")
+    st.write("""
+        Lucas Grey Scrap Trading (LGST) is a trusted scrap buying and dismantling company based in Quezon City, Philippines. We specialize in the purchase of scrap materials, 
+        dismantling of copper wires, and hauling services of unserviceable equipment and properties.
+        With years of hands-on experience, we have proudly served both private companies and government agencies—including hospitals and public institutions—earning a reputation for honesty, 
+        reliability, and competitive pricing. Our strong workforce and organized system ensure that every project is handled with efficiency, professionalism, and care for the environment.
+    """)
+    st.subheader("Our Mission")
+    st.info("""To deliver top-quality scrap trading and copper wire dismantling that prioritize client satisfaction.
+        We are committed to honesty, safety, and efficiency in every transaction, ensuring value and trust in our long-term partnerships.
+    """)
+    st.subheader("Our Vision")
+    st.success("""To become one of the most recognized and respected service providers in the scrap and dismantling industry in the Philippines—offering excellence, 
+        sustainability, and integrity while upholding our responsibility to society and the environment.
+    """)
+    st.subheader("Core Values")
+    st.markdown("""
+        * Integrity & Honesty – We uphold transparency and fairness in every deal.
+        * Customer Priority – Our clients’ needs and satisfaction are always at the center of our service.
+        * Excellence in Service – We are committed to delivering high-quality work without compromise.
+        * Safety & Responsibility – We ensure safe, compliant, and environmentally responsible practices in all operations.
+        * Commitment to Relationships – We aim to build long-term partnerships based on trust, reliability, and mutual growth.
+    """)
+    st.subheader("Brief History")
+    st.write("""
+        Lucas Grey Scrap Trading was formally established in 2021 by Von Ryan Veloso, following more than four years of active experience in the scrap and dismantling business. 
+        Starting from small transactions involving scrap and unserviceable goods, LGST expanded its services to include large-scale dismantling projects.
+        Today, the company manages a warehouse team of over 40 staff members, operates with modern hauling and transport vehicles, and continues to serve both government and private institutions. 
+        Accredited by PHILGEPS, LGST has built its reputation on competitive pricing, timely service completion, and client satisfaction.
+    """)
+    st.subheader("What We Do")
+    st.markdown("""
+        * Scrap Buying – Purchase of various scrap materials, including copper wires, IT equipment, office supplies, and unserviceable vehicles.
+        * Copper Wire Dismantling – Safe and efficient dismantling of copper wires to recover valuable materials.
+        * Sustainable Recycling – We support environmental responsibility by ensuring proper recycling and waste management practices.
+    """)
+    st.subheader("Our Commitment")
+    st.markdown("""
+        ### At Lucas Grey Scrap Trading, we are dedicated to:
+        
+        ✅ Providing safe and efficient services for every client.  
+        ⏱️ Completing projects on time with guaranteed satisfaction.  
+        🤝 Building long-term, mutually beneficial business relationships.  
+        🌍 Upholding our social and environmental responsibilities.  
+        """)
+
+    if st.button("⬅️ Back to Home"):
+        st.session_state.page = "Home"
+        st.query_params.clear()
+        st.rerun()
+
+# ------------------ HOME PAGE ------------------
+elif st.session_state.page == "Home":
+    # Load images from GitHub (only once)
+    if not st.session_state.images:
+        with st.spinner("Loading images from GitHub..."):
+            st.session_state.images = list_pic_urls_sorted()
+
+    # Load state.json to bring in persistent descriptions
+    state_data, _sha = load_state_json()
+    repo_descriptions = state_data.get("descriptions", {})
+
+    st.subheader("WELCOME TO LUCAS GREY SCRAP TRADING")
+
+    # Search
+    search_query = st.text_input("", "")
+    col_clear = st.columns([9, 1.1])
+    with col_clear[1]:
+        if st.button("Clear Search"):
+            search_query = ""
+            st.session_state.page_num = 0
+
+    # Build a helper: URL -> filename
+    def filename_from_url(url: str) -> str:
+        return url.rsplit("/", 1)[-1]
+
+    images = st.session_state.images
+
+    # Filtering by description (from state.json)
+    def desc_for_url(url: str) -> str:
+        fname = filename_from_url(url)
+        return repo_descriptions.get(fname, "")
+
+    filtered_images = images
+    if search_query:
+        filtered_images = [u for u in images if search_query.lower() in desc_for_url(u).lower()]
+        st.session_state.page_num = 0
+
+    # Pagination
+    images_per_page = 3
+    start_idx = st.session_state.page_num * images_per_page
+    end_idx = start_idx + images_per_page
+    current_images = filtered_images[start_idx:end_idx]
+    total_pages = (len(filtered_images) + images_per_page - 1) // images_per_page if filtered_images else 1
+
+    if filtered_images:
+        st.markdown(
+            f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>",
+            unsafe_allow_html=True,
+        )
     else:
-        content = file.read()
-    filename = get_next_pic_name()
-    content_b64 = base64.b64encode(content).decode()
-    github_put(f"{IMAGE_DIR}/{filename}", content_b64, f"Upload {filename}")
-    state = load_state()
-    state[filename] = {"description": description}
-    save_state(state)
-    st.success("✅ Uploaded successfully!")
+        st.warning("No results found.")
 
-# ------------------ UI FUNCTIONS ------------------
-def show_header():
-    with st.container():
-        col1, col2 = st.columns([3,1])
-        with col1:
-            st.markdown("<h2>Lucas Grey Scrap Trading</h2>", unsafe_allow_html=True)
-        with col2:
-            st.button("Home", on_click=lambda: set_page("Home"))
-            st.button("About", on_click=lambda: set_page("About"))
-            st.button("Contact Us", on_click=lambda: set_page("Contact"))
-            st.button("Admin", on_click=lambda: set_page("Admin"))
-
-def set_page(page):
-    st.session_state.page = page
-
-def show_gallery():
-    st.markdown('<div class="search-container">', unsafe_allow_html=True)
-    query = st.text_input("🔍 Search projects by description", "").lower()
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    urls = list_pic_urls_sorted()
-    state = load_state()
-    if query:
-        urls = [u for u in urls if query in state.get(u.split("/")[-1], {}).get("description","").lower()]
-
-    per_page = 6
-    total_pages = (len(urls) + per_page - 1) // per_page
-    page = st.session_state.get("gallery_page", 1)
-    if page < 1: page = 1
-    if page > total_pages: page = total_pages
-    start = (page-1)*per_page
-    end = start + per_page
-    subset = urls[start:end]
-
-    st.markdown('<div class="gallery-container">', unsafe_allow_html=True)
-    for url in subset:
-        filename = url.split("/")[-1]
-        desc = state.get(filename, {}).get("description","")
-        st.markdown(f"""
-        <div class="gallery-card">
-            <img src="{url}" onclick="window.location.href='?view={filename}'"/>
-            <p>{desc}</p>
-        </div>
-        """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    col1, col2, col3 = st.columns([1,1,1])
+    # Pagination buttons
+    col1, col2, col3 = st.columns([1, 10, 1])
     with col1:
-        if st.button("⬅ Previous") and page>1:
-            st.session_state.gallery_page = page-1
-            st.experimental_rerun()
-    with col2: st.write(f"Page {page}/{total_pages}")
+        if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
+            st.session_state.page_num -= 1
+            st.rerun()
     with col3:
-        if st.button("Next ➡") and page<total_pages:
-            st.session_state.gallery_page = page+1
-            st.experimental_rerun()
+        if st.button("Next ➡️", disabled=end_idx >= len(filtered_images)):
+            st.session_state.page_num += 1
+            st.rerun()
 
-def show_modal():
-    if st.session_state.view_image:
-        filename = st.session_state.view_image
-        url = _raw_url(filename)
-        state = load_state()
-        desc = state.get(filename, {}).get("description","")
-        st.markdown(f"""
-        <div class="modal">
-          <div class="modal-content">
-            <img src="{url}" style="width:100%; border-radius:8px"/>
-            <p>{desc}</p>
-            <button onclick="window.location.href='/'">Close</button>
-          </div>
-        </div>
-        """, unsafe_allow_html=True)
+    # Display images
+    if filtered_images:
+        st.subheader("CURRENT PROJECT")
+        img_cols = st.columns(min(len(current_images), 3))
+        for idx, col in enumerate(img_cols):
+            if idx < len(current_images):
+                img_url = current_images[idx]
+                caption = desc_for_url(img_url) or "No description"
+                col.markdown(
+                    f"""
+                    <div class="img-card">
+                        <img src="{img_url}" alt="{caption}">
+                        <p>{caption}</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                if col.button("View Details", key=f"view_{img_url}"):
+                    st.session_state.view_image = img_url
+                    st.rerun()
 
-# ------------------ PAGES ------------------
-if st.session_state.page == "Home":
-    show_header()
-    st.subheader("📌 Current Projects")
-    show_gallery()
-    show_modal()
+    # Modal
+    if st.session_state.view_image is not None:
+        img_url = st.session_state.view_image
+        caption = (state_data.get("descriptions", {}) or {}).get(filename_from_url(img_url), "No description")
+        st.markdown(
+            f"""
+            <div class="modal">
+                <img src="{img_url}" width="700">
+                <p><b>{caption}</b></p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if st.button("Close", key=f"close_{img_url}"):
+            st.session_state.view_image = None
+            st.rerun()
 
-elif st.session_state.page == "About":
-    show_header()
-    st.subheader("🏢 About Us")
-    st.info("At Lucas Grey Scrap Trading, we are dedicated to: ...")
-
+# ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
-    show_header()
-    st.subheader("📞 Contact Us")
-    st.markdown('<div class="contact-container">', unsafe_allow_html=True)
-    name = st.text_input("Name")
-    email = st.text_input("Email")
-    message = st.text_area("Message")
-    if st.button("Send"):
-        st.success("✅ Thank you for contacting us!")
+    st.header("Contact Us")
+    st.markdown('<div class="contact-form">', unsafe_allow_html=True)
+    with st.form(key="contact_form"):
+        name = st.text_input("Name", placeholder="Enter your full name")
+        email = st.text_input("Email", placeholder="Enter your email address")
+        message = st.text_area("Message", placeholder="Your inquiry or message")
+        submit_button = st.form_submit_button("Send Message")
+        if submit_button:
+            if name and email and message:
+                st.success(f"Thank you, {name}! Your message has been received. We'll get back to you at {email}.")
+            else:
+                st.error("Please fill out all fields.")
     st.markdown('</div>', unsafe_allow_html=True)
 
+    st.markdown("""
+        📧 Email: **vonryan0110@gmail.com**  
+        📍 Address: Blk-5 Lot-7 Sta. Fe st. Amlac Ville Payatas B, Quezon City  
+    """)
+
+    if st.button("⬅️ Back to Home"):
+        st.session_state.page = "Home"
+        st.query_params.clear()
+        st.rerun()
+
+# ------------------ ADMIN PAGE ------------------
 elif st.session_state.page == "Admin":
-    show_header()
     st.header("🔑 Admin Login" if not st.session_state.is_admin else "📂 Admin Dashboard")
 
     if not st.session_state.is_admin:
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
         if st.button("Login"):
-            if username=="admin" and password=="1234":
+            if username == "admin" and password == "1234":
                 st.session_state.is_admin = True
-                st.experimental_rerun()
+                st.success("Login successful!")
+                st.rerun()
             else:
-                st.error("❌ Invalid credentials")
+                st.error("Invalid credentials")
     else:
-        uploaded = st.file_uploader("Upload Image", type=["jpg","jpeg","png"])
-        desc = st.text_area("Description")
-        if st.button("Upload"):
-            upload_image_and_description(uploaded, desc)
-        if st.button("🏠 Back to Home"):
-            set_page("Home")
-            st.experimental_rerun()
-        if st.button("🚪 Logout"):
-            st.session_state.is_admin = False
-            set_page("Home")
-            st.experimental_rerun()
+        if not GITHUB_TOKEN:
+            st.error("Missing GITHUB_TOKEN in st.secrets. Add it first to enable uploads.")
+        uploaded_files = st.file_uploader(
+            "Upload new project images (they will be renamed to picX.jpg)",
+            accept_multiple_files=True,
+            type=["jpg", "jpeg", "png"]
+        )
+
+        descriptions_local = {}
+        if uploaded_files:
+            for i, file in enumerate(uploaded_files):
+                desc = st.text_area(f"Description for {file.name}", key=f"desc_{i}")
+                descriptions_local[file.name] = desc
+
+            if st.button("Save Project", key="save_project"):
+                if not GITHUB_TOKEN:
+                    st.stop()
+
+                # Load state.json (existing)
+                state_data, state_sha = load_state_json()
+                if "descriptions" not in state_data or not isinstance(state_data["descriptions"], dict):
+                    state_data["descriptions"] = {}
+
+                # Determine latest pic number
+                latest_num = get_latest_pic_number()
+
+                # Upload each file -> pic{num}.jpg
+                new_urls = []
+                errors = []
+                for i, file in enumerate(uploaded_files):
+                    file_num = latest_num + i + 1
+                    new_filename = f"pic{file_num}.jpg"
+
+                    # Convert to jpg bytes
+                    img_bytes = convert_to_jpg_bytes(file)
+
+                    # Upload image
+                    img_path = _join_path(IMAGE_DIR, new_filename)
+                    try:
+                        github_put_file(
+                            img_path,
+                            img_bytes,
+                            message=f"Add {new_filename}"
+                        )
+                        # Update state.json descriptions
+                        desc_value = descriptions_local.get(file.name, "").strip()
+                        if desc_value:
+                            state_data["descriptions"][new_filename] = desc_value
+                        new_urls.append(_raw_url(new_filename))
+                    except Exception as e:
+                        errors.append(f"{new_filename}: {e}")
+
+                # Save updated state.json
+                try:
+                    save_state_json(state_data, state_sha)
+                except Exception as e:
+                    errors.append(f"state.json update failed: {e}")
+
+                if errors:
+                    st.error("Some items failed to upload:\n- " + "\n- ".join(errors))
+                if new_urls:
+                    try:
+                        st.session_state.images = list_pic_urls_sorted()
+                    except Exception:
+                        st.session_state.images.extend(new_urls)
+                    st.success("✅ Project(s) uploaded to GitHub successfully!")
+                    st.rerun()
+
+        # ------------------ NAVIGATION BUTTONS ------------------
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🏠 Back to Home", key="back_home"):
+                st.session_state.page = "Home"
+                st.rerun()
+
+        with col2:
+            if st.button("🚪 Logout", key="logout"):
+                st.session_state.is_admin = False
+                st.rerun()
+
 
 # ------------------ FOOTER ------------------
-st.markdown("---")
-st.caption("© 2025 Lucas Grey Scrap Trading. All Rights Reserved.")
+st.markdown("""
+<div class="footer">
+    © 2025 Lucas Grey Scrap Trading. All rights reserved.
+</div>
+""", unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
