@@ -40,7 +40,7 @@ body {
 }
 .header-title img {
     margin-right: 15px;
-    width: 30px;
+    width: 150px;
     height: auto;
 }
 .header-title h1 { 
@@ -561,6 +561,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
