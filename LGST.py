@@ -627,12 +627,8 @@ elif st.session_state.page == "Admin":
                 st.session_state.is_admin = False; st.rerun()
 
 
-    <div class="footer">
-        2025 Lucas Grey Scrap Trading. All rights reserved.
-    </div>
-    """,
-    unsafe_allow_html=True
-    )
+    # ------------------ FOOTER ------------------ st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
