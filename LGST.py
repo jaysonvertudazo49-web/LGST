@@ -18,18 +18,18 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 # ------------------ CSS ------------------
 st.markdown("""
 <style>
-/* Apply to main content area in Streamlit */
 .stApp {
-    background: linear-gradient(135deg, black, rgba(128, 0, 0, 0.7));
-    background-size: 400% 400%;
-    animation: gradientShift 10s ease infinite;
+    background-size: cover;
+    background-position: center;
+    animation: slideshow 20s infinite;
 }
 
-/* Keyframes for smooth shifting */
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* Keyframes for slideshow */
+@keyframes slideshow {
+    0%   { background-image: url("https://picsum.photos/id/1015/1920/1080"); }
+    33%  { background-image: url("https://picsum.photos/id/1016/1920/1080"); }
+    66%  { background-image: url("https://picsum.photos/id/1018/1920/1080"); }
+    100% { background-image: url("https://picsum.photos/id/1015/1920/1080"); }
 }
 
 /* Header */
@@ -604,6 +604,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
