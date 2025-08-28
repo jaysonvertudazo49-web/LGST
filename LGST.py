@@ -177,6 +177,10 @@ h3 {
     color: white !important;
 }
 
+/* Force all text white */
+body, p, h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+}
 
 /* Footer */
 .footer {
@@ -590,6 +594,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
