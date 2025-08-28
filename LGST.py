@@ -19,23 +19,19 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 st.markdown("""
 <style>
 .stApp {
-    background: #121212;
-    color: #f5f5f5;
+    background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+    background-attachment: fixed;
+    background-size: cover;
+    color: white;
 }
 
-.stApp::before {
-    content: "";
-    position: fixed;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: radial-gradient(circle, rgba(128,0,0,0.15) 0%, transparent 70%);
-    animation: glowPulse 15s ease-in-out infinite;
-}
-
-@keyframes glowPulse {
-    0% { transform: scale(1); opacity: 0.4; }
-    50% { transform: scale(1.3); opacity: 0.6; }
-    100% { transform: scale(1); opacity: 0.4; }
+/* For Streamlit main container */
+.block-container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 
 /* Header */
@@ -610,6 +606,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
