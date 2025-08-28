@@ -20,7 +20,7 @@ st.markdown("""
 <style>
 /* Global */
 body { 
-    font-family: 'Arial', sans-serif; 
+    font-family: 'Times New Roman', sans-serif; 
     background: linear-gradient(135deg, #111111, #222222); 
     margin:0; 
     padding:0; 
@@ -559,6 +559,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
