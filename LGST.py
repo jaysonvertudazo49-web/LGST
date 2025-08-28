@@ -519,10 +519,10 @@ for member in team:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-    if st.button("⬅️ Back to Home"):
-        st.session_state.page = "Home"
-        st.query_params.clear()
-        st.rerun()
+if st.button("⬅️ Back to Home"):
+    st.session_state.page = "Home"
+    st.query_params.clear()
+    st.rerun()
 
 # ------------------ HOME PAGE ------------------
 elif st.session_state.page == "Home":
@@ -712,6 +712,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
