@@ -16,7 +16,6 @@ except Exception:
 st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 
 # ------------------ CSS ------------------
-# ------------------ CSS ------------------
 st.markdown("""
 <style>
 /* Apply to main content area in Streamlit */
@@ -43,7 +42,7 @@ st.markdown("""
 }
 .header-title h1 { 
     margin: 0; 
-    color: white; 
+    color: black; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 .header-buttons {
@@ -139,7 +138,7 @@ st.markdown("""
 
 /* Section headers */
 h2 { 
-    color: #800000; 
+    color: white; 
     font-size: 1.8em; 
     margin-top: 15px; 
     margin-bottom: 10px; 
@@ -152,7 +151,7 @@ h2 {
     text-align: center;
     padding: 15px;
     font-size: 14px;
-    color: #aaa;
+    color: white;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -559,6 +558,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
