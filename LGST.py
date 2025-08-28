@@ -39,7 +39,7 @@ body {
     align-items: center;
 }
 .header-title img {
-    margin-right: 10px;
+    margin-right: 50px;
 }
 .header-title h1 { 
     margin: 0; 
@@ -559,6 +559,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
