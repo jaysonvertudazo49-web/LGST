@@ -18,20 +18,36 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 # ------------------ CSS ------------------
 st.markdown("""
 <style>
+/* Apply to main content area in Streamlit */
 .stApp {
-    background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
-    background-attachment: fixed;
-    background-size: cover;
-    color: white;
+    background: linear-gradient(-45deg, #0f0f0f, #800000, #1a1a1a, #4d0000);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    color: white;  /* makes text visible */
 }
 
-/* For Streamlit main container */
-.block-container {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 25px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+/* Keyframes for smooth shifting */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Optional glowing overlay effect */
+.stApp::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    animation: glowMove 12s linear infinite;
+    z-index: 0;
+}
+
+/* Glow movement */
+@keyframes glowMove {
+    0% { transform: translate(-20%, -20%) scale(1); }
+    50% { transform: translate(20%, 20%) scale(1.2); }
+    100% { transform: translate(-20%, -20%) scale(1); }
 }
 
 /* Header */
@@ -606,6 +622,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
