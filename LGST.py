@@ -19,37 +19,11 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 # ------------------ CSS ------------------
 st.markdown("""
 <style>
-/* Main app background gradient */
+/* Apply to main content area in Streamlit */
 .stApp {
-    position: relative;
-    background: linear-gradient(135deg, maroon, white);
-    overflow: hidden;
-}
-
-/* Blurred gradient overlay */
-.stApp::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(135deg, maroon, white);
-    filter: blur(20px);        /* blur strength */
-    transform: scale(1.1);     /* avoid edge clipping */
-    z-index: -1;
-}
-
-/* Add logo on top of background */
-.stApp::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 700px;              /* logo size */
-    height: 700px;
-    background: url("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png") no-repeat center center;
-    background-size: contain;
-    opacity: 0.15;             /* watermark effect */
-    transform: translate(-50%, -50%);
-    z-index: -1;
+    background: url("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png") no-repeat center center fixed;
+    background-size: 700px;   /* adjust logo size */
+    background-color: white;  /* fallback color */
 }
 /* Header */
 .header-container {
@@ -587,9 +561,6 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
-
 
 
 
