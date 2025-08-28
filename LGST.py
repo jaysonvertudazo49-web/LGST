@@ -145,6 +145,7 @@ h2 {
     border-bottom: 2px solid #800000; 
     padding-bottom: 5px; 
 }
+
 /* Make st.subheader text white */
 h3 {
     color: white !important;
@@ -153,7 +154,7 @@ h3 {
 /* Make st.markdown text white */
 .stMarkdown, .stMarkdown p {
     color: white !important;
-{
+}
 
 /* Footer */
 .footer {
@@ -567,6 +568,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
