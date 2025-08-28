@@ -210,44 +210,6 @@ body, p, h1, h2, h3, h4, h5, h6 {
     color: white !important;
 }
 
-
-.team-container {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-.team-card {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    text-align: center;
-    padding: 20px;
-    width: 240px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.team-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-}
-.team-card img {
-    border-radius: 8px;
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-}
-.team-name {
-    font-weight: bold;
-    font-size: 18px;
-    margin-top: 12px;
-    color: #003366;
-}
-.team-role {
-    font-size: 14px;
-    color: #555555;
-}
-
 /* Footer */
 .footer {
     text-align: center;
@@ -478,47 +440,6 @@ st.write(
     """
 )
 
-# ---------------- TEAM DATA ----------------
-team = [
-    {
-        "name": "Steve Pulley",
-        "role": "Chief Executive Officer",
-        "image": "https://via.placeholder.com/240x280.png?text=Steve+Pulley"
-    },
-    {
-        "name": "Diego Obere",
-        "role": "Managing Director",
-        "image": "https://via.placeholder.com/240x280.png?text=Diego+Obere"
-    },
-    {
-        "name": "Katie O'Callaghan",
-        "role": "Chief People Officer",
-        "image": "https://via.placeholder.com/240x280.png?text=Katie+O'Callaghan"
-    },
-    {
-        "name": "David Smith",
-        "role": "Chief Financial Officer",
-        "image": "https://via.placeholder.com/240x280.png?text=David+Smith"
-    }
-]
-
-# ---------------- LAYOUT ----------------
-st.markdown('<div class="team-container">', unsafe_allow_html=True)
-
-for member in team:
-    st.markdown(
-        f"""
-        <div class="team-card">
-            <img src="{member['image']}" alt="{member['name']}">
-            <div class="team-name">{member['name']}</div>
-            <div class="team-role">{member['role']}</div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-st.markdown('</div>', unsafe_allow_html=True)
-
 if st.button("⬅️ Back to Home"):
     st.session_state.page = "Home"
     st.query_params.clear()
@@ -712,6 +633,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
