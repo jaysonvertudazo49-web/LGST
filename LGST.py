@@ -25,7 +25,7 @@ st.markdown("""
 /* Header */
 .header-container {
     background: white;
-    padding: 15px 30px;
+    /* padding: 15px 30px; */
     border-radius: 12px;
     display: flex;
     justify-content: space-between; 
@@ -572,6 +572,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
