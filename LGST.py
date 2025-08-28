@@ -16,12 +16,15 @@ except Exception:
 st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 
 # ------------------ CSS ------------------
+# ------------------ CSS ------------------
 st.markdown("""
 <style>
 /* Global */
 body { 
     font-family: 'Times New Roman', sans-serif; 
-    background: linear-gradient(135deg, #111111, #222222); 
+    background: url("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png") no-repeat center center fixed, 
+                linear-gradient(135deg, #111111, #222222); 
+    background-size: contain;  /* change to 'cover' if you want it full screen */
     margin:0; 
     padding:0; 
 }
@@ -561,6 +564,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
