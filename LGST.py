@@ -121,20 +121,21 @@ st.markdown("""
     padding: 6px 14px;
     font-weight: bold;
     border: none;
-    transition: all 0.3s ease; /* smoother transition for all properties */
+    transition: all 0.2s ease;
     cursor: pointer;
 }
 
 /* Hover effect */
 .stButton button:hover {
-    background: #a00000; /* darker maroon when hovered */
-    transform: scale(1.05); /* slight zoom */
+    background: #a00000;
+    transform: scale(1.05);
 }
 
-/* Clicked (active) effect */
+/* Click effect (press down) */
 .stButton button:active {
-    transform: scale(0.95); /* shrink slightly when clicked */
-    background: #660000;   /* even darker maroon */
+    transform: scale(0.9);       /* shrink */
+    background: #660000;         /* darker */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4) inset; /* pressed look */
 }
 
 
@@ -583,6 +584,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
