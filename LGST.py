@@ -210,19 +210,12 @@ body, p, h1, h2, h3, h4, h5, h6 {
     color: white !important;
 }
 
+/* Footer */
 .footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    color: white; 
     text-align: center;
     padding: 15px;
     font-size: 14px;
-    font-family: 'Arial', sans-serif;
-    background: url("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png") no-repeat center center;
-    background-size: cover;
-    background-color: rgba(0, 0, 0, 0.6); /* fallback overlay */
+    color: white;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -627,18 +620,8 @@ elif st.session_state.page == "Admin":
                 st.session_state.is_admin = False; st.rerun()
 
 
-    # ------------------ FOOTER ------------------ 
-    st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
-
+# ------------------ FOOTER ------------------
+st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
 
 
 
