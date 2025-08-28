@@ -23,13 +23,22 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Times New Roman', sans-serif;
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+}
 
-    /* Background image */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: url("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png") no-repeat center center fixed;
     background-size: cover;
-
-    /* Apply blur */
-    filter: blur(5px);
+    filter: blur(8px); /* adjust blur level */
+    z-index: -1; /* push behind content */
 }
 
 /* Header */
@@ -568,6 +577,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
