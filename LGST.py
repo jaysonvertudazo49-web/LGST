@@ -154,12 +154,8 @@ h2 {
 .stMarkdown, .stMarkdown p {
     color: white !important;
 }
-
-h3 {
-    color: white !important;
-}
-.stMarkdownContainer, .stMarkdownContainer p {
-    color: white !important;
+.stWidgetLabel {
+    color: white;
 }
 
 /* Footer */
@@ -574,6 +570,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
