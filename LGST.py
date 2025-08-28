@@ -429,17 +429,6 @@ if st.session_state.page == "About":
         🌍 Upholding our social and environmental responsibilities.  
         """)
 
-    st.markdown("## Executive team")
-st.write(
-    """
-    Our executive team have a wealth of experience from senior roles within the
-    world’s most renowned business information and analytics companies.  
-    They share a commitment to provide our clients with the highest possible quality  
-    of information and leading-edge technology to support the development  
-    of their businesses in emerging markets.
-    """
-)
-
 if st.button("⬅️ Back to Home"):
     st.session_state.page = "Home"
     st.query_params.clear()
@@ -633,6 +622,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
