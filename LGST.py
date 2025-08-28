@@ -19,12 +19,19 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 st.markdown("""
 <style>
 /* Global */
-body { 
-    font-family: 'Times New Roman', sans-serif; 
-    background: linear-gradient(135deg, #111111, #222222); 
-    margin:0; 
-    padding:0; 
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Times New Roman', sans-serif;
+
+    /* Background image */
+    background: url("your-image.jpg") no-repeat center center fixed;
+    background-size: cover;
+
+    /* Apply blur */
+    filter: blur(5px);
 }
+
 /* Header */
 .header-container {
     background: white;
@@ -561,6 +568,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
