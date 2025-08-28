@@ -146,7 +146,7 @@ h2 {
     padding-bottom: 5px; 
 }
 /* Make st.subheader text white */
-h2 {
+h3 {
     color: white !important;
 }
 
@@ -566,6 +566,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
