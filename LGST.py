@@ -25,7 +25,7 @@ body {
     font-family: 'Times New Roman', sans-serif;
 
     /* Background image */
-    background: url("your-image.jpg") no-repeat center center fixed;
+    background: url("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/LOGO1.png") no-repeat center center fixed;
     background-size: cover;
 
     /* Apply blur */
@@ -568,6 +568,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
