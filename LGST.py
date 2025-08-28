@@ -146,6 +146,11 @@ h2 {
     padding-bottom: 5px; 
 }
 
+/* Make st.markdown text white */
+.stMarkdown, .stMarkdown p {
+    color: white !important;
+}
+
 /* Footer */
 .footer {
     text-align: center;
@@ -558,6 +563,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
