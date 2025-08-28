@@ -128,14 +128,13 @@ st.markdown("""
 }
 
 .contact-form {
-    background: #222222;   /* dark gray instead of white */
+    background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     max-width: 500px;
     margin: auto;
-    color: white;  /* now text is visible */
+    color: white;  /* 👈 makes all text inside white */
 }
-
 
 /* Section headers */
 h2 { 
@@ -572,6 +571,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
