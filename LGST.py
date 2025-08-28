@@ -20,7 +20,7 @@ st.markdown("""
 <style>
 /* Apply to main content area in Streamlit */
 .stApp {
-    background: linear-gradient(135deg, maroon, black);
+    background: linear-gradient(135deg, black, maroon);
 }
 /* Header */
 .header-container {
@@ -574,6 +574,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
