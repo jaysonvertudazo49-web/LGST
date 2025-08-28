@@ -172,6 +172,12 @@ h3 {
     color: white !important;
 }
 
+/* Target only vision/mission text */
+.vision-text, .mission-text {
+    color: white !important;
+}
+
+
 /* Footer */
 .footer {
     text-align: center;
@@ -584,6 +590,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
