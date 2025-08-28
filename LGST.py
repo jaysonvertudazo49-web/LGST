@@ -21,7 +21,17 @@ st.markdown("""
 /* Apply to main content area in Streamlit */
 .stApp {
     background: linear-gradient(135deg, black, rgba(128, 0, 0, 0.7));
+    background-size: 400% 400%;
+    animation: gradientShift 10s ease infinite;
 }
+
+/* Keyframes for smooth shifting */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 /* Header */
 .header-container {
     background: linear-gradient(135deg, black, maroon);
@@ -594,6 +604,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
