@@ -630,7 +630,8 @@ elif st.session_state.page == "Admin":
 <div class="footer">
     @ 2025 Lucas Grey Scrap Trading. All rights reserved.
 </div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+
 
 
 
