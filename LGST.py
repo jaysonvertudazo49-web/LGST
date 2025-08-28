@@ -153,10 +153,6 @@ h2 {
 /* Make st.markdown text white */
 .stMarkdown, .stMarkdown p {
     color: white !important;
-}
-.stWidgetLabel {
-    color: white;
-}
 
 /* Footer */
 .footer {
@@ -570,6 +566,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
