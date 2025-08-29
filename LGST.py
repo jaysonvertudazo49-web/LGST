@@ -17,15 +17,15 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 
 # ------------------ CSS ------------------
 st.markdown("""
-<style>
+/* Background slideshow with zoom effect */
 .stApp {
-    position: relative;
-    color: white; /* makes text visible */
-    overflow: hidden; /* prevent overflow */
-    z-index: 0; /* make this a stacking context */
+    position: relative;     /* create stacking context */
+    z-index: 0;             /* keep content above background */
+    color: white;           /* make text visible */
+    overflow: hidden;
 }
 
-/* Slideshow container */
+/* Slideshow as background */
 .stApp::before {
     content: "";
     position: fixed;
@@ -34,8 +34,10 @@ st.markdown("""
     background-position: center;
     animation: slideshow 40s infinite;
     transform-origin: center;
-    z-index: -9999; /* push far behind everything */
+    z-index: -1;            /* push behind all content */
+    pointer-events: none;   /* don’t block clicks on UI */
 }
+
 
 /* Keyframes for slideshow with zoom in/out */
 @keyframes slideshow {
@@ -652,6 +654,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
