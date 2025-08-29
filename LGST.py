@@ -366,7 +366,7 @@ st.markdown("""
     </div>
     <div class="header-buttons">
         <form action="" method="get">
-            <button type="submit" name="page" value="About">About</button>
+            <button type="submit" name="page" value="About">About Us</button>
             <button type="submit" name="page" value="Contact">Contact Us</button>
             <button type="submit" name="page" value="Admin">Admin</button>
             <button type="submit" name="page" value="Home">Home</button>
@@ -623,6 +623,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
