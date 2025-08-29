@@ -19,26 +19,59 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 st.markdown("""
 <style>
 /* Apply to main content area in Streamlit */
-/* Glassmorphism Card */
-.glass-card {
-    background: rgba(255, 255, 255, 0.1); /* Transparent white */
-    border-radius: 16px;
-    padding: 20px;
-    backdrop-filter: blur(10px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    color: white;
-    z-index: 2;
+.stApp {
+    background: linear-gradient(-45deg, #0f0f0f, #800000, #1a1a1a, #4d0000);
+    background-size: 400% 400%;
+    animation: gradientShift 18s ease infinite;
+    color: white;  /* makes text visible */
     position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
 }
 
-/* Hover effect */
-.glass-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+/* Keyframes for smooth shifting */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
+
+/* Subtle glowing overlay */
+.stApp::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
+    animation: glowMove 14s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Glow movement */
+@keyframes glowMove {
+    0% { transform: translate(-10%, -10%) scale(1); }
+    50% { transform: translate(15%, 15%) scale(1.3); }
+    100% { transform: translate(-10%, -10%) scale(1); }
+}
+
+/* Floating particles effect */
+.stApp::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px);
+    background-size: 3px 3px;
+    opacity: 0.15;
+    animation: twinkle 6s infinite alternate;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Twinkling effect for particles */
+@keyframes twinkle {
+    from { opacity: 0.1; transform: scale(1); }
+    to { opacity: 0.25; transform: scale(1.05); }
+}
+
 
 /* Header */
 .header-container {
@@ -613,6 +646,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
