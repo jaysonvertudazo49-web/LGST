@@ -33,13 +33,13 @@ st.markdown("""
     background-size: cover;
     background-position: center;
     z-index: -1;
-    animation: slideshow 30s infinite;
+    animation: slideshow 40s infinite;
 }
 
 /* Keyframes for slideshow with zoom in/out */
 @keyframes slideshow {
     0% {
-        background-image: url("https://github.com/jaysonvertudazo49-web/LGST/blob/main/khyla.jpg");
+        background-image: url("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/khyla.jpg");
         transform: scale(1);
     }
     20% {
@@ -71,7 +71,7 @@ st.markdown("""
         transform: scale(1.2);
     }
     100% {
-        background-image: url("https://picsum.photos/id/1018/1920/1080");
+        background-image: url("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/khyla.jpg");
         transform: scale(1);
     }
 }
@@ -246,6 +246,7 @@ body, p, h1, h2, h3, h4, h5, h6 {
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 # ------------------ SESSION STATE ------------------
 if "page" not in st.session_state:
@@ -650,6 +651,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
