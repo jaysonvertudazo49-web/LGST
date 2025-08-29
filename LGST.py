@@ -22,10 +22,8 @@ st.markdown("""
 .stApp {
     background: linear-gradient(-45deg, #0f0f0f, #800000, #1a1a1a, #4d0000);
     background-size: 400% 400%;
-    animation: gradientShift 18s ease infinite;
+    animation: gradientShift 15s ease infinite;
     color: white;  /* makes text visible */
-    position: relative;
-    overflow: hidden;
 }
 
 /* Keyframes for smooth shifting */
@@ -35,43 +33,22 @@ st.markdown("""
     100% { background-position: 0% 50%; }
 }
 
-/* Subtle glowing overlay */
+/* Optional glowing overlay effect */
 .stApp::before {
     content: "";
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
-    animation: glowMove 14s linear infinite;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    animation: glowMove 12s linear infinite;
     z-index: 0;
-    pointer-events: none;
 }
 
 /* Glow movement */
 @keyframes glowMove {
-    0% { transform: translate(-10%, -10%) scale(1); }
-    50% { transform: translate(15%, 15%) scale(1.3); }
-    100% { transform: translate(-10%, -10%) scale(1); }
+    0% { transform: translate(-20%, -20%) scale(1); }
+    50% { transform: translate(20%, 20%) scale(1.2); }
+    100% { transform: translate(-20%, -20%) scale(1); }
 }
-
-/* Floating particles effect */
-.stApp::after {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px);
-    background-size: 3px 3px;
-    opacity: 0.15;
-    animation: twinkle 6s infinite alternate;
-    z-index: 1;
-    pointer-events: none;
-}
-
-/* Twinkling effect for particles */
-@keyframes twinkle {
-    from { opacity: 0.1; transform: scale(1); }
-    to { opacity: 0.25; transform: scale(1.05); }
-}
-
 
 /* Header */
 .header-container {
@@ -646,9 +623,6 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
-
 
 
 
