@@ -369,6 +369,7 @@ st.markdown("""
             <button type="submit" name="page" value="About">About</button>
             <button type="submit" name="page" value="Contact">Contact Us</button>
             <button type="submit" name="page" value="Admin">Admin</button>
+            <button type="submit" name="page" value="Home">Home</button>
         </form>
     </div>
 </div>
@@ -428,10 +429,6 @@ if st.session_state.page == "About":
         🤝 Building long-term, mutually beneficial business relationships.  
         🌍 Upholding our social and environmental responsibilities.  
         """)
-if st.button("⬅️ Back to Home"):
-    st.session_state.page = "Home"
-    st.query_params.clear()
-    st.rerun()
 
 
 # ------------------ HOME PAGE ------------------
@@ -630,6 +627,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
