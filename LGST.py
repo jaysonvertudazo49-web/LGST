@@ -446,20 +446,24 @@ elif st.session_state.page == "Home":
     if st.button("Clear Search"):
         search_query = ""
         st.session_state.page_num = 0
+
     def filename_from_url(url): return url.rsplit("/", 1)[-1]
     def desc_for_url(url): return repo_descriptions.get(filename_from_url(url), "")
     images = st.session_state.images
     filtered_images = [u for u in images if search_query.lower() in desc_for_url(u).lower()] if search_query else images
     st.session_state.page_num = 0 if search_query else st.session_state.page_num
+
     per_page = 3
     start = st.session_state.page_num * per_page
     end = start + per_page
     current_images = filtered_images[start:end]
     total_pages = (len(filtered_images) + per_page - 1) // per_page if filtered_images else 1
+
     if filtered_images:
         st.markdown(f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>", unsafe_allow_html=True)
     else:
         st.warning("No results found.")
+
     col1, col2, col3 = st.columns([1, 10, 1])
     with col1:
         if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
@@ -469,6 +473,7 @@ elif st.session_state.page == "Home":
         if st.button("Next ➡️", disabled=end >= len(filtered_images)):
             st.session_state.page_num += 1
             st.rerun()
+
     if filtered_images:
         st.subheader("CURRENT PROJECT")
         cols = st.columns(min(len(current_images), 3))
@@ -480,6 +485,7 @@ elif st.session_state.page == "Home":
                 if col.button("View Details", key=f"view_{url}"):
                     st.session_state.view_image = url
                     st.rerun()
+
     if st.session_state.view_image:
         url = st.session_state.view_image
         caption = repo_descriptions.get(filename_from_url(url), "No description")
@@ -487,11 +493,7 @@ elif st.session_state.page == "Home":
         if st.button("Close"):
             st.session_state.view_image = None
             st.rerun()
-            
-    # Show "Back to Home" only if NOT on Home page
-    if st.session_state.page != "Home":
-        if st.button("Back to Home"):
-            st.session_state.page = "Home"
+
 
 
 # ------------------ CONTACT PAGE ------------------
@@ -628,6 +630,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
