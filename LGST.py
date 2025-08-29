@@ -541,10 +541,6 @@ elif st.session_state.page == "Contact":
     st.markdown(""" Email: **vonryan0110@gmail.com**  
  Address: Amlac Ville Payatas B, Quezon City""")
     st.markdown(""" Tel #: 85365516, 84632485, 84632412""")
-    if st.button("⬅️ Back to Home"):
-        st.session_state.page = "Home"
-        st.query_params.clear()
-        st.rerun()
 
 
 # ------------------ ADMIN PAGE ------------------
@@ -616,10 +612,10 @@ elif st.session_state.page == "Admin":
 
         col1, col2 = st.columns(2)
         with col1:
-            if st.button("⬅️ Back to Home"):
+            /* if st.button("⬅️ Back to Home"):
                 st.session_state.page = "Home"
                 st.query_params.clear()
-                st.rerun()
+                st.rerun() */
         with col2:
             if st.button("🚪 Logout"): 
                 st.session_state.is_admin = False; st.rerun()
@@ -627,6 +623,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
