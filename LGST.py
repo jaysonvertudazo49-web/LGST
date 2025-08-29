@@ -17,68 +17,38 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 
 # ------------------ CSS ------------------
 st.markdown("""
-/* Background slideshow with zoom effect */
+<style>
+/* Apply to main content area in Streamlit */
 .stApp {
-    position: relative;     /* create stacking context */
-    z-index: 0;             /* keep content above background */
-    color: white;           /* make text visible */
-    overflow: hidden;
+    background: linear-gradient(-45deg, #0f0f0f, #800000, #1a1a1a, #4d0000);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    color: white;  /* makes text visible */
 }
 
-/* Slideshow as background */
+/* Keyframes for smooth shifting */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Optional glowing overlay effect */
 .stApp::before {
     content: "";
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-size: cover;
-    background-position: center;
-    animation: slideshow 40s infinite;
-    transform-origin: center;
-    z-index: -1;            /* push behind all content */
-    pointer-events: none;   /* don’t block clicks on UI */
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    animation: glowMove 12s linear infinite;
+    z-index: 0;
 }
 
-
-/* Keyframes for slideshow with zoom in/out */
-@keyframes slideshow {
-    0% {
-        background-image: url("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/khyla.jpg");
-        transform: scale(1);
-    }
-    20% {
-        background-image: url("https://picsum.photos/id/1018/1920/1080");
-        transform: scale(1.2);
-    }
-    25% {
-        background-image: url("https://picsum.photos/id/1015/1920/1080");
-        transform: scale(1);
-    }
-    45% {
-        background-image: url("https://picsum.photos/id/1015/1920/1080");
-        transform: scale(1.2);
-    }
-    50% {
-        background-image: url("https://picsum.photos/id/1019/1920/1080");
-        transform: scale(1);
-    }
-    70% {
-        background-image: url("https://picsum.photos/id/1019/1920/1080");
-        transform: scale(1.2);
-    }
-    75% {
-        background-image: url("https://picsum.photos/id/1021/1920/1080");
-        transform: scale(1);
-    }
-    95% {
-        background-image: url("https://picsum.photos/id/1021/1920/1080");
-        transform: scale(1.2);
-    }
-    100% {
-        background-image: url("https://raw.githubusercontent.com/jaysonvertudazo49-web/LGST/main/khyla.jpg");
-        transform: scale(1);
-    }
+/* Glow movement */
+@keyframes glowMove {
+    0% { transform: translate(-20%, -20%) scale(1); }
+    50% { transform: translate(20%, 20%) scale(1.2); }
+    100% { transform: translate(-20%, -20%) scale(1); }
 }
-
 
 /* Header */
 .header-container {
@@ -249,7 +219,6 @@ body, p, h1, h2, h3, h4, h5, h6 {
 }
 </style>
 """, unsafe_allow_html=True)
-
 
 # ------------------ SESSION STATE ------------------
 if "page" not in st.session_state:
@@ -654,11 +623,6 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
-
-
-
 
 
 
