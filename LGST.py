@@ -487,6 +487,10 @@ elif st.session_state.page == "Home":
         if st.button("Close"):
             st.session_state.view_image = None
             st.rerun()
+current_page = st.session_state.get("current_page", "Home")
+
+if current_page != "Home":
+    st.button("Back to Home")
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -622,6 +626,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
