@@ -457,44 +457,45 @@ if st.session_state.page == "About Us":
         ⏱️ Completing projects on time with guaranteed satisfaction.  
         🤝 Building long-term, mutually beneficial business relationships.  
         🌍 Upholding our social and environmental responsibilities.  
-        """)
+    """)
 
-col1, col2 = st.columns([1.2, 2.5])
+    # --- Executive Team Section ---
+    col1, col2 = st.columns([1.2, 2.5])
 
-with col1:
-    st.subheader("Executive team")
-    st.write(
-        "Our executive team have a wealth of experience from senior roles within "
-        "the world’s renowned businesses, information, and analytics companies. "
-        "They share a commitment to provide our clients with the highest possible "
-        "quality of information and leading-edge technology to support the "
-        "development of their businesses in emerging markets."
-    )
-
-with col2:
-    st.markdown('<div class="team-container">', unsafe_allow_html=True)
-
-    # Team member cards
-    team = [
-        {"name": "Steve Pulley", "title": "Chief Executive Officer", "img": "https://via.placeholder.com/200"},
-        {"name": "Diego Obere", "title": "Managing Director", "img": "https://via.placeholder.com/200"},
-        {"name": "Katie O’Callaghan", "title": "Chief People Officer", "img": "https://via.placeholder.com/200"},
-        {"name": "Daniel Lee", "title": "Chief Financial Officer", "img": "https://via.placeholder.com/200"},
-    ]
-
-    for member in team:
-        st.markdown(
-            f"""
-            <div class="team-card">
-                <img src="{member['img']}" alt="{member['name']}">
-                <div class="team-name">{member['name']}</div>
-                <div class="team-title">{member['title']}</div>
-            </div>
-            """,
-            unsafe_allow_html=True
+    with col1:
+        st.subheader("Executive team")
+        st.write(
+            "Our executive team have a wealth of experience from senior roles within "
+            "the world’s renowned businesses, information, and analytics companies. "
+            "They share a commitment to provide our clients with the highest possible "
+            "quality of information and leading-edge technology to support the "
+            "development of their businesses in emerging markets."
         )
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    with col2:
+        st.markdown('<div class="team-container">', unsafe_allow_html=True)
+
+        # Team member cards
+        team = [
+            {"name": "Steve Pulley", "title": "Chief Executive Officer", "img": "https://via.placeholder.com/200"},
+            {"name": "Diego Obere", "title": "Managing Director", "img": "https://via.placeholder.com/200"},
+            {"name": "Katie O’Callaghan", "title": "Chief People Officer", "img": "https://via.placeholder.com/200"},
+            {"name": "Daniel Lee", "title": "Chief Financial Officer", "img": "https://via.placeholder.com/200"},
+        ]
+
+        for member in team:
+            st.markdown(
+                f"""
+                <div class="team-card">
+                    <img src="{member['img']}" alt="{member['name']}">
+                    <div class="team-name">{member['name']}</div>
+                    <div class="team-title">{member['title']}</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ------------------ HOME PAGE ------------------
@@ -689,6 +690,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
