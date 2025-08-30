@@ -210,6 +210,35 @@ body, p, h1, h2, h3, h4, h5, h6 {
     color: white !important;
 }
 
+.team-container {
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+    .team-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        padding: 15px;
+        text-align: center;
+        width: 200px;
+    }
+    .team-card img {
+        width: 100%;
+        border-radius: 8px;
+    }
+    .team-name {
+        font-weight: bold;
+        font-size: 18px;
+        margin-top: 10px;
+    }
+    .team-title {
+        font-size: 14px;
+        color: gray;
+    }
+
 /* Footer */
 .footer {
     text-align: center;
@@ -382,7 +411,7 @@ if "page" in query_params:
     st.session_state.page = query_params["page"]
 
 # ------------------ ABOUT PAGE ------------------
-if st.session_state.page == "About":
+if st.session_state.page == "About Us":
     st.header("About Lucas Grey Scrap Trading")
     st.subheader("Who We Are")
     st.write("""
@@ -429,6 +458,43 @@ if st.session_state.page == "About":
         🤝 Building long-term, mutually beneficial business relationships.  
         🌍 Upholding our social and environmental responsibilities.  
         """)
+
+col1, col2 = st.columns([1.2, 2.5])
+
+with col1:
+    st.subheader("Executive team")
+    st.write(
+        "Our executive team have a wealth of experience from senior roles within "
+        "the world’s renowned businesses, information, and analytics companies. "
+        "They share a commitment to provide our clients with the highest possible "
+        "quality of information and leading-edge technology to support the "
+        "development of their businesses in emerging markets."
+    )
+
+with col2:
+    st.markdown('<div class="team-container">', unsafe_allow_html=True)
+
+    # Team member cards
+    team = [
+        {"name": "Steve Pulley", "title": "Chief Executive Officer", "img": "https://via.placeholder.com/200"},
+        {"name": "Diego Obere", "title": "Managing Director", "img": "https://via.placeholder.com/200"},
+        {"name": "Katie O’Callaghan", "title": "Chief People Officer", "img": "https://via.placeholder.com/200"},
+        {"name": "Daniel Lee", "title": "Chief Financial Officer", "img": "https://via.placeholder.com/200"},
+    ]
+
+    for member in team:
+        st.markdown(
+            f"""
+            <div class="team-card">
+                <img src="{member['img']}" alt="{member['name']}">
+                <div class="team-name">{member['name']}</div>
+                <div class="team-title">{member['title']}</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ------------------ HOME PAGE ------------------
@@ -623,6 +689,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
