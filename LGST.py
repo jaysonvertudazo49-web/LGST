@@ -94,7 +94,7 @@ st.markdown("""
 .img-card {
     background: black;
     border-radius: 12px;
-    padding: 10px;
+    padding: 40px;
     min-height: 280px;
     display: flex;
     flex-direction: column;
@@ -623,6 +623,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
