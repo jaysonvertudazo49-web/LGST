@@ -486,7 +486,19 @@ elif st.session_state.page == "Home":
     if st.session_state.view_image:
         url = st.session_state.view_image
         caption = repo_descriptions.get(filename_from_url(url), "No description")
-        st.markdown(f"""<div class="modal"><img src="{url}" width="700"><p><b>{caption}</b></p></div>""", unsafe_allow_html=True)
+        st.markdown(
+            f"""
+            <div style="display: flex; align-items: center; justify-content: center; gap: 20px;" class="modal">
+                <div style="flex: 1; text-align: left;">
+                    <p style="font-size:18px; font-weight:bold;">{caption}</p>
+                </div>
+                <div style="flex: 1; text-align: right;">
+                    <img src="{url}" width="700" style="border-radius: 10px;">
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         if st.button("Close"):
             st.session_state.view_image = None
             st.rerun()
@@ -623,6 +635,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
