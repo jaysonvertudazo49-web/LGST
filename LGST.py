@@ -471,37 +471,58 @@ elif st.session_state.page == "Home":
             st.session_state.page_num += 1
             st.rerun()
 
-    if filtered_images:
-        st.subheader("CURRENT PROJECT")
-        cols = st.columns(min(len(current_images), 3))
-        for idx, col in enumerate(cols):
-            if idx < len(current_images):
-                url = current_images[idx]
-                caption = desc_for_url(url) or "No description"
-                col.markdown(f"""<div class="img-card"><img src="{url}"><p>{caption}</p></div>""", unsafe_allow_html=True)
-                if col.button("View Details", key=f"view_{url}"):
-                    st.session_state.view_image = url
-                    st.rerun()
+if filtered_images:
+    st.subheader("CURRENT PROJECT")
 
-    if st.session_state.view_image:
-        url = st.session_state.view_image
-        caption = repo_descriptions.get(filename_from_url(url), "No description")
-        st.markdown(
-            f"""
-            <div style="display: flex; align-items: center; justify-content: center; gap: 20px;" class="modal">
-                <div style="flex: 1; text-align: left;">
-                    <p style="font-size:18px; font-weight:bold;">{caption}</p>
-                </div>
-                <div style="flex: 1; text-align: right;">
-                    <img src="{url}" width="700" style="border-radius: 10px;">
-                </div>
+    # Group images by project (based on filename or description key)
+    projects = {}
+    for url in current_images:
+        project_key = filename_from_url(url).split("_")[0]  # Example: group by prefix
+        projects.setdefault(project_key, []).append(url)
+
+    # Display each project
+    for project_key, urls in projects.items():
+        caption = repo_descriptions.get(project_key, "No description")
+
+        with st.container():
+            st.markdown(f"### {caption}")
+
+            # Show multiple images in a row
+            cols = st.columns(min(len(urls), 3))
+            for idx, col in enumerate(cols):
+                if idx < len(urls):
+                    url = urls[idx]
+                    col.markdown(
+                        f"""
+                        <div class="img-card">
+                            <img src="{url}" style="width:100%; border-radius:10px;">
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+                    if col.button("View Details", key=f"view_{url}"):
+                        st.session_state.view_image = (urls, caption)  # store multiple images + caption
+                        st.rerun()
+
+# ------------------ MODAL VIEW ------------------
+if st.session_state.view_image:
+    urls, caption = st.session_state.view_image
+    st.markdown(
+        f"""
+        <div style="display: flex; gap: 20px;" class="modal">
+            <div style="flex: 1; text-align: left; vertical-align: middle;">
+                <p style="font-size:18px; font-weight:bold;">{caption}</p>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        if st.button("Close"):
-            st.session_state.view_image = None
-            st.rerun()
+            <div style="flex: 2; text-align: right; display:flex; gap:10px; flex-wrap:wrap;">
+                {''.join([f'<img src="{u}" width="300" style="border-radius:10px;">' for u in urls])}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    if st.button("Close"):
+        st.session_state.view_image = None
+        st.rerun()
 
 
 
@@ -635,6 +656,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
