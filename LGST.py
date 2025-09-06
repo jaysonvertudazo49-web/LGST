@@ -607,20 +607,30 @@ elif st.session_state.page == "Admin":
         )
 
         if uploaded_files:
-            descs = {f.name: st.text_area(f"Description for {f.name}") for f in uploaded_files}
+            # One description for the whole set of images
+            project_desc = st.text_area("Project Description")
+        
             if st.button("Save Project"):
                 state_data, sha = load_state_json()
                 latest = get_latest_pic_number()
+        
+                new_image_names = []
                 for i, file in enumerate(uploaded_files):
                     new_name = f"pic{latest+i+1}.jpg"
                     img_bytes = convert_to_jpg_bytes(file)
                     github_put_file(new_name, img_bytes, f"Add {new_name}")
-                    if descs[file.name].strip():
-                        state_data["descriptions"][new_name] = descs[file.name]
+                    new_image_names.append(new_name)
+        
+                # Save description once, linked to all uploaded images
+                if project_desc.strip():
+                    for name in new_image_names:
+                        state_data["descriptions"][name] = project_desc
+        
                 save_state_json(state_data, sha)
                 st.success("✅ Uploaded successfully!")
                 st.session_state.images = list_pic_urls_sorted()
                 st.rerun()
+
 
         col1, col2 = st.columns(2)
         with col1:
@@ -635,6 +645,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
