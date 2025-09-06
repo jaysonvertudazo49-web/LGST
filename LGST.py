@@ -596,16 +596,16 @@ elif st.session_state.page == "Admin":
         else:
             st.info("No messages yet.")
 
-        # Project upload feature
+               # Project upload feature
         if not GITHUB_TOKEN:
             st.error("Missing GITHUB_TOKEN in st.secrets.")
-
+        
         uploaded_files = st.file_uploader(
             "Upload project images", 
             accept_multiple_files=True, 
             type=["jpg","jpeg","png"]
         )
-
+        
         if uploaded_files:
             # One description for the whole set of images
             project_desc = st.text_area("Project Description")
@@ -632,6 +632,7 @@ elif st.session_state.page == "Admin":
                 st.rerun()
 
 
+
         col1, col2 = st.columns(2)
         with col1:
              if st.button("⬅️ Back to Home"):
@@ -645,6 +646,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
