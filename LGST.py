@@ -472,7 +472,7 @@ elif st.session_state.page == "Home":
     filtered_images = [u for u in images if search_query.lower() in desc_for_url(u).lower()] if search_query else images
     st.session_state.page_num = 0 if search_query else st.session_state.page_num
 
-       # Group images by description
+    # Group images by description
     grouped = {}
     for u in filtered_images:
         grouped.setdefault(desc_for_url(u) or "No description", []).append(u)
@@ -484,7 +484,7 @@ elif st.session_state.page == "Home":
         st.subheader("CURRENT PROJECT")
 
         # Show grouped images with shared description
-        for caption, urls in grouped_items:
+        for caption, urls in grouped_items:  # ✅ use grouped_items, not current_groups
             img_tags = "".join([
                 f'<img src="{u}" style="width:30%; max-height:180px; border-radius:10px; object-fit:cover;">'
                 for u in urls
@@ -506,8 +506,8 @@ elif st.session_state.page == "Home":
                 st.rerun()
 
 
-            if grouped_items:
-                st.subheader("CURRENT PROJECT")
+    if grouped_items:
+        st.subheader("CURRENT PROJECT")
 
         # Show grouped images with shared description
         for caption, urls in current_groups:
@@ -703,6 +703,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
