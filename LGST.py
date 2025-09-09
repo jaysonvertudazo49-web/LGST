@@ -463,14 +463,12 @@ elif st.session_state.page == "Home":
     search_query = st.text_input("", "")
     if st.button("Clear Search"):
         search_query = ""
-        st.session_state.page_num = 0
 
     def filename_from_url(url): return url.rsplit("/", 1)[-1]
     def desc_for_url(url): return repo_descriptions.get(filename_from_url(url), "")
 
     images = st.session_state.images
     filtered_images = [u for u in images if search_query.lower() in desc_for_url(u).lower()] if search_query else images
-    st.session_state.page_num = 0 if search_query else st.session_state.page_num
 
     # Group images by description
     grouped = {}
@@ -484,7 +482,7 @@ elif st.session_state.page == "Home":
         st.subheader("CURRENT PROJECT")
 
         # Show grouped images with shared description
-        for caption, urls in grouped_items:  # ✅ use grouped_items, not current_groups
+        for caption, urls in grouped_items:
             img_tags = "".join([
                 f'<img src="{u}" style="width:30%; max-height:180px; border-radius:10px; object-fit:cover;">'
                 for u in urls
@@ -505,6 +503,34 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
+    # Modal for viewing details
+    if st.session_state.view_image:
+        data = st.session_state.view_image
+        caption = data["caption"]
+        urls = data["urls"]
+
+        img_tags = "".join([
+            f'<img src="{u}" style="width:45%; max-height:300px; border-radius:10px; object-fit:cover; margin:5px;">'
+            for u in urls
+        ])
+
+        st.markdown(
+            f"""
+            <div class="modal">
+                <div style="margin-bottom:15px; text-align:left;">
+                    <p style="font-size:18px; font-weight:bold;">{caption}</p>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+                    {img_tags}
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        if st.button("Close"):
+            st.session_state.view_image = None
+            st.rerun()
 
     if grouped_items:
         st.subheader("CURRENT PROJECT")
@@ -703,6 +729,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
