@@ -119,6 +119,21 @@ st.markdown("""
     color: white;          /* make sure text is visible */
 }
 
+.view-btn {
+    background: #800000;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+.view-btn:hover {
+    background: #b30000;
+}
+
 
 /* Modal */
 .modal {
@@ -681,6 +696,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
