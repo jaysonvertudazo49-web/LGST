@@ -536,7 +536,7 @@ elif st.session_state.page == "Home":
         st.subheader("CURRENT PROJECT")
 
     # Show grouped images with shared description
-        for caption, urls in current_groups:
+        for caption, urls in group_items:
             img_tags = "".join([
                 f'<img src="{u}" style="width:30%; max-height:180px; border-radius:10px; object-fit:cover;">'
                 for u in urls
@@ -729,6 +729,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
