@@ -452,17 +452,24 @@ elif st.session_state.page == "Home":
 
     def filename_from_url(url): return url.rsplit("/", 1)[-1]
     def desc_for_url(url): return repo_descriptions.get(filename_from_url(url), "")
+
     images = st.session_state.images
     filtered_images = [u for u in images if search_query.lower() in desc_for_url(u).lower()] if search_query else images
     st.session_state.page_num = 0 if search_query else st.session_state.page_num
 
-    per_page = 3
+    per_page = 3  # number of description groups per page
+    # Group images by description
+    grouped = {}
+    for u in filtered_images:
+        grouped.setdefault(desc_for_url(u) or "No description", []).append(u)
+    grouped_items = list(grouped.items())
+
     start = st.session_state.page_num * per_page
     end = start + per_page
-    current_images = filtered_images[start:end]
-    total_pages = (len(filtered_images) + per_page - 1) // per_page if filtered_images else 1
+    current_groups = grouped_items[start:end]
+    total_pages = (len(grouped_items) + per_page - 1) // per_page if grouped_items else 1
 
-    if filtered_images:
+    if grouped_items:
         st.markdown(f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>", unsafe_allow_html=True)
     else:
         st.warning("No results found.")
@@ -473,38 +480,60 @@ elif st.session_state.page == "Home":
             st.session_state.page_num -= 1
             st.rerun()
     with col3:
-        if st.button("Next ➡️", disabled=end >= len(filtered_images)):
+        if st.button("Next ➡️", disabled=end >= len(grouped_items)):
             st.session_state.page_num += 1
             st.rerun()
 
-    if filtered_images:
+    if grouped_items:
         st.subheader("CURRENT PROJECT")
-        cols = st.columns(min(len(current_images), 3))
-        for idx, col in enumerate(cols):
-            if idx < len(current_images):
-                url = current_images[idx]
-                caption = desc_for_url(url) or "No description"
-                col.markdown(f"""<div class="img-card"><img src="{url}"><p>{caption}</p></div>""", unsafe_allow_html=True)
-                if col.button("View Details", key=f"view_{url}"):
-                    st.session_state.view_image = url
-                    st.rerun()
 
+        # Show grouped images with shared description
+        for caption, urls in current_groups:
+            img_tags = "".join([
+                f'<img src="{u}" style="width:30%; max-height:180px; border-radius:10px; object-fit:cover;">'
+                for u in urls
+            ])
+
+            st.markdown(f"""
+            <div class="img-card">
+                <div style="flex:1; display:flex; flex-wrap:wrap; gap:10px;">
+                    {img_tags}
+                </div>
+                <div style="flex:1;">
+                    <p>{caption}</p>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            if st.button("View Details", key=f"view_{caption}"):
+                st.session_state.view_image = {"caption": caption, "urls": urls}
+                st.rerun()
+
+    # Modal for viewing details
     if st.session_state.view_image:
-        url = st.session_state.view_image
-        caption = repo_descriptions.get(filename_from_url(url), "No description")
+        data = st.session_state.view_image
+        caption = data["caption"]
+        urls = data["urls"]
+
+        img_tags = "".join([
+            f'<img src="{u}" style="width:45%; max-height:300px; border-radius:10px; object-fit:cover; margin:5px;">'
+            for u in urls
+        ])
+
         st.markdown(
             f"""
-            <div style="display: flex; align-items: center; justify-content: center; gap: 20px;" class="modal">
-                <div style="flex: 1; text-align: left;">
+            <div class="modal">
+                <div style="margin-bottom:15px; text-align:left;">
                     <p style="font-size:18px; font-weight:bold;">{caption}</p>
                 </div>
-                <div style="flex: 1; text-align: right;">
-                    <img src="{url}" width="700" style="border-radius: 10px;">
+                <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+                    {img_tags}
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
+
         if st.button("Close"):
             st.session_state.view_image = None
             st.rerun()
@@ -652,6 +681,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
