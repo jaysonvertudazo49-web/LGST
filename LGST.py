@@ -70,7 +70,7 @@ st.markdown("""
 }
 .header-title h1 { 
     margin: 0; 
-    color: white; 
+    color: maroon; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 .header-buttons {
@@ -194,7 +194,7 @@ st.markdown("""
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     max-width: 500px;
     margin: auto;
-    color: white;  /* 👈 makes all text inside white */
+    color: maroon;  /* 👈 makes all text inside white */
 }
 
 /* Section headers */
@@ -213,22 +213,22 @@ h2 {
 
 /* Make st.subheader text white */
 h3 {
-    color: white !important;
+    color: maroon !important;
 }
 
 /* Make st.markdown text white */
 .stMarkdown, .stMarkdown p {
-    color: white !important;
+    color: maroon !important;
 }
 
 /* Target only vision/mission text */
 .vision-text, .mission-text {
-    color: white !important;
+    color: maroon !important;
 }
 
 /* Force all text white */
 body, p, h1, h2, h3, h4, h5, h6 {
-    color: white !important;
+    color: maroon !important;
 }
 
 /* Footer */
@@ -696,6 +696,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
