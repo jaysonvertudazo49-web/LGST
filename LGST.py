@@ -134,56 +134,6 @@ st.markdown("""
     background: #b30000;
 }
 
-carousel_code = """
-    <style>
-    .carousel-container {
-        position: relative;
-        width: 100%;
-        max-width: 700px;
-        margin: auto;
-        overflow: hidden;
-        border-radius: 12px;
-    }
-    .carousel-slide {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-    }
-    .carousel-slide img {
-        width: 100%;
-        border-radius: 12px;
-        object-fit: cover;
-    }
-    .carousel-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0,0,0,0.5);
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 50%;
-    }
-    .prev-btn { left: 10px; }
-    .next-btn { right: 10px; }
-    </style>
-
-    <script>
-    function initCarousel(id) {
-        const slide = document.querySelector(`#${id} .carousel-slide`);
-        const images = slide.querySelectorAll("img");
-        let counter = 0;
-
-        document.querySelector(`#${id} .next-btn`).onclick = () => {
-            counter = (counter + 1) % images.length;
-            slide.style.transform = `translateX(${-counter * 100}%)`;
-        };
-        document.querySelector(`#${id} .prev-btn`).onclick = () => {
-            counter = (counter - 1 + images.length) % images.length;
-            slide.style.transform = `translateX(${-counter * 100}%)`;
-        };
-    }
-
 
 /* Modal */
 .modal {
@@ -599,33 +549,6 @@ elif st.session_state.page == "Home":
             unsafe_allow_html=True,
         )
 
-        st.markdown(carousel_code, unsafe_allow_html=True)
-
-    for idx, (caption, urls) in enumerate(current_groups):
-        # Create carousel HTML
-        carousel_id = f"carousel_{idx}"
-        img_tags = "".join([f'<img src="{u}">' for u in urls])
-
-        st.markdown(f"""
-        <div class="img-card">
-            <div id="{carousel_id}" class="carousel-container">
-                <div class="carousel-slide">
-                    {img_tags}
-                </div>
-                <button class="carousel-btn prev-btn">&#10094;</button>
-                <button class="carousel-btn next-btn">&#10095;</button>
-            </div>
-            <script>initCarousel("{carousel_id}");</script>
-            <div style="margin-top:10px;">
-                <p>{caption}</p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        if st.button("View Details", key=f"view_{caption}"):
-            st.session_state.view_image = {"caption": caption, "urls": urls}
-            st.rerun()
-
         if st.button("Close"):
             st.session_state.view_image = None
             st.rerun()
@@ -773,29 +696,4 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
