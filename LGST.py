@@ -199,7 +199,7 @@ st.markdown("""
 
 /* Section headers */
 h2 { 
-    color: white; 
+    color: maroon; 
     font-size: 1.8em; 
     margin-top: 15px; 
     margin-bottom: 10px; 
@@ -208,7 +208,7 @@ h2 {
 }
 
 h2 {
-    color: maroon !important;
+    color: white !important;
 }
 
 /* Make st.subheader text white */
@@ -696,6 +696,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
