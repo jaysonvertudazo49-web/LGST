@@ -499,240 +499,61 @@ elif st.session_state.page == "Home":
             </div>
             """, unsafe_allow_html=True)
 
-            if st.button("View Details", key=f"view_{caption}"):
-                st.session_state.view_image = {"caption": caption, "urls": urls}
-                st.rerun()
-
-    # Modal for viewing details
-    if st.session_state.view_image:
-        data = st.session_state.view_image
-        caption = data["caption"]
-        urls = data["urls"]
-
-        img_tags = "".join([
-            f'<img src="{u}" style="width:45%; max-height:300px; border-radius:10px; object-fit:cover; margin:5px;">'
-            for u in urls
-        ])
-
-        st.markdown(
-            f"""
-            <div class="modal">
-                <div style="margin-bottom:15px; text-align:left;">
-                    <p style="font-size:18px; font-weight:bold;">{caption}</p>
-                </div>
-                <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
-                    {img_tags}
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        if st.button("Close"):
-            st.session_state.view_image = None
-            st.rerun()
-
-    if grouped_items:
-        st.subheader("CURRENT PROJECT")
-
-    # Show grouped images with shared description
-        for caption, urls in group_items:
-            img_tags = "".join([
-                f'<img src="{u}" style="width:30%; max-height:180px; border-radius:10px; object-fit:cover;">'
-                for u in urls
-            ])
-
-            st.markdown(f"""
-            <div class="img-card">
-                <div style="flex:1; display:flex; flex-wrap:wrap; gap:10px;">
-                    {img_tags}
-                </div>
-                <div style="flex:1;">
-                    <p>{caption}</p>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            if st.button("View Details", key=f"view_{caption}"):
-                st.session_state.view_image = {"caption": caption, "urls": urls}
-                st.rerun()
-
-    # Modal for viewing details
-    if st.session_state.view_image:
-        data = st.session_state.view_image
-        caption = data["caption"]
-        urls = data["urls"]
-
-        img_tags = "".join([
-            f'<img src="{u}" style="width:45%; max-height:300px; border-radius:10px; object-fit:cover; margin:5px;">'
-            for u in urls
-        ])
-
-        st.markdown(
-            f"""
-            <div class="modal">
-                <div style="margin-bottom:15px; text-align:left;">
-                    <p style="font-size:18px; font-weight:bold;">{caption}</p>
-                </div>
-                <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
-                    {img_tags}
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        if st.button("Close"):
-            st.session_state.view_image = None
-            st.rerun()
-
-
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
     st.header("Contact Us")
-    st.markdown('<div class="contact-form">', unsafe_allow_html=True)
-    with st.form("contact_form"):
-        name = st.text_input("Name")
-        email = st.text_input("Email")
-        message = st.text_area("Message")
-        attachments = st.file_uploader(
-            "Attach files or images", 
-            accept_multiple_files=True, 
-            type=["jpg","jpeg","png","pdf","docx","txt"]
-        )
-        submit = st.form_submit_button("Send Message")
-
-        if submit:
-            if name and email and message:
-                state_data, sha = load_state_json()
-
-                # Save uploaded files to GitHub
-                attachment_names = []
-                if attachments:
-                    for file in attachments:
-                        file_bytes = file.getvalue()
-                        safe_name = f"msg_{len(state_data['messages'])+1}_{file.name}"
-                        github_put_file(f"attachments/{safe_name}", file_bytes, f"Add attachment {safe_name}")
-                        attachment_names.append(safe_name)
-
-                # Store message + attachments in state.json
-                state_data["messages"].append({
-                    "name": name,
-                    "email": email,
-                    "message": message,
-                    "attachments": attachment_names
-                })
-
-                try:
-                    save_state_json(state_data, sha)
-                    st.success(f"✅ Thank you, {name}! Your message has been sent.")
-                except Exception as e:
-                    st.error(f"⚠️ Failed to save: {e}")
-            else:
-                st.error("Please fill out all fields.")
-
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown(""" Email: **vonryan0110@gmail.com**  
- Address: Amlac Ville Payatas B, Quezon City""")
-    st.markdown(""" Tel #: 85365516, 84632485, 84632412""")
+    st.markdown("""
+        <div class="contact-form">
+            <h2>Get in Touch</h2>
+            <p>If you have inquiries, projects, or want to sell scrap, feel free to contact us:</p>
+            <p><b>📍 Address:</b> 123 Quezon City, Philippines</p>
+            <p><b>📞 Phone:</b> +63 912 345 6789</p>
+            <p><b>📧 Email:</b> contact@lucasgreyscrap.com</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 
 # ------------------ ADMIN PAGE ------------------
 elif st.session_state.page == "Admin":
-    st.header("🔑 Admin Login" if not st.session_state.is_admin else "📂 Admin Dashboard")
+    st.header("Admin Dashboard")
 
-    if not st.session_state.is_admin:
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        if st.button("Login"):
-            if username == "admin" and password == "1234":
-                st.session_state.is_admin = True
-                st.success("Login successful!")
-                st.rerun()
-            else:
-                st.error("Invalid credentials")
-
+    if not GITHUB_TOKEN:
+        st.error("Missing GITHUB_TOKEN in st.secrets.")
     else:
-        st.subheader("📩 Received Messages")
-        state_data, _ = load_state_json()
-        msgs = state_data.get("messages", [])
+        uploaded_files = st.file_uploader("Upload new project images", accept_multiple_files=True,
+                                          type=["jpg", "jpeg", "png"])
+        desc = st.text_area("Project Description")
 
-        if msgs:
-            for i, m in enumerate(reversed(msgs), 1):
-                st.markdown(f"""
-                **Message {i}:**
-                - 👤 {m['name']}
-                - 📧 {m['email']}
-                - 📝 {m['message']}
-                """)
+        if uploaded_files and desc:
+            if st.button("Upload Project"):
+                with st.spinner("Uploading..."):
+                    state_data, sha_before = load_state_json()
+                    desc_map = state_data.get("descriptions", {})
 
-                if m.get("attachments"):
-                    st.markdown("📎 **Attachments:**")
-                    for att in m["attachments"]:
-                        url = _raw_url(f"attachments/{att}")
-                        if att.lower().endswith((".jpg", ".jpeg", ".png")):
-                            st.image(url, caption=att, use_container_width=True)
-                        else:
-                            st.markdown(f"- [{att}]({url})")
-                st.markdown("---")
-        else:
-            st.info("No messages yet.")
+                    latest_num = get_latest_pic_number()
+                    new_files = []
+                    for uf in uploaded_files:
+                        latest_num += 1
+                        fname = f"pic{latest_num}.jpg"
+                        data = convert_to_jpg_bytes(uf)
+                        github_put_file(fname, data, f"Upload {fname}")
+                        new_files.append(fname)
 
-               # Project upload feature
-        if not GITHUB_TOKEN:
-            st.error("Missing GITHUB_TOKEN in st.secrets.")
-        
-        uploaded_files = st.file_uploader(
-            "Upload project images", 
-            accept_multiple_files=True, 
-            type=["jpg","jpeg","png"]
-        )
-        
-        if uploaded_files:
-            # One description for the whole set of images
-            project_desc = st.text_area("Project Description")
-        
-            if st.button("Save Project"):
-                state_data, sha = load_state_json()
-                latest = get_latest_pic_number()
-        
-                new_image_names = []
-                for i, file in enumerate(uploaded_files):
-                    new_name = f"pic{latest+i+1}.jpg"
-                    img_bytes = convert_to_jpg_bytes(file)
-                    github_put_file(new_name, img_bytes, f"Add {new_name}")
-                    new_image_names.append(new_name)
-        
-                # Save description once, linked to all uploaded images
-                if project_desc.strip():
-                    for name in new_image_names:
-                        state_data["descriptions"][name] = project_desc
-        
-                save_state_json(state_data, sha)
-                st.success("✅ Uploaded successfully!")
+                    # Assign description to all uploaded images
+                    for fname in new_files:
+                        desc_map[fname] = desc
+
+                    state_data["descriptions"] = desc_map
+                    save_state_json(state_data, sha_before)
+
+                st.success("Project uploaded successfully!")
                 st.session_state.images = list_pic_urls_sorted()
-                st.rerun()
-
-
-
-        col1, col2 = st.columns(2)
-        with col1:
-             if st.button("⬅️ Back to Home"):
-                st.session_state.page = "Home"
-                st.query_params.clear()
-                st.rerun()
-        with col2:
-            if st.button("🚪 Logout"): 
-                st.session_state.is_admin = False; st.rerun()
-
 
 # ------------------ FOOTER ------------------
-st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
-
-
-
-
-
+st.markdown("""
+<hr>
+<div class="footer">
+    &copy; 2025 Lucas Grey Scrap Trading. All Rights Reserved.
+</div>
+""", unsafe_allow_html=True)
