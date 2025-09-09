@@ -213,7 +213,7 @@ h2 {
 
 /* Make st.subheader text white */
 h3 {
-    color: maroon !important;
+    color: white !important;
 }
 
 /* Make st.markdown text white */
@@ -696,6 +696,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
