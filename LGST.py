@@ -94,11 +94,12 @@ st.markdown("""
 .img-card {
     background: black;
     border-radius: 20px;
-    padding: 40px;
+    padding: 20px;
     min-height: 280px;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex-direction: row;  /* put image left, text right */
+    align-items: center;   /* vertical alignment */
+    gap: 20px;             /* space between image and text */
     text-align: left;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -108,11 +109,16 @@ st.markdown("""
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 .img-card img {
-    width: 100%;
-    max-height: 180px;
+    width: 40%;            /* image takes 40% of card width */
+    max-height: 200px;
     object-fit: cover;
     border-radius: 10px;
 }
+.img-card p {
+    flex: 1;               /* text takes the remaining space */
+    color: white;          /* make sure text is visible */
+}
+
 
 /* Modal */
 .modal {
@@ -646,6 +652,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
