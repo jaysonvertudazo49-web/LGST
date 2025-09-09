@@ -472,32 +472,39 @@ elif st.session_state.page == "Home":
     filtered_images = [u for u in images if search_query.lower() in desc_for_url(u).lower()] if search_query else images
     st.session_state.page_num = 0 if search_query else st.session_state.page_num
 
-    per_page = 3  # number of description groups per page
-    # Group images by description
+       # Group images by description
     grouped = {}
     for u in filtered_images:
         grouped.setdefault(desc_for_url(u) or "No description", []).append(u)
     grouped_items = list(grouped.items())
 
-    start = st.session_state.page_num * per_page
-    end = start + per_page
-    current_groups = grouped_items[start:end]
-    total_pages = (len(grouped_items) + per_page - 1) // per_page if grouped_items else 1
-
-    if grouped_items:
-        st.markdown(f"<p style='text-align:center;'>Page {st.session_state.page_num+1} of {total_pages}</p>", unsafe_allow_html=True)
-    else:
+    if not grouped_items:
         st.warning("No results found.")
+    else:
+        st.subheader("CURRENT PROJECT")
 
-    col1, col2, col3 = st.columns([1, 10, 1])
-    with col1:
-        if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
-            st.session_state.page_num -= 1
-            st.rerun()
-    with col3:
-        if st.button("Next ➡️", disabled=end >= len(grouped_items)):
-            st.session_state.page_num += 1
-            st.rerun()
+        # Show grouped images with shared description
+        for caption, urls in grouped_items:
+            img_tags = "".join([
+                f'<img src="{u}" style="width:30%; max-height:180px; border-radius:10px; object-fit:cover;">'
+                for u in urls
+            ])
+
+            st.markdown(f"""
+            <div class="img-card">
+                <div style="flex:1; display:flex; flex-wrap:wrap; gap:10px;">
+                    {img_tags}
+                </div>
+                <div style="flex:1;">
+                    <p>{caption}</p>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            if st.button("View Details", key=f"view_{caption}"):
+                st.session_state.view_image = {"caption": caption, "urls": urls}
+                st.rerun()
+
 
     if grouped_items:
         st.subheader("CURRENT PROJECT")
@@ -696,4 +703,5 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
