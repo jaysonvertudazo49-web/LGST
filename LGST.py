@@ -127,6 +127,7 @@ st.markdown("""
     text-decoration: none;
     font-weight: bold;
     display: inline-block;
+    text-align: left;
     margin-top: 10px;
     transition: 0.3s;
 }
@@ -696,6 +697,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
