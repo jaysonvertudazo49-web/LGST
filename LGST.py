@@ -20,7 +20,7 @@ st.markdown("""
 <style>
 /* ------------------ Background ------------------ */
 .stApp {
-    background: linear-gradient(-45deg, #0f0f0f, #FFFFFF, #1a1a1a, #4d0000);
+    background: linear-gradient(-45deg, #0f0f0f, #000000, #1a1a1a, #4d0000);
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
     color: white;  /* default text visible */
@@ -677,6 +677,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
