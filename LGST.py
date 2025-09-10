@@ -18,12 +18,12 @@ st.set_page_config(page_title="Lucas Grey Scrap Trading", layout="wide")
 # ------------------ CSS ------------------
 st.markdown("""
 <style>
-/* Apply to main content area in Streamlit */
+/* ------------------ Background ------------------ */
 .stApp {
     background: linear-gradient(-45deg, #0f0f0f, #FFFFFF, #1a1a1a, #4d0000);
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
-    color: white;  /* makes text visible */
+    color: white;  /* default text visible */
 }
 
 /* Keyframes for smooth shifting */
@@ -50,7 +50,7 @@ st.markdown("""
     100% { transform: translate(-20%, -20%) scale(1); }
 }
 
-/* Header */
+/* ------------------ Header ------------------ */
 .header-container {
     background: linear-gradient(135deg, black, maroon);
     padding: 15px 30px;
@@ -90,7 +90,7 @@ st.markdown("""
     background: #a00000;
 }
 
-/* Gallery */
+/* ------------------ Gallery ------------------ */
 .img-card {
     background: black;
     border-radius: 20px;
@@ -104,19 +104,6 @@ st.markdown("""
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
-.img-card p, 
-.img-card h1, 
-.img-card h2, 
-.img-card h3, 
-.img-card h4, 
-.img-card h5, 
-.img-card h6, 
-.img-card span, 
-.img-card div {
-    color: white !important;   /* make all text in cards white */
-}
-
 .img-card:hover {
     transform: scale(1.03);
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
@@ -127,9 +114,18 @@ st.markdown("""
     object-fit: cover;
     border-radius: 10px;
 }
-.img-card p {
-    text-align: left;              /* text takes the remaining space */
-    color: white;          /* make sure text is visible */
+
+/* FIX → Force text beside picture to white */
+.img-card p, 
+.img-card h1, 
+.img-card h2, 
+.img-card h3, 
+.img-card h4, 
+.img-card h5, 
+.img-card h6, 
+.img-card span, 
+.img-card div {
+    color: white !important;
 }
 
 .view-btn {
@@ -147,8 +143,7 @@ st.markdown("""
     background: #b30000;
 }
 
-
-/* Modal */
+/* ------------------ Modal ------------------ */
 .modal {
     background: black;
     border-radius: 15px;
@@ -162,7 +157,7 @@ st.markdown("""
     height: auto;
 }
 
-/* Search bar */
+/* ------------------ Search Bar ------------------ */
 .stTextInput input {
     border: 2px solid #800000;
     border-radius: 12px;
@@ -175,7 +170,7 @@ st.markdown("""
     background-size: 18px;
 }
 
-/* Buttons */
+/* ------------------ Buttons ------------------ */
 .stButton button {
     background: black;
     color: white;
@@ -186,73 +181,46 @@ st.markdown("""
     transition: all 0.2s ease;
     cursor: pointer;
 }
-
-/* Hover effect */
 .stButton button:hover {
     background: #a00000;
     transform: scale(1.05);
 }
-
-/* Click effect (press down) */
 .stButton button:active {
     transform: scale(0.9);       /* shrink */
     background: #660000;         /* darker */
     box-shadow: 0 2px 8px rgba(0,0,0,0.4) inset; /* pressed look */
 }
 
-
+/* ------------------ Contact Form ------------------ */
 .contact-form {
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     max-width: 500px;
     margin: auto;
-    color: maroon;  /* 👈 makes all text inside white */
+    color: maroon;
 }
 
+/* ------------------ Typography ------------------ */
 /* Section headers */
 h2 { 
-    color: white; 
+    color: white !important; 
     font-size: 1.8em; 
     margin-top: 15px; 
     margin-bottom: 10px; 
     border-bottom: 2px solid #800000; 
     padding-bottom: 5px; 
 }
+h3 { color: white !important; }
 
-h2 {
-    color: white !important;
-}
-
-/* Make st.subheader text white */
-h3 {
-    color: white !important;
-}
-
-/* Make st.markdown text white */
-.stMarkdown, .stMarkdown p {
-    color: maroon !important;
-}
-
-/* Target only vision/mission text */
+/* Vision/Mission text stays maroon */
 .vision-text, .mission-text {
     color: maroon !important;
 }
 
-/* Force all text white */
-body, p, h1, h2, h3, h4, h5, h6 {
-    color: white !important;
-}
-
-/* Footer */
-.footer {
-    text-align: center;
-    padding: 15px;
-    font-size: 14px;
-    color: white;
-}
 </style>
 """, unsafe_allow_html=True)
+
 
 # ------------------ SESSION STATE ------------------
 if "page" not in st.session_state:
@@ -709,6 +677,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
