@@ -115,7 +115,7 @@ st.markdown("""
     border-radius: 10px;
 }
 .img-card p {
-    flex: 1;               /* text takes the remaining space */
+    text-align: left;              /* text takes the remaining space */
     color: white;          /* make sure text is visible */
 }
 
@@ -127,7 +127,6 @@ st.markdown("""
     text-decoration: none;
     font-weight: bold;
     display: inline-block;
-    text-align: left;
     margin-top: 10px;
     transition: 0.3s;
 }
@@ -697,6 +696,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
