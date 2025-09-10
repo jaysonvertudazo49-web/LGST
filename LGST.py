@@ -489,15 +489,15 @@ elif st.session_state.page == "Home":
     else:
         st.warning("No results found.")
 
-    #col1, col2, col3 = st.columns([1, 10, 1])
-    #with col1:
-     #   if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
-      #      st.session_state.page_num -= 1
-       #     st.rerun()
-    #with col3:
-     #   if st.button("Next ➡️", disabled=end >= len(grouped_items)):
-      #      st.session_state.page_num += 1
-       #     st.rerun()
+    col1, col2, col3 = st.columns([1, 10, 1])
+    with col1:
+        if st.button("⬅️ Back", disabled=st.session_state.page_num == 0):
+            st.session_state.page_num -= 1
+            st.rerun()
+    with col3:
+        if st.button("Next ➡️", disabled=end >= len(grouped_items)):
+            st.session_state.page_num += 1
+            st.rerun()
 
     if grouped_items:
         st.subheader("CURRENT PROJECT")
@@ -696,6 +696,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
