@@ -109,7 +109,7 @@ st.markdown("""
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 .img-card img {
-    width: 40%;            /* image takes 40% of card width */
+    width: 70%;            /* image takes 40% of card width */
     max-height: 200px;
     object-fit: cover;
     border-radius: 10px;
@@ -677,6 +677,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
