@@ -70,7 +70,7 @@ st.markdown("""
 }
 .header-title h1 { 
     margin: 0; 
-    color: white; 
+    color: maroon; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 .header-buttons {
@@ -94,6 +94,7 @@ st.markdown("""
 .img-card {
     background: black;
     border-radius: 20px;
+    color: white;
     padding: 20px;
     min-height: 280px;
     display: flex;
@@ -696,6 +697,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
