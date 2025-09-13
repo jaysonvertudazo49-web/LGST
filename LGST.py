@@ -572,16 +572,13 @@ elif st.session_state.page == "Home":
             for u in urls
         ])
 
-        # Unique key for the hidden button
-        close_button_key = f"modal_close_trigger_{hash(caption)}"
-
-        # Render the modal with the close button and JavaScript
+        # Render the modal with a Streamlit button for closing
         st.markdown(
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
                     <div class="close-btn-container">
-                        <button id="closeModalBtn_{hash(caption)}" class="close-btn">✕</button>
+                        {st.button("✕", key=f"modal_close_{hash(caption)}", help="Close the modal")}
                     </div>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
@@ -589,17 +586,12 @@ elif st.session_state.page == "Home":
                     </div>
                 </div>
             </div>
-            <script>
-                document.getElementById('closeModalBtn_{hash(caption)}').addEventListener('click', function() {{
-                    document.getElementById('hidden_button_{hash(caption)}').click();
-                }});
-            </script>
             """,
             unsafe_allow_html=True,
         )
 
-        # Hidden button to trigger the close action
-        if st.button("Hidden Close Trigger", key=close_button_key, help="Close the modal", visible=False):
+        # Handle the close button click
+        if st.session_state.get(f"modal_close_{hash(caption)}", False):
             st.session_state.view_image = None
             st.rerun()
 
