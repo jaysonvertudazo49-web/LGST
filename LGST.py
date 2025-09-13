@@ -584,9 +584,9 @@ elif st.session_state.page == "Home":
                 </div>
             </div>
             <script>
-                document.getElementById('close_modal_btn').addEventListener('click', function() {
-                    window.parent.postMessage({ type: 'close_modal' }, '*');
-                });
+                document.getElementById('close_modal_btn').addEventListener('click', function() {{
+                    window.parent.postMessage({{ type: 'close_modal' }}, '*');
+                }});
             </script>
             """,
             unsafe_allow_html=True,
@@ -596,10 +596,6 @@ elif st.session_state.page == "Home":
         if st.experimental_get_query_params().get('close_modal'):
             st.session_state.view_image = None
             st.experimental_rerun()
-
-
-
-
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
     st.header("Contact Us")
@@ -737,6 +733,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
