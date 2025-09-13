@@ -592,11 +592,11 @@ elif st.session_state.page == "Home":
 
         # Add the close button outside the HTML but aligned with the modal
         col1, col2, col3 = st.columns([1, 1, 1])
-with col2:
-    if st.button("✕", key=f"close_btn_{hash(caption)}", help="Return to Home"):
-        st.session_state.page = "Home"
-        st.session_state.view_image = None
-        st.rerun()
+        with col2:
+            if st.button("✕", key=f"close_btn_{hash(caption)}", help="Return to Home"):
+                st.session_state.page = "Home"
+                st.session_state.view_image = None
+                st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -735,4 +735,5 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
