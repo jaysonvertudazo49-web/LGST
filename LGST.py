@@ -143,18 +143,55 @@ st.markdown("""
     background: #b30000;
 }
 
-/* ------------------ Modal ------------------ */
-.modal {
+/* ------------------ Full-Screen Modal ------------------ */
+.fullscreen-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other content */
+}
+.modal-content {
     background: black;
     border-radius: 15px;
-    padding: 20px;
+    padding: 30px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-.modal img {
+.modal-content img {
     border-radius: 12px;
-    max-width: 100%;
-    height: auto;
+    max-width: 80%;
+    max-height: 60vh;
+    object-fit: contain;
+    margin: 10px;
+}
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #800000;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.close-btn:hover {
+    background: #b30000;
 }
 
 /* ------------------ Search Bar ------------------ */
@@ -202,7 +239,6 @@ st.markdown("""
 }
 
 /* ------------------ Typography ------------------ */
-/* Section headers */
 h2 { 
     color: white !important; 
     font-size: 1.8em; 
@@ -217,10 +253,8 @@ h3 { color: white !important; }
 .vision-text, .mission-text {
     color: maroon !important;
 }
-
 </style>
 """, unsafe_allow_html=True)
-
 
 # ------------------ SESSION STATE ------------------
 if "page" not in st.session_state:
@@ -432,7 +466,6 @@ if st.session_state.page == "About":
         🌍 Upholding our social and environmental responsibilities.  
         """)
 
-
 # ------------------ HOME PAGE ------------------
 elif st.session_state.page == "Home":
     if not st.session_state.images:
@@ -505,36 +538,36 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
-    # Modal for viewing details
+    # Full-screen pop-up modal for viewing details
     if st.session_state.view_image:
         data = st.session_state.view_image
         caption = data["caption"]
         urls = data["urls"]
 
         img_tags = "".join([
-            f'<img src="{u}" style="width:45%; max-height:300px; border-radius:10px; object-fit:cover; margin:5px;">'
+            f'<img src="{u}" alt="Project image">'
             for u in urls
         ])
 
         st.markdown(
             f"""
-            <div class="modal">
-                <div style="margin-bottom:15px; text-align:left;">
-                    <p style="font-size:18px; font-weight:bold;">{caption}</p>
-                </div>
-                <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
-                    {img_tags}
+            <div class="fullscreen-modal">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="this.closest('.fullscreen-modal').style.display='none';">✕</button>
+                    <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
+                    <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
+                        {img_tags}
+                    </div>
+                    <button class="stButton" style="margin-top:20px;">Close</button>
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-        if st.button("Close"):
+        if st.button("Close", key="modal_close"):
             st.session_state.view_image = None
             st.rerun()
-
-
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -585,7 +618,6 @@ elif st.session_state.page == "Contact":
  Address: Amlac Ville Payatas B, Quezon City""")
     st.markdown(""" Tel #: 85365516, 84632485, 84632412""")
 
-
 # ------------------ ADMIN PAGE ------------------
 elif st.session_state.page == "Admin":
     st.header("🔑 Admin Login" if not st.session_state.is_admin else "📂 Admin Dashboard")
@@ -627,7 +659,7 @@ elif st.session_state.page == "Admin":
         else:
             st.info("No messages yet.")
 
-               # Project upload feature
+        # Project upload feature
         if not GITHUB_TOKEN:
             st.error("Missing GITHUB_TOKEN in st.secrets.")
         
@@ -662,8 +694,6 @@ elif st.session_state.page == "Admin":
                 st.session_state.images = list_pic_urls_sorted()
                 st.rerun()
 
-
-
         col1, col2 = st.columns(2)
         with col1:
              if st.button("⬅️ Back to Home"):
@@ -674,27 +704,5 @@ elif st.session_state.page == "Admin":
             if st.button("🚪 Logout"): 
                 st.session_state.is_admin = False; st.rerun()
 
-
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
