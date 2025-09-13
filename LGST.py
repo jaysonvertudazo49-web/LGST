@@ -572,13 +572,13 @@ elif st.session_state.page == "Home":
             for u in urls
         ])
 
-        # Render the modal with a button that navigates to Home
+        # Render the modal content
         st.markdown(
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
                     <div class="close-btn-container">
-                        {st.button("✕", key=f"modal_home_{hash(caption)}", help="Return to Home")}
+                        <!-- Placeholder for the button -->
                     </div>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
@@ -590,11 +590,13 @@ elif st.session_state.page == "Home":
             unsafe_allow_html=True,
         )
 
-        # Handle the button click to navigate to Home
-        if st.session_state.get(f"modal_home_{hash(caption)}", False):
-            st.session_state.page = "Home"
-            st.session_state.view_image = None  # Clear the modal state
-            st.rerun()
+        # Add the close button outside the HTML but aligned with the modal
+        col1, col2, col3 = st.columns([1, 1, 1])
+        with col2:
+            if st.button("✕", key=f"close_btn_{hash(caption)}", help="Return to Home"):
+                st.session_state.page = "Home"
+                st.session_state.view_image = None
+                st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
