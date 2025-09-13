@@ -470,7 +470,6 @@ elif st.session_state.page == "Home":
     st.session_state.page_num = 0 if search_query else st.session_state.page_num
 
     per_page = 3  # number of description groups per page
-    # Group images by description
     grouped = {}
     for u in filtered_images:
         grouped.setdefault(desc_for_url(u) or "No description", []).append(u)
@@ -499,7 +498,6 @@ elif st.session_state.page == "Home":
     if grouped_items:
         st.subheader("CURRENT PROJECT")
 
-        # Show grouped images with shared description
         for caption, urls in current_groups:
             img_tags = "".join([
                 f'<img src="{u}" style="width:30%; max-height:180px; border-radius:10px; object-fit:cover;">'
@@ -526,13 +524,13 @@ elif st.session_state.page == "Home":
         data = st.session_state.view_image
         caption = data["caption"]
         urls = data["urls"]
-    
+
         img_tags = "".join([
             f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px;">'
             for u in urls
         ])
-    
-        # Modal container
+
+        # Modal container with CSS
         st.markdown(
             """
             <style>
@@ -562,32 +560,42 @@ elif st.session_state.page == "Home":
                 border-radius: 50%;
                 width: 35px; height: 35px;
                 font-size: 20px; cursor: pointer;
+                line-height: 35px; /* Center the ✕ vertically */
+                text-align: center;
+            }
+            .close-btn:hover {
+                background: #b30000; /* Optional hover effect */
             }
             </style>
             """,
             unsafe_allow_html=True,
         )
-    
-        # Render modal
+
+        # Render modal with embedded close button
         st.markdown(
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
+                    <button class="close-btn" id="close_modal_btn">✕</button>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                         {img_tags}
                     </div>
                 </div>
             </div>
+            <script>
+                document.getElementById('close_modal_btn').addEventListener('click', function() {
+                    window.parent.postMessage({ type: 'close_modal' }, '*');
+                });
+            </script>
             """,
             unsafe_allow_html=True,
         )
-    
-        # Streamlit button styled as close button
-        close_btn = st.button("✕", key="close_modal")
-        if close_btn:
+
+        # Handle the close event via Streamlit's message listener
+        if st.experimental_get_query_params().get('close_modal'):
             st.session_state.view_image = None
-            st.rerun()
+            st.experimental_rerun()
 
 
 
@@ -729,6 +737,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
