@@ -176,46 +176,6 @@ st.markdown("""
     object-fit: contain;
     margin: 10px;
 }
-.close-btn {
-    background: #800000;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    cursor: pointer;
-    transition: background 0.3s;
-    line-height: 40px; /* Center the ✕ vertically */
-    text-align: center;
-}
-.close-btn:hover {
-    background: #b30000;
-}
-
-/* Ensure the close button in the modal inherits the correct styling */
-.stButton button.close-btn {
-    background: #800000;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    line-height: 40px;
-    text-align: center;
-    border: none;
-    color: white;
-}
-.stButton button.close-btn:hover {
-    background: #b30000;
-}
-
-/* Container for the close button to position it in the upper-right corner */
-.close-btn-container {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    z-index: 1001;
-}
 
 /* ------------------ Search Bar ------------------ */
 .stTextInput input {
@@ -572,14 +532,11 @@ elif st.session_state.page == "Home":
             for u in urls
         ])
 
-        # Render the modal content
+        # Render the modal without a close button
         st.markdown(
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
-                    <div class="close-btn-container">
-                        <!-- Placeholder for the button -->
-                    </div>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                         {img_tags}
@@ -589,14 +546,6 @@ elif st.session_state.page == "Home":
             """,
             unsafe_allow_html=True,
         )
-
-        # Add the close button outside the HTML but aligned with the modal
-        col1, col2, col3 = st.columns([1, 1, 1])
-        with col2:
-            if st.button("✕", key=f"close_btn_{hash(caption)}", help="Return to Home"):
-                st.session_state.page = "Home"
-                st.session_state.view_image = None
-                st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -735,5 +684,3 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
