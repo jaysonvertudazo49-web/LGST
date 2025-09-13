@@ -572,15 +572,16 @@ elif st.session_state.page == "Home":
             for u in urls
         ])
 
-        # Render the modal with the close button inside
+        # Unique key for the hidden button
+        close_button_key = f"modal_close_trigger_{hash(caption)}"
+
+        # Render the modal with the close button and JavaScript
         st.markdown(
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
                     <div class="close-btn-container">
-                        <form action="" method="post">
-                            <button type="submit" class="close-btn" name="close_modal" value="close">✕</button>
-                        </form>
+                        <button id="closeModalBtn_{hash(caption)}" class="close-btn">✕</button>
                     </div>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
@@ -588,18 +589,17 @@ elif st.session_state.page == "Home":
                     </div>
                 </div>
             </div>
+            <script>
+                document.getElementById('closeModalBtn_{hash(caption)}').addEventListener('click', function() {{
+                    document.getElementById('hidden_button_{hash(caption)}').click();
+                }});
+            </script>
             """,
             unsafe_allow_html=True,
         )
 
-        # Handle the close button click using query parameters or session state
-        if st.query_params.get("close_modal") == "close":
-            st.session_state.view_image = None
-            st.query_params.clear()
-            st.rerun()
-
-        # Alternative: Use a hidden button with a unique key to detect the click
-        if st.button("Hidden Close Trigger", key=f"modal_close_trigger_{hash(caption)}", help="Close the modal", visible=False):
+        # Hidden button to trigger the close action
+        if st.button("Hidden Close Trigger", key=close_button_key, help="Close the modal", visible=False):
             st.session_state.view_image = None
             st.rerun()
 
