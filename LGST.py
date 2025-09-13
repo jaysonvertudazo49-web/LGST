@@ -578,7 +578,9 @@ elif st.session_state.page == "Home":
             <div class="fullscreen-modal">
                 <div class="modal-content">
                     <div class="close-btn-container">
-                        <button class="close-btn">✕</button>
+                        <form action="" method="post">
+                            <button type="submit" class="close-btn" name="close_modal" value="close">✕</button>
+                        </form>
                     </div>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
@@ -590,8 +592,14 @@ elif st.session_state.page == "Home":
             unsafe_allow_html=True,
         )
 
-        # Handle the close button click
-        if st.button("✕", key=f"modal_close_x_{hash(caption)}", help="Close the modal"):
+        # Handle the close button click using query parameters or session state
+        if st.query_params.get("close_modal") == "close":
+            st.session_state.view_image = None
+            st.query_params.clear()
+            st.rerun()
+
+        # Alternative: Use a hidden button with a unique key to detect the click
+        if st.button("Hidden Close Trigger", key=f"modal_close_trigger_{hash(caption)}", help="Close the modal", visible=False):
             st.session_state.view_image = None
             st.rerun()
 
