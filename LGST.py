@@ -584,8 +584,8 @@ elif st.session_state.page == "Home":
                 </div>
             </div>
             <script>
+                // Trigger a click on a hidden Streamlit button
                 document.getElementById('close_modal_btn').addEventListener('click', function() {
-                    // Trigger a click on a hidden Streamlit button
                     document.getElementById('hidden_close_button').click();
                 });
             </script>
@@ -734,6 +734,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
