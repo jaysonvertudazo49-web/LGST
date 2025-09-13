@@ -584,19 +584,22 @@ elif st.session_state.page == "Home":
                 </div>
             </div>
             <script>
-                // Trigger a click on a hidden Streamlit button
                 document.getElementById('close_modal_btn').addEventListener('click', function() {
-                    document.getElementById('hidden_close_button').click();
+                    window.parent.postMessage({ type: 'close_modal' }, '*');
                 });
             </script>
             """,
             unsafe_allow_html=True,
         )
 
-        # Hidden Streamlit button to handle the close action
-        if st.button("Close Modal", key="hidden_close_button", help="Hidden button for modal close", on_click=lambda: None, args=()):
+        # Handle the close event via Streamlit's message listener
+        if st.experimental_get_query_params().get('close_modal'):
             st.session_state.view_image = None
-            st.rerun()
+            st.experimental_rerun()
+
+
+
+
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
     st.header("Contact Us")
@@ -734,10 +737,6 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
-
-
 
 
 
