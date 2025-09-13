@@ -164,7 +164,6 @@ st.markdown("""
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -175,23 +174,6 @@ st.markdown("""
     max-height: 60vh;
     object-fit: contain;
     margin: 10px;
-}
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: #800000;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-.close-btn:hover {
-    background: #b30000;
 }
 
 /* ------------------ Search Bar ------------------ */
@@ -553,19 +535,20 @@ elif st.session_state.page == "Home":
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
-                    <button class="close-btn" onclick="this.closest('.fullscreen-modal').style.display='none';">✕</button>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                         {img_tags}
                     </div>
-                    <button class="stButton" style="margin-top:20px;">Close</button>
+                    <div style="margin-top:20px;">
+                        <button class="stButton">Close</button>
+                    </div>
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-        if st.button("Close", key="modal_close"):
+        if st.button("Close", key="modal_close_unique"):
             st.session_state.view_image = None
             st.rerun()
 
