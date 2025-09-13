@@ -532,34 +532,44 @@ elif st.session_state.page == "Home":
             for u in urls
         ])
     
-        # Render the modal WITH a close button
+        # Modal wrapper (without the broken HTML ❌)
         st.markdown(
             f"""
             <div class="fullscreen-modal">
-                <div class="modal-content">
-                    <button onclick="window.location.href='?page=Home'" 
-                            style="position:absolute; top:10px; right:20px;
-                                   background:#800000; color:white; border:none;
-                                   border-radius:50%; width:35px; height:35px;
-                                   font-size:20px; cursor:pointer;">✕</button>
+                <div class="modal-content" style="position:relative;">
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                         {img_tags}
                     </div>
-                </div>
-            </div>
             """,
             unsafe_allow_html=True,
         )
-
-        # Close button (Streamlit, styled like HTML one)
-        close_col = st.columns([9, 1])[1]
-        with close_col:
-            if st.button("✕", key=f"close_{hash(caption)}"):
-                st.session_state.view_image = None
-                st.rerun()
-
-        # Close the modal wrapper
+    
+        # Streamlit ❌ button styled as floating
+        close_style = """
+            <style>
+            div[data-testid="stButton"] button.close-btn {
+                position: absolute;
+                top: 10px;
+                right: 20px;
+                background: #800000;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 35px;
+                height: 35px;
+                font-size: 20px;
+                cursor: pointer;
+            }
+            </style>
+        """
+        st.markdown(close_style, unsafe_allow_html=True)
+    
+        if st.button("✕", key=f"close_{hash(caption)}", help="Close modal"):
+            st.session_state.view_image = None
+            st.rerun()
+    
+        # Close modal div wrapper
         st.markdown("</div></div>", unsafe_allow_html=True)
 
 
@@ -701,6 +711,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
