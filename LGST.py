@@ -230,6 +230,20 @@ st.markdown("""
     box-shadow: 0 2px 8px rgba(0,0,0,0.4) inset; /* pressed look */
 }
 
+/* Ensure the close button in the modal inherits the correct styling */
+.stButton button.close-btn {
+    background: #800000;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    line-height: 30px;
+    text-align: center;
+}
+.stButton button.close-btn:hover {
+    background: #b30000;
+}
+
 /* ------------------ Contact Form ------------------ */
 .contact-form {
     background: #ffffff;
@@ -556,9 +570,6 @@ elif st.session_state.page == "Home":
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
-                    <div style="position: absolute; top: 15px; right: 15px;">
-                        <button class="close-btn">✕</button>
-                    </div>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                         {img_tags}
@@ -569,12 +580,21 @@ elif st.session_state.page == "Home":
             unsafe_allow_html=True,
         )
 
-        # Place the close button outside the markdown to ensure Streamlit handles it
-        col1, col2, col3 = st.columns([1, 8, 1])
-        with col3:
-            if st.button("✕", key=f"modal_close_x_{caption}", help="Close the modal"):
-                st.session_state.view_image = None
-                st.rerun()
+        # Place the close button directly, styled as ✕ in the upper-right corner
+        st.markdown(
+            """
+            <div style="position: absolute; top: 15px; right: 15px; z-index: 1001;">
+                <button class="close-btn">✕</button>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # Handle close button click with a unique key
+        if st.button("✕", key=f"modal_close_x_{hash(caption)}", help="Close the modal"):
+            st.session_state.view_image = None
+            st.rerun()
+            st.write("Debug: Close button clicked")  # Debugging output
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
