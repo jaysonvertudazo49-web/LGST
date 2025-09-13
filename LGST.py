@@ -526,17 +526,22 @@ elif st.session_state.page == "Home":
         data = st.session_state.view_image
         caption = data["caption"]
         urls = data["urls"]
-
+    
         img_tags = "".join([
             f'<img src="{u}" alt="Project image">'
             for u in urls
         ])
-
-        # Render the modal without a close button
+    
+        # Render the modal WITH a close button
         st.markdown(
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
+                    <button onclick="window.location.href='?page=Home'" 
+                            style="position:absolute; top:10px; right:20px;
+                                   background:#800000; color:white; border:none;
+                                   border-radius:50%; width:35px; height:35px;
+                                   font-size:20px; cursor:pointer;">✕</button>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                         {img_tags}
@@ -546,6 +551,7 @@ elif st.session_state.page == "Home":
             """,
             unsafe_allow_html=True,
         )
+
         col1, col2, col3 = st.columns([1, 1, 1])
 
         with col1:  # Move from col2 to col1
@@ -692,4 +698,5 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
