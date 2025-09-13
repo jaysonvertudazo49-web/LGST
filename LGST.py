@@ -572,36 +572,28 @@ elif st.session_state.page == "Home":
             for u in urls
         ])
 
-        # Render the modal
-        with st.container():
-            st.markdown(
-                f"""
-                <div class="fullscreen-modal">
-                    <div class="modal-content">
-                        <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
-                        <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
-                            {img_tags}
-                        </div>
+        # Render the modal with the close button inside
+        st.markdown(
+            f"""
+            <div class="fullscreen-modal">
+                <div class="modal-content">
+                    <div class="close-btn-container">
+                        <button class="close-btn">✕</button>
+                    </div>
+                    <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
+                    <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
+                        {img_tags}
                     </div>
                 </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-            # Place the close button in a container for positioning
-            with st.container():
-                st.markdown(
-                    """
-                    <div class="close-btn-container">
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
-                # Render the Streamlit button styled as ✕
-                if st.button("✕", key=f"modal_close_x_{hash(caption)}", help="Close the modal"):
-                    st.session_state.view_image = None
-                    st.rerun()
-                    st.write("Debug: Close button clicked")  # Debugging output
+        # Handle the close button click
+        if st.button("✕", key=f"modal_close_x_{hash(caption)}", help="Close the modal"):
+            st.session_state.view_image = None
+            st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
