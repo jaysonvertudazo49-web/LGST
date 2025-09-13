@@ -528,49 +528,67 @@ elif st.session_state.page == "Home":
         urls = data["urls"]
     
         img_tags = "".join([
-            f'<img src="{u}" alt="Project image">'
+            f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px;">'
             for u in urls
         ])
     
-        # Modal wrapper (without the broken HTML ❌)
+        # Modal container
         st.markdown(
-            f"""
-            <div class="fullscreen-modal">
-                <div class="modal-content" style="position:relative;">
-                    <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
-                    <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
-                        {img_tags}
-                    </div>
+            """
+            <style>
+            .fullscreen-modal {
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: rgba(0,0,0,0.9);
+                display: flex; justify-content: center; align-items: center;
+                z-index: 9999;
+            }
+            .modal-content {
+                position: relative;
+                background: #222;
+                padding: 20px;
+                border-radius: 15px;
+                max-width: 90%;
+                max-height: 90%;
+                overflow-y: auto;
+                text-align: center;
+            }
+            .close-btn {
+                position: absolute;
+                top: 10px; right: 20px;
+                background: #800000; color: white;
+                border: none;
+                border-radius: 50%;
+                width: 35px; height: 35px;
+                font-size: 20px; cursor: pointer;
+            }
+            </style>
             """,
             unsafe_allow_html=True,
         )
     
-        # Streamlit ❌ button styled as floating
-        close_style = """
-            <style>
-            div[data-testid="stButton"] button.close-btn {
-                position: absolute;
-                top: 10px;
-                right: 20px;
-                background: #800000;
-                color: white;
-                border: none;
-                border-radius: 50%;
-                width: 35px;
-                height: 35px;
-                font-size: 20px;
-                cursor: pointer;
-            }
-            </style>
-        """
-        st.markdown(close_style, unsafe_allow_html=True)
+        # Render modal
+        st.markdown(
+            f"""
+            <div class="fullscreen-modal">
+                <div class="modal-content">
+                    <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
+                    <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
+                        {img_tags}
+                    </div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
     
-        if st.button("✕", key=f"close_{hash(caption)}", help="Close modal"):
+        # Streamlit button styled as close button
+        close_btn = st.button("✕", key="close_modal")
+        if close_btn:
             st.session_state.view_image = None
             st.rerun()
-    
-        # Close modal div wrapper
-        st.markdown("</div></div>", unsafe_allow_html=True)
+
 
 
 
@@ -711,6 +729,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
