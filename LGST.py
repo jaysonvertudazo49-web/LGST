@@ -177,23 +177,44 @@ st.markdown("""
     margin: 10px;
 }
 .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
     background: #800000;
     color: white;
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 16px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
     cursor: pointer;
     transition: background 0.3s;
-    line-height: 30px; /* Center the ✕ vertically */
+    line-height: 40px; /* Center the ✕ vertically */
     text-align: center;
 }
 .close-btn:hover {
     background: #b30000;
+}
+
+/* Ensure the close button in the modal inherits the correct styling */
+.stButton button.close-btn {
+    background: #800000;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    line-height: 40px;
+    text-align: center;
+    border: none;
+    color: white;
+}
+.stButton button.close-btn:hover {
+    background: #b30000;
+}
+
+/* Container for the close button to position it in the upper-right corner */
+.close-btn-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 1001;
 }
 
 /* ------------------ Search Bar ------------------ */
@@ -228,20 +249,6 @@ st.markdown("""
     transform: scale(0.9);       /* shrink */
     background: #660000;         /* darker */
     box-shadow: 0 2px 8px rgba(0,0,0,0.4) inset; /* pressed look */
-}
-
-/* Ensure the close button in the modal inherits the correct styling */
-.stButton button.close-btn {
-    background: #800000;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 16px;
-    line-height: 30px;
-    text-align: center;
-}
-.stButton button.close-btn:hover {
-    background: #b30000;
 }
 
 /* ------------------ Contact Form ------------------ */
@@ -566,35 +573,35 @@ elif st.session_state.page == "Home":
         ])
 
         # Render the modal
-        st.markdown(
-            f"""
-            <div class="fullscreen-modal">
-                <div class="modal-content">
-                    <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
-                    <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
-                        {img_tags}
+        with st.container():
+            st.markdown(
+                f"""
+                <div class="fullscreen-modal">
+                    <div class="modal-content">
+                        <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
+                        <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
+                            {img_tags}
+                        </div>
                     </div>
                 </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+                """,
+                unsafe_allow_html=True,
+            )
 
-        # Place the close button directly, styled as ✕ in the upper-right corner
-        st.markdown(
-            """
-            <div style="position: absolute; top: 15px; right: 15px; z-index: 1001;">
-                <button class="close-btn">✕</button>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        # Handle close button click with a unique key
-        if st.button("✕", key=f"modal_close_x_{hash(caption)}", help="Close the modal"):
-            st.session_state.view_image = None
-            st.rerun()
-            st.write("Debug: Close button clicked")  # Debugging output
+            # Place the close button in a container for positioning
+            with st.container():
+                st.markdown(
+                    """
+                    <div class="close-btn-container">
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                # Render the Streamlit button styled as ✕
+                if st.button("✕", key=f"modal_close_x_{hash(caption)}", help="Close the modal"):
+                    st.session_state.view_image = None
+                    st.rerun()
+                    st.write("Debug: Close button clicked")  # Debugging output
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
