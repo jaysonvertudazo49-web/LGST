@@ -546,6 +546,14 @@ elif st.session_state.page == "Home":
             """,
             unsafe_allow_html=True,
         )
+        col1, col2, col3 = st.columns([1, 1, 1])
+
+        with col1:  # Move from col2 to col1
+            if st.button("✕", key=f"close_btn_{hash(caption)}", help="Return to Home"):
+                st.session_state.page = "Home"
+                st.session_state.view_image = None
+                st.rerun()
+
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -684,3 +692,4 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
