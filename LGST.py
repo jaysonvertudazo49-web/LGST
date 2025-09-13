@@ -189,6 +189,8 @@ st.markdown("""
     font-size: 16px;
     cursor: pointer;
     transition: background 0.3s;
+    line-height: 30px; /* Center the ✕ vertically */
+    text-align: center;
 }
 .close-btn:hover {
     background: #b30000;
@@ -549,6 +551,7 @@ elif st.session_state.page == "Home":
             for u in urls
         ])
 
+        # Render the modal
         st.markdown(
             f"""
             <div class="fullscreen-modal">
@@ -566,10 +569,12 @@ elif st.session_state.page == "Home":
             unsafe_allow_html=True,
         )
 
-        # Handle close button click
-        if st.button("✕", key="modal_close_x", help="Close the modal"):
-            st.session_state.view_image = None
-            st.rerun()
+        # Place the close button outside the markdown to ensure Streamlit handles it
+        col1, col2, col3 = st.columns([1, 8, 1])
+        with col3:
+            if st.button("✕", key=f"modal_close_x_{caption}", help="Close the modal"):
+                st.session_state.view_image = None
+                st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
