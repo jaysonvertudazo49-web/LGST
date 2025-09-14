@@ -524,12 +524,10 @@ if st.session_state.view_image:
     data = st.session_state.view_image
     caption = data["caption"]
     urls = data["urls"]
-
     img_tags = "".join([
         f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px;">'
         for u in urls
     ])
-
     # Modal container with CSS
     st.markdown(
         """
@@ -569,14 +567,13 @@ if st.session_state.view_image:
         """,
         unsafe_allow_html=True,
     )
-
     # Render modal with a form-based close button
     with st.form(key="modal_form"):
         st.markdown(
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
-                    <button class="close-btn" type="submit" form="modal_form">✕</button>
+                    <button class="close-btn" type="submit" name="close" value="close">✕</button>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                         {img_tags}
@@ -590,6 +587,8 @@ if st.session_state.view_image:
         if submitted:
             st.session_state.view_image = None
             st.rerun()
+
+
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -728,6 +727,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
