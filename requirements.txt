@@ -3,6 +3,8 @@ requests
 Pillow
 PyGithub
 python-dotenv
+html
+
 
 
 
