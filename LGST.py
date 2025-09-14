@@ -539,6 +539,8 @@ if st.session_state.view_image:
             background: rgba(0,0,0,0.9);
             display: flex; justify-content: center; align-items: center;
             z-index: 9999;
+            flex-direction: column;
+            padding: 20px;
         }
         .modal-content {
             position: relative;
@@ -546,15 +548,27 @@ if st.session_state.view_image:
             padding: 20px;
             border-radius: 15px;
             max-width: 90%;
-            max-height: 90%;
+            max-height: 80%;
             overflow-y: auto;
             text-align: center;
+            margin-bottom: 15px;
+        }
+        .close-btn {
+            background: #800000; color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px; cursor: pointer;
+            align-self: center;
+        }
+        .close-btn:hover {
+            background: #b30000;
         }
         </style>
         """,
         unsafe_allow_html=True,
     )
-    # Render modal with a single form submit button labeled "Close"
+    # Render modal and a separate close button inside the form
     with st.form(key="modal_form"):
         st.markdown(
             f"""
@@ -569,8 +583,7 @@ if st.session_state.view_image:
             """,
             unsafe_allow_html=True,
         )
-        submitted = st.form_submit_button("Close", use_container_width=False, type="primary")
-        if submitted:
+        if st.form_submit_button("Close", help="Close modal", key="close_btn", use_container_width=False):
             st.session_state.view_image = None
             st.rerun()
 
@@ -714,6 +727,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
