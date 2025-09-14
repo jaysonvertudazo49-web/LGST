@@ -525,7 +525,7 @@ if params.get("close_modal"):
     st.session_state.view_image = None
     # clear query params so it doesn't keep triggering
     st.experimental_set_query_params()
-    st.experimental_rerun()
+    st.rerun()
 
 # Full-screen pop-up modal for viewing details
 if st.session_state.get("view_image"):
@@ -612,7 +612,6 @@ if st.session_state.get("view_image"):
         """,
         unsafe_allow_html=True,
     )
-
 
 
 
@@ -757,6 +756,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
