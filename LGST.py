@@ -539,8 +539,6 @@ if st.session_state.view_image:
             background: rgba(0,0,0,0.9);
             display: flex; justify-content: center; align-items: center;
             z-index: 9999;
-            flex-direction: column;
-            padding: 20px;
         }
         .modal-content {
             position: relative;
@@ -548,18 +546,20 @@ if st.session_state.view_image:
             padding: 20px;
             border-radius: 15px;
             max-width: 90%;
-            max-height: 80%;
+            max-height: 90%;
             overflow-y: auto;
             text-align: center;
-            margin-bottom: 15px;
+            color: white;
         }
         .close-btn {
-            background: #800000; color: white;
+            margin-top: 20px;
+            background: #800000;
+            color: white;
             border: none;
             border-radius: 5px;
             padding: 10px 20px;
-            font-size: 16px; cursor: pointer;
-            align-self: center;
+            font-size: 16px;
+            cursor: pointer;
         }
         .close-btn:hover {
             background: #b30000;
@@ -568,22 +568,27 @@ if st.session_state.view_image:
         """,
         unsafe_allow_html=True,
     )
-    # Render modal and a separate close button inside the form
     with st.form(key="modal_form"):
         st.markdown(
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
-                    <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
+                    <h3 style="margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                         {img_tags}
                     </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        submitted = st.form_submit_button("Close", key="close_btn", help="Close modal", use_container_width=False)
+        st.markdown(
+            """
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        if st.form_submit_button("Close", help="Close modal", key="close_btn", use_container_width=False):
+        if submitted:
             st.session_state.view_image = None
             st.rerun()
 
@@ -727,6 +732,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
