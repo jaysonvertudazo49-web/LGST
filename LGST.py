@@ -519,7 +519,6 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
-
 # Full-screen pop-up modal for viewing details
 if st.session_state.view_image:
     data = st.session_state.view_image
@@ -530,27 +529,6 @@ if st.session_state.view_image:
         f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px; margin:10px;">'
         for u in urls
     ])
-
-    # Modal layout
-    modal_html = f"""
-    <div style="
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background-color: rgba(0,0,0,0.85); z-index: 9999;
-        display: flex; flex-direction: column; justify-content: center; align-items: center;
-    ">
-        <h2 style="color:white; margin-bottom:20px;">{caption}</h2>
-        <div>{img_tags}</div>
-    </div>
-    """
-
-    st.markdown(modal_html, unsafe_allow_html=True)
-
-    # Close button below images
-    if st.button("Close", key="close_modal"):
-        st.session_state.view_image = None
-        st.rerun()
-
-
 
     # Modal container with CSS
     st.markdown(
@@ -574,25 +552,12 @@ if st.session_state.view_image:
             overflow-y: auto;
             text-align: center;
         }
-        .close-btn {
-            position: absolute;
-            top: 10px; right: 20px;
-            background: #800000; color: white;
-            border: none;
-            border-radius: 50%;
-            width: 35px; height: 35px;
-            font-size: 20px; cursor: pointer;
-            line-height: 35px; text-align: center;
-        }
-        .close-btn:hover {
-            background: #b30000;
-        }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-    # Render modal with Streamlit button for closing
+    # Render modal
     st.markdown(
         f"""
         <div class="fullscreen-modal">
@@ -607,12 +572,20 @@ if st.session_state.view_image:
         unsafe_allow_html=True,
     )
 
-    # Streamlit close button
+    # Streamlit close button (under images, inside modal area)
     close_col1, close_col2, close_col3 = st.columns([4, 1, 4])
     with close_col2:
         if st.button("✕ Close", key="close_modal_btn"):
             st.session_state.view_image = None
             st.rerun()
+
+
+
+
+
+
+
+
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
     st.header("Contact Us")
@@ -750,6 +723,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
