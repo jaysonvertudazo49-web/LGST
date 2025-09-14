@@ -519,14 +519,6 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
-# If the page was called with ?close_modal=1, clear the modal state and rerun
-params = st.experimental_get_query_params()
-if params.get("close_modal"):
-    st.session_state.view_image = None
-    # clear query params so it doesn't keep triggering
-    st.experimental_set_query_params()
-    st.rerun()
-
 # Full-screen pop-up modal for viewing details
 if st.session_state.get("view_image"):
     data = st.session_state.view_image
@@ -589,13 +581,13 @@ if st.session_state.get("view_image"):
         unsafe_allow_html=True,
     )
 
-    # Render modal with in-modal HTML close controls that set ?close_modal=1
+    # Render modal with in-modal HTML close controls that reload the page
     st.markdown(
         f"""
         <div class="fullscreen-modal">
             <div class="modal-content">
                 <!-- Top-right X button (inside modal, clickable) -->
-                <button class="close-btn" onclick="window.location.href=window.location.pathname + '?close_modal=1'">✕</button>
+                <button class="close-btn" onclick="window.location.reload()">✕</button>
 
                 <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
 
@@ -605,14 +597,13 @@ if st.session_state.get("view_image"):
 
                 <!-- Close button under images (inside modal) -->
                 <div>
-                    <button class="modal-close" onclick="window.location.href=window.location.pathname + '?close_modal=1'">Close</button>
+                    <button class="modal-close" onclick="window.location.reload()">Close</button>
                 </div>
             </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
-
 
 
 
@@ -756,6 +747,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
