@@ -555,10 +555,9 @@ if st.session_state.view_image:
             top: 10px; right: 20px;
             background: #800000; color: white;
             border: none;
-            border-radius: 50%;
-            width: 35px; height: 35px;
-            font-size: 20px; cursor: pointer;
-            line-height: 35px; text-align: center;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 16px; cursor: pointer;
         }
         .close-btn:hover {
             background: #b30000;
@@ -573,7 +572,7 @@ if st.session_state.view_image:
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
-                    <button class="close-btn" type="submit" name="close" value="close">✕</button>
+                    <button class="close-btn" type="submit" name="close" value="close">Close</button>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                         {img_tags}
@@ -587,6 +586,7 @@ if st.session_state.view_image:
         if submitted:
             st.session_state.view_image = None
             st.rerun()
+
 
 
 
@@ -727,6 +727,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
