@@ -523,6 +523,15 @@ import re
 import html
 import streamlit as st
 
+# Example button to trigger the modal (replace with your actual button)
+# This is based on your provided context
+caption = "🔧 Our Logo – Lucas Grey Scrap Trading"
+urls = ["https://via.placeholder.com/150", "https://via.placeholder.com/200"]
+if st.button("View Details", key=f"view_{caption}"):
+    st.session_state.view_image = {"caption": caption, "urls": urls}
+    st.rerun()
+
+# Modal code
 if st.session_state.get("view_image"):
     data = st.session_state.view_image or {}
     caption = data.get("caption", "") or ""
@@ -531,8 +540,7 @@ if st.session_state.get("view_image"):
     # Clean caption: remove HTML tags and unescape entities
     clean_caption = re.sub(r"<[^>]*>", "", caption)
     clean_caption = html.unescape(clean_caption).strip()
-    # Double-escape to handle special characters like emojis or en-dashes
-    escaped_caption = html.escape(clean_caption)
+    escaped_caption = html.escape(clean_caption)  # Double-escape for safety
 
     # Generate image HTML
     img_tags = "".join(
@@ -596,6 +604,8 @@ if st.session_state.get("view_image"):
         </div>
     </div>
     """
+    # Clear any previous content to ensure modal is on top
+    st.empty()
     # Render modal
     st.markdown(modal_html, unsafe_allow_html=True)
 
@@ -741,6 +751,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
