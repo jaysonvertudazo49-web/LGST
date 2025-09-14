@@ -519,11 +519,16 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
+import html  # required to safely escape caption text
+
 # Full-screen pop-up modal for viewing details
 if st.session_state.get("view_image"):
     data = st.session_state.view_image
     caption = data["caption"]
     urls = data["urls"]
+
+    # Escape caption so any HTML/CSS inside it doesn't break the modal
+    safe_caption = html.escape(caption)
 
     img_tags = "".join([
         f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px; margin:10px;">'
@@ -589,7 +594,7 @@ if st.session_state.get("view_image"):
                 <!-- Top-right X button (inside modal, clickable) -->
                 <button class="close-btn" onclick="window.location.reload()">✕</button>
 
-                <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
+                <h3 style="color:white; margin-bottom:20px;">{safe_caption}</h3>
 
                 <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                     {img_tags}
@@ -604,9 +609,6 @@ if st.session_state.get("view_image"):
         """,
         unsafe_allow_html=True,
     )
-
-
-
 
 
 
@@ -747,6 +749,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
