@@ -223,7 +223,7 @@ st.markdown("""
 
 /* ------------------ Typography ------------------ */
 h2 { 
-    color: black !important; 
+    color: white !important; 
     font-size: 1.8em; 
     margin-top: 15px; 
     margin-bottom: 10px; 
@@ -729,6 +729,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
