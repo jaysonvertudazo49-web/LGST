@@ -519,14 +519,11 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
-import bleach
-import streamlit as st
-
 # Full-screen pop-up modal for viewing details
 if st.session_state.view_image:
     data = st.session_state.view_image
-    caption = bleach.clean(data["caption"], tags=[], strip=True)
-    urls = [bleach.clean(u, tags=[], strip=True) for u in data["urls"]]
+    caption = data["caption"]
+    urls = data["urls"]
 
     img_tags = "".join([
         f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px;">'
@@ -556,15 +553,14 @@ if st.session_state.view_image:
             text-align: center;
         }
         .stButton>button {
-            position: fixed;
-            top: 20px; right: 20px;
+            position: absolute;
+            top: 10px; right: 20px;
             background: #800000; color: white;
             border: none;
             border-radius: 50%;
             width: 35px; height: 35px;
             font-size: 16px; cursor: pointer;
             line-height: 35px; text-align: center;
-            z-index: 10000;
         }
         .stButton>button:hover {
             background: #b30000;
@@ -590,7 +586,7 @@ if st.session_state.view_image:
     )
 
     # Close button
-    if st.button("Close", key="close_modal", help="Close the modal"):
+    if st.button("Close", key="modal_close", help="Close the modal"):
         st.session_state.view_image = None
         st.rerun()
 
@@ -732,6 +728,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
