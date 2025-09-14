@@ -523,12 +523,8 @@ if st.session_state.view_image:
     data = st.session_state.view_image
     caption = data["caption"]
     urls = data["urls"]
-    img_tags = "".join([
-        f'<img src="{u}" alt="Project image">'
-        for u in urls
-    ])
-    
-    # Inject your exact CSS
+
+    # Inject modal CSS
     st.markdown(
         """
         <style>
@@ -538,11 +534,11 @@ if st.session_state.view_image:
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.85); /* Semi-transparent background */
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Above other content */
+            z-index: 1000;
         }
         .modal-content {
             background: black;
@@ -569,34 +565,22 @@ if st.session_state.view_image:
         """,
         unsafe_allow_html=True,
     )
-    
-    with st.form(key="modal_form"):
-        st.markdown(
-            f"""
-            <div class="fullscreen-modal">
-                <div class="modal-content">
-                    <h3>{caption}</h3>
-                    <div>
-                        {img_tags}
-                    </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        
-        # Streamlit close button inside the form (visible under images)
-        submitted = st.form_submit_button("Close", help="Close modal")
-        
-        st.markdown(
-            """
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        
-        if submitted:
+
+    # Use container to hold modal HTML and Streamlit button visually together
+    st.markdown('<div class="fullscreen-modal">', unsafe_allow_html=True)
+    container = st.container()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    with container:
+        st.markdown('<div class="modal-content">', unsafe_allow_html=True)
+        st.markdown(f'<h3>{caption}</h3>', unsafe_allow_html=True)
+        for url in urls:
+            st.markdown(f'<img src="{url}" alt="Project image">', unsafe_allow_html=True)
+        # Place Streamlit close button here, visually inside modal-content
+        if st.button("Close", key="close_modal_button"):
             st.session_state.view_image = None
-            st.rerun()
+            st.experimental_rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 
@@ -741,6 +725,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
