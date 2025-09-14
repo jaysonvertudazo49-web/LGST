@@ -531,6 +531,29 @@ if st.session_state.view_image:
         for u in urls
     ])
 
+    # Add close button + modal layout
+    modal_html = f"""
+    <div style="
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.85); z-index: 9999;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+    ">
+        <!-- Close button -->
+        <button onclick="window.location.reload()" style="
+            position: absolute; top: 20px; right: 30px;
+            background: red; color: white; border: none;
+            border-radius: 50%; width: 35px; height: 35px;
+            font-size: 18px; cursor: pointer;
+        ">X</button>
+
+        <h2 style="color:white; margin-bottom:20px;">{caption}</h2>
+        <div>{img_tags}</div>
+    </div>
+    """
+
+    st.markdown(modal_html, unsafe_allow_html=True)
+
+
     # Modal container with CSS
     st.markdown(
         """
@@ -729,6 +752,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
