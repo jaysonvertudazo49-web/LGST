@@ -523,10 +523,13 @@ if st.session_state.view_image:
     data = st.session_state.view_image
     caption = data["caption"]
     urls = data["urls"]
+    img_tags = "".join([
+        f'<img src="{u}" alt="Project image">'
+        for u in urls
+    ])
 
-    # Inject modal CSS
-    st.markdown(
-        """
+    # Inject your existing modal CSS exactly once
+    st.markdown("""
         <style>
         .fullscreen-modal {
             position: fixed;
@@ -561,26 +564,44 @@ if st.session_state.view_image:
             object-fit: contain;
             margin: 10px;
         }
+        .close-button {
+            background: #800000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .close-button:hover {
+            background: #b30000;
+        }
         </style>
+    """, unsafe_allow_html=True)
+
+    # Render modal via markdown (overlay + content)
+    st.markdown(
+        f"""
+        <div class="fullscreen-modal">
+          <div class="modal-content">
+            <h3>{caption}</h3>
+            <div>{img_tags}</div>
+          </div>
+        </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Use container to hold modal HTML and Streamlit button visually together
-    st.markdown('<div class="fullscreen-modal">', unsafe_allow_html=True)
-    container = st.container()
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    with container:
-        st.markdown('<div class="modal-content">', unsafe_allow_html=True)
-        st.markdown(f'<h3>{caption}</h3>', unsafe_allow_html=True)
-        for url in urls:
-            st.markdown(f'<img src="{url}" alt="Project image">', unsafe_allow_html=True)
-        # Place Streamlit close button here, visually inside modal-content
-        if st.button("Close", key="close_modal_button"):
+    # Render Close button via Streamlit form *below modal-content inside overlay visually*
+    # Use st.empty() and CSS margins to position inside modal area
+    button_placeholder = st.empty()
+    with st.form(key="modal_form"):
+        if button_placeholder.form_submit_button("Close", help="Close modal", css_class="close-button"):
             st.session_state.view_image = None
             st.experimental_rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
 
 
@@ -725,6 +746,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
