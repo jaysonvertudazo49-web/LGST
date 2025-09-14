@@ -143,39 +143,39 @@ st.markdown("""
     background: #b30000;
 }
 
-/* ------------------ Full-Screen Modal ------------------ */
-.fullscreen-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.85); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure it appears above other content */
-}
-.modal-content {
-    background: black;
-    border-radius: 15px;
-    padding: 30px;
-    max-width: 90vw;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.modal-content img {
-    border-radius: 12px;
-    max-width: 80%;
-    max-height: 60vh;
-    object-fit: contain;
-    margin: 10px;
-}
+#/* ------------------ Full-Screen Modal ------------------ */
+#.fullscreen-modal {
+    #position: fixed;
+    #top: 0;
+    #left: 0;
+    #width: 100vw;
+    #height: 100vh;
+    #background: rgba(0, 0, 0, 0.85); /* Semi-transparent background */
+    #display: flex;
+    #justify-content: center;
+    #align-items: center;
+    #z-index: 1000; /* Ensure it appears above other content */
+#}
+#.modal-content {
+    #background: black;
+    #border-radius: 15px;
+    #padding: 30px;
+    #max-width: 90vw;
+    #max-height: 90vh;
+    #overflow-y: auto;
+    #box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    #position: relative;
+    #display: flex;
+    #flex-direction: column;
+    #align-items: center;
+#}
+#.modal-content img {
+    #border-radius: 12px;
+    #max-width: 80%;
+    #max-height: 60vh;
+    #object-fit: contain;
+    #margin: 10px;
+#}
 
 /* ------------------ Search Bar ------------------ */
 .stTextInput input {
@@ -740,6 +740,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
