@@ -70,7 +70,7 @@ st.markdown("""
 }
 .header-title h1 { 
     margin: 0; 
-    color: white; 
+    color: black; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 .header-buttons {
@@ -729,6 +729,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
