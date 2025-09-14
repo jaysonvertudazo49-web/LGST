@@ -519,100 +519,55 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
-import re
-import html
-import streamlit as st
-
-# Example button to trigger the modal (replace with your actual button)
-# This is based on your provided context
-caption = "🔧 Our Logo – Lucas Grey Scrap Trading"
+# Trigger button
+caption = "Lucas Grey Scrap Trading is your trusted partner in handling unserviceable items and scrap materials with integrity and efficiency. We buy a wide range of materials — from I.T. and office equipment, copper wires, and scrap metals to motor vehicles, air conditioners, generators, and batteries."
 urls = ["https://via.placeholder.com/150", "https://via.placeholder.com/200"]
-if st.button("View Details", key=f"view_{caption}"):
+if st.button("View Details", key=f"view_{caption[:50]}"):
     st.session_state.view_image = {"caption": caption, "urls": urls}
     st.rerun()
 
 # Modal code
 if st.session_state.get("view_image"):
-    data = st.session_state.view_image or {}
-    caption = data.get("caption", "") or ""
-    urls = data.get("urls", []) or []
-
-    # Clean caption: remove HTML tags and unescape entities
-    clean_caption = re.sub(r"<[^>]*>", "", caption)
-    clean_caption = html.unescape(clean_caption).strip()
-    escaped_caption = html.escape(clean_caption)  # Double-escape for safety
-
-    # Generate image HTML
-    img_tags = "".join(
-        f'<img src="{html.escape(u)}" alt="Project image" style="max-width:40%; border-radius:10px; margin:10px;">'
-        for u in urls if u and isinstance(u, str) and u.startswith(("http://", "https://"))
-    ) or '<div style="color:#fff;">No valid images available</div>'
-
-    # Modal HTML/CSS
-    modal_html = f"""
-    <style>
-    .fullscreen-modal {{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.9);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 100000;
-    }}
-    .modal-content {{
-        position: relative;
-        background: #222;
-        padding: 20px;
-        border-radius: 15px;
-        max-width: 90%;
-        max-height: 90%;
-        overflow-y: auto;
-        text-align: center;
-    }}
-    .close-btn {{
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        background: #800000;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 35px;
-        height: 35px;
-        font-size: 20px;
-        line-height: 35px;
-        text-align: center;
-        cursor: pointer;
-    }}
-    .close-btn:hover {{
-        background: #b30000;
-    }}
-    </style>
-    <div class="fullscreen-modal">
-        <div class="modal-content">
-            <h3 style="color:white; margin-bottom:20px;">{escaped_caption}</h3>
-            <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
-                {img_tags}
-            </div>
-            <div style="margin-top:20px;">
-                <button class="close-btn">✕</button>
-            </div>
-        </div>
-    </div>
-    """
-    # Clear any previous content to ensure modal is on top
-    st.empty()
-    # Render modal
-    st.markdown(modal_html, unsafe_allow_html=True)
-
-    # Streamlit close button (handles actual closing logic)
-    if st.button("✕", key="close_modal_btn", help="Close modal"):
-        st.session_state.view_image = None
-        st.rerun()
+    # Clear previous content
+    placeholder = st.empty()
+    with placeholder.container():
+        # Simulate modal with a container
+        with st.container():
+            # Dark background
+            st.markdown(
+                """
+                <style>
+                .modal-container {
+                    background: rgba(0,0,0,0.9);
+                    padding: 20px;
+                    border-radius: 15px;
+                    text-align: center;
+                    margin: auto;
+                    max-width: 90%;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+            # Modal content
+            with st.container():
+                st.markdown(
+                    f'<div class="modal-container"><h3 style="color:white; margin-bottom:20px;">{caption}</h3></div>',
+                    unsafe_allow_html=True
+                )
+                # Images
+                cols = st.columns(min(len(urls), 3))
+                for i, url in enumerate(urls):
+                    if url and isinstance(url, str) and url.startswith(("http://", "https://")):
+                        cols[i % len(cols)].image(url, use_column_width=True)
+                    else:
+                        cols[i % len(cols)].write("Invalid image URL")
+                # Close button
+                close_col1, close_col2, close_col3 = st.columns([4, 1, 4])
+                with close_col2:
+                    if st.button("✕ Close", key="close_modal_btn"):
+                        st.session_state.view_image = None
+                        st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -751,6 +706,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
