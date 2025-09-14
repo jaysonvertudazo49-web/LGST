@@ -531,6 +531,8 @@ if st.session_state.get("view_image"):
     # Clean caption: remove HTML tags and unescape entities
     clean_caption = re.sub(r"<[^>]*>", "", caption)
     clean_caption = html.unescape(clean_caption).strip()
+    # Double-escape to handle special characters like emojis or en-dashes
+    escaped_caption = html.escape(clean_caption)
 
     # Generate image HTML
     img_tags = "".join(
@@ -551,7 +553,7 @@ if st.session_state.get("view_image"):
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 9999;
+        z-index: 100000;
     }}
     .modal-content {{
         position: relative;
@@ -584,22 +586,23 @@ if st.session_state.get("view_image"):
     </style>
     <div class="fullscreen-modal">
         <div class="modal-content">
-            <h3 style="color:white; margin-bottom:20px;">{html.escape(clean_caption)}</h3>
+            <h3 style="color:white; margin-bottom:20px;">{escaped_caption}</h3>
             <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                 {img_tags}
             </div>
-            <button class="close-btn" onclick="/* Streamlit handles click via st.button */">✕</button>
+            <div style="margin-top:20px;">
+                <button class="close-btn">✕</button>
+            </div>
         </div>
     </div>
     """
+    # Render modal
     st.markdown(modal_html, unsafe_allow_html=True)
 
     # Streamlit close button (handles actual closing logic)
-    close_col1, close_col2, close_col3 = st.columns([4, 1, 4])
-    with close_col2:
-        if st.button("✕", key="close_modal_btn", help="Close modal"):
-            st.session_state.view_image = None
-            st.rerun()
+    if st.button("✕", key="close_modal_btn", help="Close modal"):
+        st.session_state.view_image = None
+        st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -738,6 +741,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
