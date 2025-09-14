@@ -552,18 +552,17 @@ if st.session_state.view_image:
             overflow-y: auto;
             text-align: center;
         }
-        .stButton>button {
+        .close-btn {
             position: absolute;
             top: 10px; right: 20px;
             background: #800000; color: white;
             border: none;
             border-radius: 50%;
             width: 35px; height: 35px;
-            font-size: 16px; cursor: pointer;
+            font-size: 20px; cursor: pointer;
             line-height: 35px; text-align: center;
-            z-index: 10000;
         }
-        .stButton>button:hover {
+        .close-btn:hover {
             background: #b30000;
         }
         </style>
@@ -571,27 +570,26 @@ if st.session_state.view_image:
         unsafe_allow_html=True,
     )
 
-    # Render modal
-    st.markdown(
-        f"""
-        <div class="fullscreen-modal">
-            <div class="modal-content">
-                <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
-                <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
-                    {img_tags}
+    # Render modal with a form-based close button
+    with st.form(key="modal_form"):
+        st.markdown(
+            f"""
+            <div class="fullscreen-modal">
+                <div class="modal-content">
+                    <button class="close-btn" type="submit" form="modal_form">✕</button>
+                    <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
+                    <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
+                        {img_tags}
+                    </div>
                 </div>
             </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    # Close button
-    if st.button("Close", key="modal_close", help="Close the modal"):
-        st.session_state.view_image = None
-        st.rerun()
-        
-
+            """,
+            unsafe_allow_html=True,
+        )
+        submitted = st.form_submit_button("", use_container_width=False, type="primary")
+        if submitted:
+            st.session_state.view_image = None
+            st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -730,9 +728,6 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
-
-
-
 
 
 
