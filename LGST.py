@@ -524,10 +524,7 @@ if st.session_state.view_image:
     data = st.session_state.view_image
     caption = data["caption"]
     urls = data["urls"]
-    img_tags = "".join([
-        f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px;">'
-        for u in urls
-    ])
+
     # Modal container with CSS
     st.markdown(
         """
@@ -541,7 +538,6 @@ if st.session_state.view_image:
             z-index: 9999;
         }
         .modal-content {
-            position: relative;
             background: #222;
             padding: 20px;
             border-radius: 15px;
@@ -551,46 +547,54 @@ if st.session_state.view_image:
             text-align: center;
             color: white;
         }
-        .close-btn {
-            margin-top: 20px;
-            background: #800000;
-            color: white;
+        .modal-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .modal-images img {
+            max-width: 40%;
+            border-radius: 10px;
+        }
+        .close-button {
+            background-color: #800000;
             border: none;
             border-radius: 5px;
             padding: 10px 20px;
             font-size: 16px;
+            color: white;
             cursor: pointer;
         }
-        .close-btn:hover {
-            background: #b30000;
+        .close-button:hover {
+            background-color: #b30000;
         }
         </style>
         """,
         unsafe_allow_html=True,
     )
-    with st.form(key="modal_form"):
-        st.markdown(
-            f"""
-            <div class="fullscreen-modal">
-                <div class="modal-content">
-                    <h3 style="margin-bottom:20px;">{caption}</h3>
-                    <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
-                        {img_tags}
-                    </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        submitted = st.form_submit_button("Close", key="close_btn", help="Close modal", use_container_width=False)
-        st.markdown(
-            """
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        if submitted:
+
+    # Modal outer div
+    st.markdown('<div class="fullscreen-modal">', unsafe_allow_html=True)
+    modal_container = st.container()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    with modal_container:
+        st.markdown('<div class="modal-content">', unsafe_allow_html=True)
+        st.markdown(f'<h3>{caption}</h3>', unsafe_allow_html=True)
+        st.markdown('<div class="modal-images">', unsafe_allow_html=True)
+        for url in urls:
+            st.markdown(f'<img src="{url}" alt="Project image">', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        # Close button inside modal
+        if st.button("Close", key="close_modal_button", help="Close modal", css_class="close-button"):
             st.session_state.view_image = None
-            st.rerun()
+            st.experimental_rerun()
+
+        st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 
@@ -732,6 +736,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
