@@ -20,7 +20,7 @@ st.markdown("""
 <style>
 /* ------------------ Background ------------------ */
 .stApp {
-    background: white;
+    background: black;
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
     color: white;  /* default text visible */
@@ -230,7 +230,7 @@ h2 {
     border-bottom: 2px solid #800000; 
     padding-bottom: 5px; 
 }
-h3 { color: black !important; }
+h3 { color: white !important; }
 
 /* Vision/Mission text stays maroon */
 .vision-text, .mission-text {
@@ -729,6 +729,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
