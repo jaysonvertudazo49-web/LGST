@@ -521,128 +521,73 @@ elif st.session_state.page == "Home":
 
 import re
 import html
+import streamlit as st
 
-# -----------------------------
-# Full-screen pop-up modal code
-# -----------------------------
 if st.session_state.get("view_image"):
     data = st.session_state.view_image or {}
     caption = data.get("caption", "") or ""
     urls = data.get("urls", []) or []
 
-    # 1) Clean caption: remove HTML tags and unescape entities
+    # Clean caption: remove HTML tags and unescape entities
     clean_caption = re.sub(r"<[^>]*>", "", caption)
     clean_caption = html.unescape(clean_caption).strip()
 
-    # 2) Helper to show images using st.image (safer than raw <img> injection)
-    def show_images(image_urls):
-        if not image_urls:
-            st.write("No images available.")
-            return
-        n_cols = min(3, max(1, len(image_urls)))
-        cols = st.columns(n_cols)
-        for i, u in enumerate(image_urls):
-            try:
-                cols[i % n_cols].image(u, use_column_width=True)
-            except Exception:
-                # fallback: show URL if image fails to load
-                cols[i % n_cols].write(u)
+    # Generate image HTML
+    imgs_html = ""
+    for u in urls:
+        if u and isinstance(u, str) and u.startswith(("http://", "https://")):
+            imgs_html += f'<div style="max-width:40%;"><img src="{html.escape(u)}" style="width:100%; border-radius:8px; display:block;"/></div>'
+        else:
+            imgs_html += '<div style="max-width:40%; color:#fff;">Invalid image URL</div>'
 
-    # 3) Try to use Streamlit's native modal (preferred — produces true popup)
-    use_native_modal = hasattr(st, "modal")
-    if use_native_modal:
-        try:
-            with st.modal("View Details", key="view_details_modal"):
-                # Header
-                st.markdown(f"### {clean_caption}")
-
-                # Images
-                show_images(urls)
-
-                st.write("")  # spacer
-
-                # Close button that clears the modal state and reruns
-                if st.button("✕ Close", key="close_modal_btn"):
-                    st.session_state.view_image = None
-                    st.rerun()
-            # If we got here, native modal was used — done.
-        except Exception:
-            # If st.modal exists but failed, fall back to overlay below
-            use_native_modal = False
-
-    # 4) Fallback overlay using HTML/CSS (position: fixed so it appears on top)
-    if not use_native_modal:
-        # Build simple img HTML for fallback (safe because we strip caption earlier)
-        imgs_html = "".join(
-            f'<div style="max-width:40%;"><img src="{u}" style="width:100%; border-radius:8px; display:block;"/></div>'
-            for u in urls
-        )
-
-        overlay_html = f"""
-        <style>
-        /* overlay backdrop */
-        .lgst-fullscreen-modal {{
-            position: fixed;
-            inset: 0; /* top:0; right:0; bottom:0; left:0; */
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.88);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-        }}
-        /* content card */
-        .lgst-modal-card {{
-            background: #1f1f1f;
-            color: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            max-width: 92%;
-            max-height: 92%;
-            overflow-y: auto;
-            text-align: center;
-        }}
-        .lgst-modal-images {{
-            display:flex;
-            flex-wrap:wrap;
-            gap:12px;
-            justify-content:center;
-            margin-top:12px;
-        }}
-        .lgst-modal-close {{
-            margin-top:16px;
-            padding: 8px 18px;
-            background:#333;
-            color:#fff;
-            border:1px solid #444;
-            border-radius:8px;
-            cursor:pointer;
-            font-size:14px;
-        }}
-        .lgst-modal-close:hover {{ background:#444; }}
-        /* make sure the overlay is visually above everything */
-        </style>
-
-        <div class="lgst-fullscreen-modal" onclick="/* click outside to not close (stopPropagation in card) */">
-            <div class="lgst-modal-card" onclick="event.stopPropagation()">
-                <h2 style="margin:0 0 8px 0;">{html.escape(clean_caption)}</h2>
-                <div class="lgst-modal-images">
-                    {imgs_html}
-                </div>
-
-                <div>
-                    <!-- Fallback Close: reload the page. This is simple & reliable.
-                         If your session_state.view_image persists after reload, the modal will reappear.
-                         Native st.modal is preferred for direct session_state clearing. -->
-                    <button class="lgst-modal-close" onclick="window.location.reload();">Close</button>
-                </div>
+    # Modal HTML/CSS
+    overlay_html = f"""
+    <style>
+    .lgst-fullscreen-modal {{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100000;
+    }}
+    .lgst-modal-card {{
+        background: #1f1f1f;
+        color: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 90%;
+        max-height: 90%;
+        overflow-y: auto;
+        text-align: center;
+    }}
+    .lgst-modal-images {{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 12px;
+    }}
+    </style>
+    <div class="lgst-fullscreen-modal">
+        <div class="lgst-modal-card">
+            <h2 style="margin:0 0 8px 0;">{html.escape(clean_caption)}</h2>
+            <div class="lgst-modal-images">
+                {imgs_html}
             </div>
         </div>
-        """
+    </div>
+    """
+    st.markdown(overlay_html, unsafe_allow_html=True)
 
-        st.markdown(overlay_html, unsafe_allow_html=True)
-
+    # Streamlit close button
+    if st.button("✕ Close", key="close_modal_btn"):
+        st.session_state.view_image = None
+        st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -781,6 +726,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
