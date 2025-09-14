@@ -533,61 +533,73 @@ if st.session_state.get("view_image"):
     clean_caption = html.unescape(clean_caption).strip()
 
     # Generate image HTML
-    imgs_html = ""
-    for u in urls:
-        if u and isinstance(u, str) and u.startswith(("http://", "https://")):
-            imgs_html += f'<div style="max-width:40%;"><img src="{html.escape(u)}" style="width:100%; border-radius:8px; display:block;"/></div>'
-        else:
-            imgs_html += '<div style="max-width:40%; color:#fff;">Invalid image URL</div>'
+    img_tags = "".join(
+        f'<img src="{html.escape(u)}" alt="Project image" style="max-width:40%; border-radius:10px; margin:10px;">'
+        for u in urls if u and isinstance(u, str) and u.startswith(("http://", "https://"))
+    ) or '<div style="color:#fff;">No valid images available</div>'
 
     # Modal HTML/CSS
-    overlay_html = f"""
+    modal_html = f"""
     <style>
-    .lgst-fullscreen-modal {{
+    .fullscreen-modal {{
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.8);
+        background: rgba(0,0,0,0.9);
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 100000;
+        z-index: 9999;
     }}
-    .lgst-modal-card {{
-        background: #1f1f1f;
-        color: #fff;
+    .modal-content {{
+        position: relative;
+        background: #222;
         padding: 20px;
-        border-radius: 12px;
+        border-radius: 15px;
         max-width: 90%;
         max-height: 90%;
         overflow-y: auto;
         text-align: center;
     }}
-    .lgst-modal-images {{
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        justify-content: center;
-        margin-top: 12px;
+    .close-btn {{
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        background: #800000;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        line-height: 35px;
+        text-align: center;
+        cursor: pointer;
+    }}
+    .close-btn:hover {{
+        background: #b30000;
     }}
     </style>
-    <div class="lgst-fullscreen-modal">
-        <div class="lgst-modal-card">
-            <h2 style="margin:0 0 8px 0;">{html.escape(clean_caption)}</h2>
-            <div class="lgst-modal-images">
-                {imgs_html}
+    <div class="fullscreen-modal">
+        <div class="modal-content">
+            <h3 style="color:white; margin-bottom:20px;">{html.escape(clean_caption)}</h3>
+            <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
+                {img_tags}
             </div>
+            <button class="close-btn" onclick="/* Streamlit handles click via st.button */">✕</button>
         </div>
     </div>
     """
-    st.markdown(overlay_html, unsafe_allow_html=True)
+    st.markdown(modal_html, unsafe_allow_html=True)
 
-    # Streamlit close button
-    if st.button("✕ Close", key="close_modal_btn"):
-        st.session_state.view_image = None
-        st.rerun()
+    # Streamlit close button (handles actual closing logic)
+    close_col1, close_col2, close_col3 = st.columns([4, 1, 4])
+    with close_col2:
+        if st.button("✕", key="close_modal_btn", help="Close modal"):
+            st.session_state.view_image = None
+            st.rerun()
 
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
@@ -726,6 +738,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
