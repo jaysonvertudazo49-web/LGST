@@ -519,55 +519,73 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
-# Full-screen pop-up modal for viewing details
 if st.session_state.view_image:
     data = st.session_state.view_image
     caption = data["caption"]
     urls = data["urls"]
     img_tags = "".join([
-        f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px;">'
+        f'<img src="{u}" alt="Project image">'
         for u in urls
     ])
-    # Modal container with CSS
+    
+    # Inject your exact CSS
     st.markdown(
         """
         <style>
         .fullscreen-modal {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85); /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Above other content */
         }
         .modal-content {
-            position: relative;
-            background: #222;
-            padding: 20px;
+            background: black;
             border-radius: 15px;
-            max-width: 90%;
-            max-height: 90%;
+            padding: 30px;
+            max-width: 90vw;
+            max-height: 90vh;
             overflow-y: auto;
-            text-align: center;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             color: white;
+        }
+        .modal-content img {
+            border-radius: 12px;
+            max-width: 80%;
+            max-height: 60vh;
+            object-fit: contain;
+            margin: 10px;
         }
         </style>
         """,
         unsafe_allow_html=True,
     )
+    
     with st.form(key="modal_form"):
         st.markdown(
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
-                    <h3 style="margin-bottom:20px;">{caption}</h3>
-                    <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
+                    <h3>{caption}</h3>
+                    <div>
                         {img_tags}
                     </div>
             """,
             unsafe_allow_html=True,
         )
-        submitted = st.form_submit_button("Close", key="close_btn", help="Close modal")
+        
+        # Streamlit close button inside the form (visible under images)
+        submitted = st.form_submit_button("Close", help="Close modal")
+        
         st.markdown(
             """
                 </div>
@@ -575,9 +593,11 @@ if st.session_state.view_image:
             """,
             unsafe_allow_html=True,
         )
+        
         if submitted:
             st.session_state.view_image = None
             st.rerun()
+
 
 
 
@@ -721,6 +741,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
