@@ -561,6 +561,7 @@ if st.session_state.view_image:
             width: 35px; height: 35px;
             font-size: 16px; cursor: pointer;
             line-height: 35px; text-align: center;
+            z-index: 10000;
         }
         .stButton>button:hover {
             background: #b30000;
@@ -728,6 +729,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
