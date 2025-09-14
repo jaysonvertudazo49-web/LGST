@@ -520,82 +520,76 @@ elif st.session_state.page == "Home":
                 st.rerun()
 
     # Full-screen pop-up modal for viewing details
-    if st.session_state.view_image:
-        data = st.session_state.view_image
-        caption = data["caption"]
-        urls = data["urls"]
+if st.session_state.view_image:
+    data = st.session_state.view_image
+    caption = data["caption"]
+    urls = data["urls"]
 
-        img_tags = "".join([
-            f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px;">'
-            for u in urls
-        ])
+    img_tags = "".join([
+        f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px;">'
+        for u in urls
+    ])
 
-        # Modal container with CSS
-        st.markdown(
-            """
-            <style>
-            .fullscreen-modal {
-                position: fixed;
-                top: 0; left: 0;
-                width: 100%; height: 100%;
-                background: rgba(0,0,0,0.9);
-                display: flex; justify-content: center; align-items: center;
-                z-index: 9999;
-            }
-            .modal-content {
-                position: relative;
-                background: #222;
-                padding: 20px;
-                border-radius: 15px;
-                max-width: 90%;
-                max-height: 90%;
-                overflow-y: auto;
-                text-align: center;
-            }
-            .close-btn {
-                position: absolute;
-                top: 10px; right: 20px;
-                background: #800000; color: white;
-                border: none;
-                border-radius: 50%;
-                width: 35px; height: 35px;
-                font-size: 20px; cursor: pointer;
-                line-height: 35px; /* Center the ✕ vertically */
-                text-align: center;
-            }
-            .close-btn:hover {
-                background: #b30000; /* Optional hover effect */
-            }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
+    # Modal container with CSS
+    st.markdown(
+        """
+        <style>
+        .fullscreen-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            position: relative;
+            background: #222;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            text-align: center;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px; right: 20px;
+            background: #800000; color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px; height: 35px;
+            font-size: 20px; cursor: pointer;
+            line-height: 35px; text-align: center;
+        }
+        .close-btn:hover {
+            background: #b30000;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
-        # Render modal with embedded close button
+    # Render modal with a form-based close button
+    with st.form(key="modal_form"):
         st.markdown(
             f"""
             <div class="fullscreen-modal">
                 <div class="modal-content">
-                    <button class="close-btn" id="close_modal_btn">✕</button>
+                    <button class="close-btn" type="submit" form="modal_form">✕</button>
                     <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
                     <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                         {img_tags}
                     </div>
                 </div>
             </div>
-            <script>
-                document.getElementById('close_modal_btn').addEventListener('click', function() {{
-                    window.parent.postMessage({{ type: 'close_modal' }}, '*');
-                }});
-            </script>
             """,
             unsafe_allow_html=True,
         )
-
-        # Handle the close event via Streamlit's message listener
-        if st.experimental_get_query_params().get('close_modal'):
+        submitted = st.form_submit_button("", use_container_width=False, type="primary")
+        if submitted:
             st.session_state.view_image = None
-            st.experimental_rerun()
+            st.rerun()
 # ------------------ CONTACT PAGE ------------------
 elif st.session_state.page == "Contact":
     st.header("Contact Us")
@@ -733,6 +727,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
