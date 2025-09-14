@@ -522,17 +522,19 @@ elif st.session_state.page == "Home":
 import re
 import html
 
-# Full-screen pop-up modal for viewing details (cleaned & robust)
+# ---------------------
+# Modal / overlay block
+# ---------------------
 if st.session_state.get("view_image"):
-    data = st.session_state.view_image
-    caption = data.get("caption", "") if data else ""
-    urls = data.get("urls", []) if data else []
+    data = st.session_state.view_image or {}
+    caption = data.get("caption", "")
+    urls = data.get("urls", []) or []
 
-    # Clean caption: remove HTML tags and unescape HTML entities
+    # Clean caption: strip HTML tags and unescape HTML entities
     clean_caption = re.sub(r"<[^>]*>", "", caption or "")
     clean_caption = html.unescape(clean_caption).strip()
 
-    # Helper to show images in responsive columns using st.image (no raw HTML)
+    # Helper to show images with st.image (no raw HTML)
     def show_images(image_urls):
         if not image_urls:
             st.write("No images available.")
@@ -545,29 +547,92 @@ if st.session_state.get("view_image"):
             except Exception:
                 cols[i % n_cols].write(u)
 
-    # Try using Streamlit's native modal for reliable widget behavior
-    try:
-        with st.modal("View Details", key="view_details_modal"):
-            st.markdown(f"### {clean_caption}")
+    # --- Preferred: use Streamlit's native modal (true popup) if available ---
+    if hasattr(st, "modal"):
+        try:
+            with st.modal("View Details", key="view_details_modal"):
+                st.markdown(f"### {clean_caption}")
 
-            show_images(urls)
+                show_images(urls)
 
-            st.write("")  # spacer
+                st.write("")  # spacer
 
-            # Close button that clears the session state and reruns
-            if st.button("✕ Close", key="close_modal_btn"):
-                st.session_state.view_image = None
-                st.rerun()
+                # Native Streamlit Close button — clears session state and reruns
+                if st.button("✕ Close", key="close_modal_btn"):
+                    st.session_state.view_image = None
+                    st.rerun()
+            # done with modal path
+            continue_modal = False
+        except Exception:
+            # If st.modal exists but errors, fall back to HTML overlay below
+            continue_modal = True
+    else:
+        # st.modal not present in this Streamlit version -> use fallback
+        continue_modal = True
 
-    except Exception:
-        # Fallback when st.modal isn't available: show an in-page container (no overlay)
-        container = st.container()
-        with container:
-            st.markdown(f"### {clean_caption}")
-            show_images(urls)
-            if st.button("✕ Close (fallback)", key="close_modal_fallback"):
-                st.session_state.view_image = None
-                st.rerun()
+    # --- Fallback: HTML/CSS overlay (works visually but not as robust) ---
+    if continue_modal:
+        # NOTE: HTML overlay cannot directly call Python. We use a reload to refresh UI.
+        # If your session_state persists after reload, the overlay will reappear. In that
+        # case, prefer upgrading Streamlit to a version that supports st.modal.
+        overlay_html = f"""
+        <style>
+        .fullscreen-modal {{
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        }}
+        .modal-card {{
+            background: #222;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 92%;
+            max-height: 92%;
+            overflow-y: auto;
+            color: #fff;
+            text-align: center;
+        }}
+        .modal-close-btn {{
+            margin-top: 14px;
+            padding: 8px 18px;
+            background: #333;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }}
+        .modal-close-btn:hover {{ background: #444; }}
+        </style>
+
+        <div class="fullscreen-modal" onclick="/* allow clicking outside to also reload */">
+            <div class="modal-card" onclick="event.stopPropagation()">
+                <h3 style="margin-bottom:16px;">{html.escape(clean_caption)}</h3>
+                <div id="modal-images" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+        """
+
+        # append simple HTML <img> elements for the fallback (these are harmless)
+        for u in urls:
+            overlay_html += f'<div style="max-width:40%"><img src="{u}" style="width:100%;border-radius:8px" /></div>'
+
+        overlay_html += f"""
+                </div>
+                <div>
+                    <!-- This reloads the page. If session_state.view_image persists after reload,
+                    the modal will reappear; that's why native st.modal is preferred. -->
+                    <button class="modal-close-btn" onclick="window.location.reload();">Close</button>
+                </div>
+            </div>
+        </div>
+        """
+
+        st.markdown(overlay_html, unsafe_allow_html=True)
 
 
 # ------------------ CONTACT PAGE ------------------
@@ -707,6 +772,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
