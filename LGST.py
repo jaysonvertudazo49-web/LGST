@@ -519,60 +519,84 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
-if st.session_state.get("view_image"):
+if st.session_state.view_image:
     data = st.session_state.view_image
     caption = data["caption"]
     urls = data["urls"]
+    img_tags = "".join([
+        f'<img src="{u}" alt="Project image" style="max-width:80%; border-radius:12px; margin:10px;">'
+        for u in urls
+    ])
+    
+    st.markdown(
+        """
+        <style>
+        .fullscreen-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: black;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            position: relative;
+            text-align: center;
+            color: white;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #800000;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            line-height: 35px;
+            text-align: center;
+        }
+        .close-btn:hover {
+            background: #b30000;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    # Your modal CSS injected once
-    st.markdown("""
-    <style>
-    .fullscreen-modal {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100vw; height: 100vh;
-        background: rgba(0,0,0,0.85);
-        display: flex; justify-content: center; align-items: center;
-        z-index: 1000;
-    }
-    .modal-content {
-        background: black;
-        border-radius: 15px;
-        padding: 30px;
-        max-width: 90vw;
-        max-height: 90vh;
-        overflow-y: auto;
-        color: white;
-        text-align: center;
-    }
-    .modal-content img {
-        border-radius: 12px;
-        max-width: 80%;
-        max-height: 60vh;
-        margin: 10px;
-        object-fit: contain;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # Render modal container div
-    st.markdown('<div class="fullscreen-modal">', unsafe_allow_html=True)
-
-    # Use form for modal with submit button as close
     with st.form(key="modal_form"):
-        # Modal content without button in markdown (just static content)
-        st.markdown(f'<div class="modal-content"><h3>{caption}</h3>', unsafe_allow_html=True)
-        for url in urls:
-            st.markdown(f'<img src="{url}" alt="Image">', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        # Streamlit button to close modal (form submit button)
-        if st.form_submit_button("Close"):
+        st.markdown(
+            f'''
+            <div class="fullscreen-modal">
+                <div class="modal-content">
+                    <button type="submit" class="close-btn" title="Close modal" name="close" value="close">×</button>
+                    <h3>{caption}</h3>
+                    <div>
+                        {img_tags}
+                    </div>
+                </div>
+            </div>
+            ''',
+            unsafe_allow_html=True,
+        )
+        submitted = st.form_submit_button(label="", key="hidden_submit", help="Submit form")
+        if submitted:
             st.session_state.view_image = None
             st.experimental_rerun()
-
-    # Close modal container div
-    st.markdown('</div>', unsafe_allow_html=True)
 
 
 
@@ -716,6 +740,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
