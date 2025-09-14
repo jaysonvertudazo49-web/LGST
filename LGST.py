@@ -519,97 +519,55 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
-import html  # required to safely escape caption text
+import re
+import html
 
-# Full-screen pop-up modal for viewing details
+# Full-screen pop-up modal for viewing details (cleaned & robust)
 if st.session_state.get("view_image"):
     data = st.session_state.view_image
-    caption = data["caption"]
-    urls = data["urls"]
+    caption = data.get("caption", "") if data else ""
+    urls = data.get("urls", []) if data else []
 
-    # Escape caption so any HTML/CSS inside it doesn't break the modal
-    safe_caption = html.escape(caption)
+    # Clean caption: remove HTML tags and unescape HTML entities
+    clean_caption = re.sub(r"<[^>]*>", "", caption or "")
+    clean_caption = html.unescape(clean_caption).strip()
 
-    img_tags = "".join([
-        f'<img src="{u}" alt="Project image" style="max-width:40%; border-radius:10px; margin:10px;">'
-        for u in urls
-    ])
+    # Helper to show images in responsive columns using st.image (no raw HTML)
+    def show_images(image_urls):
+        if not image_urls:
+            st.write("No images available.")
+            return
+        n_cols = min(3, max(1, len(image_urls)))
+        cols = st.columns(n_cols)
+        for i, u in enumerate(image_urls):
+            try:
+                cols[i % n_cols].image(u, use_column_width=True)
+            except Exception:
+                cols[i % n_cols].write(u)
 
-    # Modal container with CSS (keeps your look & adds in-modal close controls)
-    st.markdown(
-        """
-        <style>
-        .fullscreen-modal {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 9999;
-        }
-        .modal-content {
-            position: relative;
-            background: #222;
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 90%;
-            max-height: 90%;
-            overflow-y: auto;
-            text-align: center;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px; right: 20px;
-            background: #800000; color: white;
-            border: none;
-            border-radius: 50%;
-            width: 35px; height: 35px;
-            font-size: 20px; cursor: pointer;
-            line-height: 35px; text-align: center;
-        }
-        .close-btn:hover { background: #b30000; }
+    # Try using Streamlit's native modal for reliable widget behavior
+    try:
+        with st.modal("View Details", key="view_details_modal"):
+            st.markdown(f"### {clean_caption}")
 
-        /* Close button under images (styled to match modal) */
-        .modal-close {
-            margin-top: 18px;
-            padding: 8px 18px;
-            background: #333;
-            color: #fff;
-            border: 1px solid #444;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .modal-close:hover { background: #444; }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+            show_images(urls)
 
-    # Render modal with in-modal HTML close controls that reload the page
-    st.markdown(
-        f"""
-        <div class="fullscreen-modal">
-            <div class="modal-content">
-                <!-- Top-right X button (inside modal, clickable) -->
-                <button class="close-btn" onclick="window.location.reload()">✕</button>
+            st.write("")  # spacer
 
-                <h3 style="color:white; margin-bottom:20px;">{safe_caption}</h3>
+            # Close button that clears the session state and reruns
+            if st.button("✕ Close", key="close_modal_btn"):
+                st.session_state.view_image = None
+                st.rerun()
 
-                <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
-                    {img_tags}
-                </div>
-
-                <!-- Close button under images (inside modal) -->
-                <div>
-                    <button class="modal-close" onclick="window.location.reload()">Close</button>
-                </div>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
+    except Exception:
+        # Fallback when st.modal isn't available: show an in-page container (no overlay)
+        container = st.container()
+        with container:
+            st.markdown(f"### {clean_caption}")
+            show_images(urls)
+            if st.button("✕ Close (fallback)", key="close_modal_fallback"):
+                st.session_state.view_image = None
+                st.rerun()
 
 
 # ------------------ CONTACT PAGE ------------------
@@ -749,6 +707,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
