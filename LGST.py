@@ -519,8 +519,16 @@ elif st.session_state.page == "Home":
                 st.session_state.view_image = {"caption": caption, "urls": urls}
                 st.rerun()
 
+# If the page was called with ?close_modal=1, clear the modal state and rerun
+params = st.experimental_get_query_params()
+if params.get("close_modal"):
+    st.session_state.view_image = None
+    # clear query params so it doesn't keep triggering
+    st.experimental_set_query_params()
+    st.experimental_rerun()
+
 # Full-screen pop-up modal for viewing details
-if st.session_state.view_image:
+if st.session_state.get("view_image"):
     data = st.session_state.view_image
     caption = data["caption"]
     urls = data["urls"]
@@ -530,7 +538,7 @@ if st.session_state.view_image:
         for u in urls
     ])
 
-    # Modal container with CSS
+    # Modal container with CSS (keeps your look & adds in-modal close controls)
     st.markdown(
         """
         <style>
@@ -552,32 +560,58 @@ if st.session_state.view_image:
             overflow-y: auto;
             text-align: center;
         }
+        .close-btn {
+            position: absolute;
+            top: 10px; right: 20px;
+            background: #800000; color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px; height: 35px;
+            font-size: 20px; cursor: pointer;
+            line-height: 35px; text-align: center;
+        }
+        .close-btn:hover { background: #b30000; }
+
+        /* Close button under images (styled to match modal) */
+        .modal-close {
+            margin-top: 18px;
+            padding: 8px 18px;
+            background: #333;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .modal-close:hover { background: #444; }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-    # Render modal
+    # Render modal with in-modal HTML close controls that set ?close_modal=1
     st.markdown(
         f"""
         <div class="fullscreen-modal">
             <div class="modal-content">
+                <!-- Top-right X button (inside modal, clickable) -->
+                <button class="close-btn" onclick="window.location.href=window.location.pathname + '?close_modal=1'">✕</button>
+
                 <h3 style="color:white; margin-bottom:20px;">{caption}</h3>
+
                 <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
                     {img_tags}
+                </div>
+
+                <!-- Close button under images (inside modal) -->
+                <div>
+                    <button class="modal-close" onclick="window.location.href=window.location.pathname + '?close_modal=1'">Close</button>
                 </div>
             </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
-
-    # Streamlit close button (under images, inside modal area)
-    close_col1, close_col2, close_col3 = st.columns([4, 1, 4])
-    with close_col2:
-        if st.button("✕ Close", key="close_modal_btn"):
-            st.session_state.view_image = None
-            st.rerun()
 
 
 
@@ -723,6 +757,7 @@ elif st.session_state.page == "Admin":
 
 # ------------------ FOOTER ------------------
 st.markdown("""<div class="footer">© 2025 Lucas Grey Scrap Trading. All rights reserved.</div>""", unsafe_allow_html=True)
+
 
 
 
